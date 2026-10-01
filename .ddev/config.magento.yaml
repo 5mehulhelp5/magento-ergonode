@@ -1,0 +1,8 @@
+web_extra_daemons:
+  - name: magento-cron
+    command: sudo /usr/sbin/cron -f
+    directory: /var/www/html
+
+hooks:
+  post-start:
+    - exec: "if [ -f app/etc/env.php ]; then php bin/magento cron:install; fi"

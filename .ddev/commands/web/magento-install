@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+## Description: Install a fresh local Magento database using .env.local credentials
+## Usage: magento-install
+## Example: ddev magento-install
+
+set -euo pipefail
+cd /var/www/html
+
+if [[ -f app/etc/env.php ]]; then
+    echo 'app/etc/env.php already exists. Use setup:upgrade for an installed project.' >&2
+    exit 1
+fi
+
+if [[ -f .env.local ]]; then
+    # This ignored file contains local administrator credentials.
+    source .env.local
+fi
+
+: "${MAGENTO_ADMIN_PASSWORD:?Set MAGENTO_ADMIN_PASSWORD in .env.local first}"
+
+php bin/magento setup:install \
+    --base-url="${DDEV_PRIMARY_URL}/" \
+    --base-url-secure="${DDEV_PRIMARY_URL}/" \
+    --use-secure=1 \
+    --use-secure-admin=1 \
+    --use-rewrites=1 \
+    --backend-frontname=admin \
+    --db-host=db --db-name=db --db-user=db --db-password=db \
+    --search-engine=opensearch \
+    --opensearch-host=opensearch --opensearch-port=9200 \
+    --opensearch-index-prefix=magento_ergonode \
+    --opensearch-enable-auth=0 --opensearch-timeout=30 \
+    --admin-user="${MAGENTO_ADMIN_USER:-admin}" \
+    --admin-password="${MAGENTO_ADMIN_PASSWORD}" \
+    --admin-email="${MAGENTO_ADMIN_EMAIL:-admin@example.test}" \
+    --admin-firstname="${MAGENTO_ADMIN_FIRSTNAME:-Local}" \
+    --admin-lastname="${MAGENTO_ADMIN_LASTNAME:-Admin}" \
+    --language=pl_PL --currency=PLN --timezone=Europe/Warsaw \
+    --session-save=files
+
+php bin/magento deploy:mode:set developer
+# Local development only: permit logging into the DDEV admin without a 2FA provider.
+php bin/magento module:disable Magento_TwoFactorAuth Magento_AdminAdobeImsTwoFactorAuth
+php bin/magento setup:upgrade
+php bin/magento indexer:reindex
+php bin/magento cache:flush
+php bin/magento cron:install

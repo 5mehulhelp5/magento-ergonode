@@ -1,0 +1,60 @@
+# Composer and frontend dependencies
+/vendor/
+/node_modules/
+
+# Magento base libraries, setup tools and upstream tests restored by Composer
+/lib/
+/setup/
+/dev/
+/phpserver/
+
+# Local configuration and credentials
+/auth.json
+**/auth.json
+/.env
+/.env.*
+!/.env.example
+/app/etc/env.php
+/.ddev/.env.*
+!/.ddev/.env.opensearch
+/.ddev/homeadditions/.composer/
+/.ddev/homeadditions/.config/composer/
+/.ddev/db_snapshots/
+/.ddev/.downloads/
+
+# Magento runtime data and generated assets
+/var/**
+!/var/.htaccess
+/generated/**
+!/generated/.htaccess
+/pub/static/**
+!/pub/static/.htaccess
+/pub/media/**
+!/pub/media/**/
+!/pub/media/**/.htaccess
+/pub/opt/
+/pub/robots.txt
+/pub/sitemap*.xml
+/sitemap*.xml
+
+# Tool caches, local backups and editor metadata
+/.cache/
+/.grunt/
+/.php-cs-fixer.cache
+/.php_cs.cache
+/.phpunit.cache/
+/.phpunit.result.cache
+/coverage/
+/build/
+/.idea/
+/.vscode/
+.DS_Store
+*.log
+*.sql
+*.sql.gz
+*.sql.bz2
+*.sql.xz
+*.bak
+*.orig
+*.swp
+*.swo
