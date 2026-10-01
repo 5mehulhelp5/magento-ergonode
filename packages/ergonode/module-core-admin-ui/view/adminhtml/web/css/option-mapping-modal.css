@@ -1,0 +1,90 @@
+.modal-popup.vea-option-mapping-modal {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: 24px;
+}
+
+.modal-popup.vea-option-mapping-modal .modal-inner-wrap {
+    max-height: calc(100vh - 48px);
+    max-width: 1800px;
+    min-height: min(720px, calc(100vh - 48px));
+    position: relative;
+    width: 100%;
+}
+
+.modal-popup.vea-option-mapping-modal .modal-header {
+    min-height: 42px;
+    padding: 8px 16px;
+}
+
+.modal-popup.vea-option-mapping-modal .modal-title {
+    font-size: 0;
+    line-height: 1;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+}
+
+.modal-popup.vea-option-mapping-modal .modal-content {
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.vea-option-mapping-modal-host {
+    height: min(720px, calc(100vh - 90px));
+    min-height: 0;
+    position: relative;
+}
+
+.vea-option-mapping-modal-loading,
+.vea-option-mapping-modal-error {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    height: 100%;
+    justify-content: center;
+    padding: 24px;
+}
+
+.vea-option-mapping-modal-loading[hidden],
+.vea-option-mapping-modal-error[hidden] {
+    display: none;
+}
+
+.vea-option-mapping-modal-error {
+    color: var(--veui-red);
+    font-weight: 700;
+}
+
+.vea-option-mapping-modal-host > [data-role='option-mapping-modal-content'] {
+    height: 100%;
+}
+
+.vea-option-mapping-modal-host > [data-role='option-mapping-modal-content'] > .vea-option-mapping-embedded {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.vea-option-mapping-embedded .vea-shell {
+    height: 100%;
+}
+
+@media (max-width: 1180px) {
+    .modal-popup.vea-option-mapping-modal {
+        padding: 12px;
+    }
+
+    .modal-popup.vea-option-mapping-modal .modal-inner-wrap {
+        min-height: calc(100vh - 24px);
+    }
+
+    .vea-option-mapping-modal-host {
+        height: calc(100vh - 66px);
+        overflow-x: auto;
+    }
+}

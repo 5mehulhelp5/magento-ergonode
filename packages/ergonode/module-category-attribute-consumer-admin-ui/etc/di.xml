@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Model\Category\DataProvider">
+        <plugin name="ergonode_category_attribute_form_mapping_context" type="Ergonode\CategoryAttributeConsumerAdminUi\Model\CategoryFormDataProviderPlugin"/>
+    </type>
+    <type name="Ergonode\CategoryConsumerAdminUi\Model\Navigation\CategoryNavigationGroupProvider">
+        <arguments>
+            <argument name="itemProviders" xsi:type="array">
+                <item name="category_attributes" xsi:type="object">Ergonode\CategoryAttributeConsumerAdminUi\Model\Navigation\CategoryAttributeNavigationItemProvider</item>
+            </argument>
+            <argument name="sectionCodes" xsi:type="array">
+                <item name="category_attributes" xsi:type="string">category_attributes</item>
+                <item name="category_options" xsi:type="string">category_options</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CategoryConsumerAdminUi\Block\Adminhtml\CategorySynchronizationActions">
+        <arguments>
+            <argument name="dataLabel" xsi:type="string">Attributes</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CategoryConsumerAdminUi\Model\Config\Source\CategoryNameMode">
+        <arguments>
+            <argument name="additionalOptions" xsi:type="array">
+                <item name="attribute" xsi:type="string">In a field</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

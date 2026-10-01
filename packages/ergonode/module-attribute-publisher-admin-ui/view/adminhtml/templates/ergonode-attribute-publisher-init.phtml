@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var AttributePublisherMapping $block */
+
+use Ergonode\AttributePublisherAdminUi\Block\Adminhtml\AttributePublisherMapping;
+
+?>
+<script type="text/x-magento-init">
+{
+    "<?= $escaper->escapeJs($block->getTargetSelector()) ?>": {
+        "Ergonode_AttributePublisherAdminUi/js/ergonode-attribute-publisher-mapping":
+            <?= /* @noEscape */ $block->getConfigJson() ?>
+    }
+}
+</script>

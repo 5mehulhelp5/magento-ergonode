@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\TemplateConsumer\Api\TemplateLoaderInterface" type="Ergonode\TemplateConsumer\Model\GraphQl\TemplateLoader"/>
+    <preference for="Ergonode\TemplateConsumer\Api\TemplateSnapshotRemoverInterface" type="Ergonode\TemplateConsumer\Model\Snapshot\TemplateSnapshotRemover"/>
+    <preference for="Ergonode\TemplateConsumer\Api\TemplateSnapshotRefresherInterface" type="Ergonode\TemplateConsumer\Model\Import\TemplateListSynchronizer"/>
+    <preference for="Ergonode\TemplateConsumer\Api\TemplateSynchronizerInterface" type="Ergonode\TemplateConsumer\Model\Import\TemplateListSynchronizer"/>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="ergonode_templates_import" xsi:type="object">Ergonode\TemplateConsumer\Console\Command\ImportTemplatesCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\TemplateConsumer\Console\Command\ImportTemplatesCommand">
+        <arguments>
+            <argument name="templateSynchronizer" xsi:type="object">Ergonode\TemplateConsumer\Api\TemplateSynchronizerInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Readiness\ReadinessService">
+        <arguments>
+            <argument name="checks" xsi:type="array">
+                <item name="ergonode_template_attribute_set_mapping" xsi:type="object">Ergonode\TemplateConsumer\Model\Readiness\TemplateMappingCheck</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Import\SynchronizationStatusProvider">
+        <arguments>
+            <argument name="synchronizations" xsi:type="array">
+                <item name="template_stream" xsi:type="array">
+                    <item name="label" xsi:type="string">Templates (full scan)</item>
+                    <item
+                        name="description"
+                        xsi:type="string"
+                    >Reads the complete template list and section definitions, then synchronizes Magento attribute sets. The API provides no template or section stream.</item>
+                    <item name="sort_order" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Import\SynchronizationOperationExecutor">
+        <arguments>
+            <argument name="operations" xsi:type="array">
+                <item name="template_stream" xsi:type="object">Ergonode\TemplateConsumer\Model\Import\TemplateSynchronizationOperation\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="environment" xsi:type="array">
+                <item name="ergonode_templates/cron/status" xsi:type="string">1</item>
+                <item name="ergonode_templates/cron/cron_expr" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

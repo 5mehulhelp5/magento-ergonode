@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\Core\Api\CursorPaginationGuardFactoryInterface" type="Ergonode\Core\Model\GraphQl\CursorPaginationGuardFactory"/>
+    <preference for="Ergonode\Core\Api\GraphQlMutationClientInterface" type="Ergonode\Core\Model\GraphQl\Client"/>
+    <preference for="Ergonode\Core\Api\GraphQlQueryClientInterface" type="Ergonode\Core\Model\GraphQl\Client"/>
+    <preference for="Ergonode\Core\Api\GraphQlWriteScopeQueryClientInterface" type="Ergonode\Core\Model\GraphQl\Client"/>
+    <preference for="Ergonode\Core\Api\MappingRowsPersisterInterface" type="Ergonode\Core\Model\Mapping\MappingRowsPersister"/>
+    <preference for="Ergonode\Core\Api\MappingVisibilityProviderInterface" type="Ergonode\Core\Model\Provider\VisibilityProvider"/>
+    <preference for="Ergonode\Core\Api\MappingVisibilitySaverInterface" type="Ergonode\Core\Model\Provider\VisibilityProvider"/>
+    <preference for="Ergonode\Core\Api\PaginatedImporterRefresherInterface" type="Ergonode\Core\Model\Import\PaginatedImporterRefresher"/>
+    <preference for="Ergonode\Core\Api\PersistedBatchImportRunnerInterface" type="Ergonode\Core\Model\Import\PersistedBatchImportRunner"/>
+    <preference for="Ergonode\Core\Api\PageQueryRetrierInterface" type="Ergonode\Core\Model\GraphQl\PageQueryRetrier"/>
+    <preference for="Ergonode\Core\Api\ReadinessEvaluatorInterface" type="Ergonode\Core\Model\Readiness\ReadinessService"/>
+    <preference for="Ergonode\Core\Api\ReadinessGuardInterface" type="Ergonode\Core\Model\Readiness\ReadinessService"/>
+    <preference for="Ergonode\Core\Api\ReadinessIssueFactoryInterface" type="Ergonode\Core\Model\Readiness\ReadinessIssueFactory"/>
+    <preference for="Ergonode\Core\Api\SynchronizationStatusProviderInterface" type="Ergonode\Core\Model\Import\SynchronizationStatusProvider"/>
+    <preference for="Ergonode\Core\Api\SynchronizationOperationExecutorInterface" type="Ergonode\Core\Model\Import\SynchronizationOperationExecutor"/>
+    <preference for="Ergonode\Core\Api\UpdateConfigurationProviderInterface" type="Ergonode\Core\Model\Config\UpdateConfigProvider"/>
+    <type name="Ergonode\Core\Model\Readiness\ReadinessService">
+        <arguments>
+            <argument name="checks" xsi:type="array">
+                <item name="ergonode_connection_configuration" xsi:type="object">Ergonode\Core\Model\Readiness\ConnectionConfigurationCheck</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\Core\Api\GraphQlRequestLimiterInterface" type="Ergonode\Core\Model\GraphQl\RateLimiter"/>
+    <preference for="Ergonode\Core\Api\SynchronizationMonitorInterface" type="Ergonode\Core\Model\Import\SynchronizationMonitor"/>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="environment" xsi:type="array">
+                <item name="ergonode_connection/general/environment" xsi:type="string">1</item>
+                <item name="ergonode_connection/general/mode" xsi:type="string">1</item>
+                <item name="ergonode_connection/general/enabled" xsi:type="string">1</item>
+                <item name="ergonode_connection/test/url" xsi:type="string">1</item>
+                <item name="ergonode_connection/test/requests_per_minute" xsi:type="string">1</item>
+                <item name="ergonode_connection/production/url" xsi:type="string">1</item>
+                <item name="ergonode_connection/production/requests_per_minute" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Ergonode\Core\Api\AutomaticSynchronizationInterface" type="Ergonode\Core\Model\Config\AutomaticSynchronization"/>
+    <preference for="Ergonode\Core\Api\DownloadSourcePolicyInterface" type="Ergonode\Core\Model\Http\DownloadSourcePolicy"/>
+</config>

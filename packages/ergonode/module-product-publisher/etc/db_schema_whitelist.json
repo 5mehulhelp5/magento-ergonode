@@ -1,0 +1,63 @@
+{
+    "ergonode_product_publisher_job": {
+        "column": {
+            "job_id": true,
+            "status": true,
+            "total_count": true,
+            "processed_count": true,
+            "succeeded_count": true,
+            "failed_count": true,
+            "attention_count": true,
+            "requested_by": true,
+            "last_error": true,
+            "created_at": true,
+            "updated_at": true,
+            "finished_at": true
+        },
+        "index": {
+            "ERGONODE_PRODUCT_PUBLISHER_JOB_STATUS_UPDATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "ergonode_product_publisher_item": {
+        "column": {
+            "item_id": true,
+            "job_id": true,
+            "product_id": true,
+            "requested_sku": true,
+            "status": true,
+            "attempt_count": true,
+            "available_at": true,
+            "lease_token": true,
+            "lease_expires_at": true,
+            "outcome": true,
+            "message": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_PRODUCT_PUBLISHER_ITEM_CLAIM": true,
+            "IDX_DBC4A660410723314DCC9CBA033B3860": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_PRODUCT_PUBLISHER_ITEM_JOB_ID_JOB_JOB_ID": true,
+            "ERGONODE_PRODUCT_PUBLISHER_ITEM_JOB_PRODUCT": true,
+            "FK_A2BF7B972F356B39224D0C8BFB9BF136": true,
+            "ERGONODE_PRODUCT_PUBLISHER_ITEM_JOB_ID_PRODUCT_ID": true
+        }
+    },
+    "ergonode_product_publication_result": {
+        "column": {
+            "product_id": true,
+            "status": true,
+            "message": true,
+            "recorded_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_PRD_PUBLICATION_RESULT_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    }
+}

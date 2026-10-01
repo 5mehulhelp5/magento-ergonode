@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_products">
+            <group id="attributes">
+                <field id="default_category_attribute" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Category</label>
+                    <comment>Optional Magento product attribute whose category ID is synchronized as an Ergonode category code.</comment>
+                    <source_model>Ergonode\ProductAttributeAdminUi\Model\Config\Source\ProductAttributeCode</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

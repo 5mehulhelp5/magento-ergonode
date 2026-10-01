@@ -1,0 +1,54 @@
+{
+    "ergonode_template": {
+        "column": {
+            "attribute_set_id": true
+        },
+        "constraint": {
+            "ERGONODE_TEMPLATE_ATTRIBUTE_SET_ID": true
+        }
+    },
+    "ergonode_template_section": {
+        "column": {
+            "attribute_group_id": true,
+            "entity_id": true,
+            "template_code": true,
+            "section_code": true,
+            "is_synthetic": true,
+            "sort_order": true,
+            "content_hash": true,
+            "raw_json": true,
+            "synced_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_TEMPLATE_SECTION_ATTRIBUTE_GROUP_ID": true,
+            "ERGONODE_TEMPLATE_SECTION_TEMPLATE_CODE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_TEMPLATE_SECTION_TEMPLATE_CODE_ERGONODE_TEMPLATE_CODE": true,
+            "ERGONODE_TEMPLATE_SECTION_TEMPLATE_CODE_SECTION_CODE": true
+        }
+    },
+    "ergonode_template_attribute": {
+        "column": {
+            "entity_id": true,
+            "template_code": true,
+            "section_code": true,
+            "attribute_code": true,
+            "sort_order": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_TEMPLATE_ATTRIBUTE_TEMPLATE_CODE": true,
+            "ERGONODE_TEMPLATE_ATTRIBUTE_ATTRIBUTE_CODE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_TEMPLATE_ATTRIBUTE_TEMPLATE_CODE_ERGONODE_TEMPLATE_CODE": true,
+            "ERGONODE_TEMPLATE_ATTR_TEMPLATE_CODE_SECTION_CODE_ATTR_CODE": true
+        }
+    }
+}

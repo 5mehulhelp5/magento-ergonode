@@ -1,0 +1,43 @@
+:root {
+    --vecf-c-065f46: #065f46;
+    --vecf-c-079669: #079669;
+    --vecf-c-475569: #475569;
+    --vecf-c-64748b: #64748b;
+    --vecf-c-991b1b: #991b1b;
+    --vecf-c-dc2626: #dc2626;
+}
+
+.vec-category-form-create {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vec-category-form-create-button {
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+}
+
+.vec-category-form-create-button:disabled {
+    cursor: wait;
+    opacity: .62;
+}
+
+.vec-category-form-create-status {
+    border-left: 3px solid var(--vecf-c-64748b);
+    color: var(--vecf-c-475569);
+    line-height: 1.45;
+    padding: 6px 10px;
+}
+
+.vec-category-form-create-status.is-success {
+    border-color: var(--vecf-c-079669);
+    color: var(--vecf-c-065f46);
+}
+
+.vec-category-form-create-status.is-error {
+    border-color: var(--vecf-c-dc2626);
+    color: var(--vecf-c-991b1b);
+}

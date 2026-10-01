@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-product-attribute-publisher",
+    "description": "Mapped product publication values and adapter availability diagnostics.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "packhauer/module-unit-attribute": "dev-main@dev",
+        "ergonode/module-product-publisher": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductAttributePublisher\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

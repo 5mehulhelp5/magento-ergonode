@@ -1,0 +1,495 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+use Ergonode\CategoryAdminUi\Model\Navigation\CategoryTreeNavigationItemProvider;
+
+/** @var \Ergonode\CategoryAdminUi\Block\Adminhtml\CategoryTreeMapping\Index $block */
+$config = $block->getCategoryConfig();
+$categoryTrees = is_array($config['category_trees'] ?? null) ? $config['category_trees'] : [];
+$currentCategoryTree = is_array($config['current_category_tree'] ?? null)
+    ? $config['current_category_tree']
+    : null;
+$newMappingOptions = is_array($config['new_mapping_options'] ?? null)
+    ? $config['new_mapping_options']
+    : [];
+$ergonodeTreeOptions = is_array($newMappingOptions['trees'] ?? null) ? $newMappingOptions['trees'] : [];
+$magentoRootOptions = is_array($newMappingOptions['roots'] ?? null) ? $newMappingOptions['roots'] : [];
+$mappedRootCategoryIds = [];
+foreach ($categoryTrees as $configuredCategoryTree) {
+    $mappedRootCategoryId = (int)($configuredCategoryTree['root_category_id'] ?? 0);
+    if ($mappedRootCategoryId > 0) {
+        $mappedRootCategoryIds[$mappedRootCategoryId] = true;
+    }
+}
+$hasSelection = $currentCategoryTree !== null;
+$canEditCategoryTree = $block->canEditCategoryTree();
+$canRefreshCategoryTrees = $block->canRefreshCategoryTrees();
+$autoMatchIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/auto-match.svg');
+$ergonodeIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/m2_configuration.svg');
+$magentoIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/magento-mark.svg');
+$refreshIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/refresh-ergonode.svg');
+$refreshTreeTitle = __('Pobierz kod i nazwę drzew z Ergonode');
+$saveIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/save.svg');
+$newMappingIntro = __(
+    'Połącz drzewo Ergonode z katalogiem Magento. Drzewa i korzenia nie można zmienić po zapisaniu mapowania.'
+);
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    [
+        'data' => [
+            'current_section' => CategoryTreeNavigationItemProvider::SECTION_CODE,
+        ],
+    ]
+);
+?>
+<div id="ergonode-category-tree-mapping"
+     class="veui-workspace veui-workspace-viewbar vec-admin"
+     data-auto-match-icon-url="<?= $escaper->escapeUrl($autoMatchIconUrl) ?>"
+     data-can-edit-category-tree="<?= $canEditCategoryTree ? '1' : '0' ?>"
+     data-refresh-icon-url="<?= $escaper->escapeUrl($refreshIconUrl) ?>">
+    <div class="veui-toolbar veui-viewbar vec-toolbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+        <?= /* @noEscape */ $block->getChildHtml('actions') ?>
+    </div>
+
+    <div class="veui-message vec-message" data-role="message" aria-live="polite" hidden>
+        <span class="vec-message-dot" aria-hidden="true"></span>
+        <span data-role="message-text"></span>
+    </div>
+
+    <div class="veui-layout vec-layout">
+        <section class="veui-panel vec-panel vec-source-panel" data-column-role="source">
+            <?php if ($hasSelection): ?>
+                <div class="veui-panel-head veui-panel-head-with-tools vec-panel-head">
+                    <div>
+                        <strong class="veui-panel-title">
+                            <span class="veui-brand-mark veui-brand-ergonode" aria-hidden="true">
+                                <img src="<?= $escaper->escapeUrl($ergonodeIconUrl) ?>" alt=""/>
+                            </span>
+                            <span class="veui-panel-title-text"><?= $escaper->escapeHtml(__('Category Tree')) ?></span>
+                        </strong>
+                    </div>
+                    <div class="veui-panel-head-tools vec-source-tools">
+                        <label class="veui-search veui-search-expandable">
+                            <span class="veui-search-icon" aria-hidden="true"></span>
+                            <input type="search"
+                                   data-role="ergo-search"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj w Ergonode...')) ?>"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj w Ergonode...')) ?>"/>
+                        </label>
+                    </div>
+                </div>
+                <div class="vec-side-tree" data-role="ergo-list"></div>
+            <?php endif; ?>
+        </section>
+
+        <section class="veui-panel vec-panel vec-target-panel" data-column-role="target">
+            <?php if ($hasSelection): ?>
+                <div class="veui-panel-head veui-panel-head-with-tools vec-panel-head">
+                    <div>
+                        <strong class="veui-panel-title">
+                            <span class="veui-brand-mark veui-brand-magento" aria-hidden="true">
+                                <img src="<?= $escaper->escapeUrl($magentoIconUrl) ?>" alt=""/>
+                            </span>
+                            <span class="veui-panel-title-text"><?= $escaper->escapeHtml(__('Category Tree')) ?></span>
+                        </strong>
+                    </div>
+                    <div class="veui-panel-head-tools vec-target-tools">
+                        <label class="veui-search veui-search-expandable">
+                            <span class="veui-search-icon" aria-hidden="true"></span>
+                            <input type="search"
+                                   data-role="magento-search"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj w Magento...')) ?>"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj w Magento...')) ?>"/>
+                        </label>
+                        <div class="veui-split-button veui-split-button-align-end veui-split-button-primary"
+                             data-role="category-mapping-actions"
+                             role="group"
+                             aria-label="<?= $escaper->escapeHtmlAttr(__('Zapisz mapowanie kategorii')) ?>">
+                            <button type="button"
+                                    class="veui-button veui-button-primary veui-button-toolbar
+                                           veui-split-button-main vec-button"
+                                    data-role="save-categories"
+                                    disabled
+                                    title="<?= $escaper->escapeHtmlAttr(__('Zapisz mapowanie kategorii')) ?>"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Zapisz mapowanie kategorii')) ?>">
+                                <img class="vec-icon vec-icon-save"
+                                     src="<?= $escaper->escapeUrl($saveIconUrl) ?>"
+                                     width="14"
+                                     height="14"
+                                     alt=""
+                                     aria-hidden="true">
+                                <span><?= $escaper->escapeHtml(__('Zapisz')) ?></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <section class="vec-source-issues"
+                         data-role="source-issues"
+                         aria-label="<?= $escaper->escapeHtmlAttr(__('Source status')) ?>"
+                         aria-live="polite"
+                         hidden></section>
+                <div class="vec-side-tree vec-magento-mapping-tree" data-role="magento-list"></div>
+            <?php endif; ?>
+        </section>
+
+        <aside class="veui-panel vec-panel vec-settings-panel" data-column-role="settings">
+            <div class="veui-panel-head vec-panel-head vec-settings-head">
+                <div>
+                    <strong class="veui-panel-title"><?= $escaper->escapeHtml(__('Konfiguracje drzew')) ?></strong>
+                </div>
+            </div>
+
+            <?php if ($categoryTrees !== []): ?>
+                <div class="vec-settings-body">
+                    <div class="vec-configuration-list"
+                         data-role="category-tree-configuration-list"
+                         role="list"
+                         aria-label="<?= $escaper->escapeHtmlAttr(__('Konfiguracje drzew')) ?>">
+                        <?php foreach ($categoryTrees as $categoryTree): ?>
+                            <?php
+                            $categoryTreeId = (int)$categoryTree['category_tree_id'];
+                            $isSelected = $categoryTreeId === (int)$config['category_tree_id'];
+                            $isActive = !empty($categoryTree['is_active']);
+                            $inactiveHintId = 'vec-configuration-disabled-hint-' . $categoryTreeId;
+                            $configurationCardClass = 'vec-configuration-card'
+                                . ($isSelected ? ' is-selected' : '')
+                                . ($isActive ? '' : ' is-disabled');
+                            $inactiveTitle = __('Synchronization is turned off');
+                            $inactiveDescription = __(
+                                'Categories from this tree will not be synchronized with Magento. '
+                                . 'Turn on this connection in its options to start synchronization.'
+                            );
+                            $treeCode = (string)$categoryTree['tree_code'];
+                            $configurationLabel = (string)$categoryTree['tree_label'];
+                            $hasConfigurationOptions = $canEditCategoryTree;
+                            ?>
+                            <div class="<?= $escaper->escapeHtmlAttr($configurationCardClass) ?>"
+                                     data-role="category-tree-configuration"
+                                     data-category-tree-id="<?= $escaper->escapeHtmlAttr((string)$categoryTreeId) ?>"
+                                     data-tree-code="<?= $escaper->escapeHtmlAttr($treeCode) ?>"
+                                     data-root-category-id="<?= (int)$categoryTree['root_category_id'] ?>"
+                                     data-sort-order="<?= (int)$categoryTree['sort_order'] ?>"
+                                     data-is-active="<?= $isActive ? '1' : '0' ?>"
+                                     data-remove-missing="<?= !empty($categoryTree['remove_missing']) ? '1' : '0' ?>"
+                                     role="listitem"
+                                     <?= $canEditCategoryTree ? 'draggable="true"' : '' ?>>
+                                <span class="vec-configuration-drag" aria-hidden="true"></span>
+                                <a class="vec-configuration-link"
+                                   data-role="category-tree-configuration-link"
+                                   aria-current="<?= $isSelected ? 'page' : 'false' ?>"
+                                   href="<?= $escaper->escapeUrl((string)$categoryTree['mapping_url']) ?>">
+                                    <strong data-role="configuration-option-label">
+                                        <?= $escaper->escapeHtml((string)$categoryTree['tree_label']) ?>
+                                    </strong>
+                                    <code><?= $escaper->escapeHtml((string)$categoryTree['tree_code']) ?></code>
+                                    <span>
+                                        <?= $escaper->escapeHtml((string)$categoryTree['root_category_label']) ?>
+                                    </span>
+                                </a>
+                                <span class="vec-configuration-actions">
+                                    <span class="vec-configuration-disabled-info vec-source-status"
+                                          data-role="source-status-badge"
+                                          tabindex="0"
+                                          role="img"
+                                          hidden></span>
+                                    <?php if (!$isActive): ?>
+                                        <span class="vec-configuration-disabled-info"
+                                              tabindex="0"
+                                              role="img"
+                                              aria-label="<?= $escaper->escapeHtmlAttr((string)$inactiveTitle) ?>"
+                                              aria-describedby="<?= $escaper->escapeHtmlAttr($inactiveHintId) ?>">
+                                            <span class="vec-information-icon" aria-hidden="true">i</span>
+                                            <span class="vec-mapping-hint vec-configuration-disabled-tooltip"
+                                                  id="<?= $escaper->escapeHtmlAttr($inactiveHintId) ?>"
+                                                  role="tooltip">
+                                                <strong><?= $escaper->escapeHtml($inactiveTitle) ?></strong>
+                                                <span><?= $escaper->escapeHtml($inactiveDescription) ?></span>
+                                            </span>
+                                        </span>
+                                    <?php endif; ?>
+                                    <?php if ($hasConfigurationOptions): ?>
+                                        <span data-role="configuration-options-slot"
+                                              data-configuration-label="<?=
+                                                $escaper->escapeHtmlAttr($configurationLabel)
+                                                ?>"></span>
+                                    <?php endif; ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php if ($canEditCategoryTree): ?>
+                        <button type="button"
+                                class="vec-new-mapping-secondary"
+                                data-role="open-new-mapping"
+                                aria-haspopup="dialog">
+                            <span class="vec-add-icon" aria-hidden="true"></span>
+                            <?= $escaper->escapeHtml(__('Nowe mapowanie')) ?>
+                        </button>
+                    <?php endif; ?>
+                    <?= /* @noEscape */ $block->getChildHtml('sidebar') ?>
+                </div>
+            <?php else: ?>
+                <div class="vec-settings-empty">
+                    <p><?= $escaper->escapeHtml(__('Brak skonfigurowanych drzew kategorii.')) ?></p>
+                    <?php if ($canEditCategoryTree): ?>
+                        <button type="button"
+                                class="veui-button veui-button-primary"
+                                data-role="open-new-mapping"
+                                aria-haspopup="dialog">
+                            <span class="vec-add-icon" aria-hidden="true"></span>
+                            <?= $escaper->escapeHtml(__('Nowe mapowanie')) ?>
+                        </button>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+
+        </aside>
+    </div>
+
+    <?php if ($canEditCategoryTree): ?>
+        <div class="vec-new-mapping-modal" data-role="new-mapping-modal" style="display: none">
+            <form class="vec-new-mapping-form"
+                  data-role="new-mapping-form"
+                  method="post"
+                  action="<?= $escaper->escapeUrl((string)$config['urls']['settings_save']) ?>">
+                <input type="hidden"
+                       name="form_key"
+                       value="<?= $escaper->escapeHtmlAttr((string)$config['form_key']) ?>"/>
+                <input type="hidden" name="category_tree_id" data-role="mapping-category-tree-id" value="0"/>
+                <input type="hidden" name="sort_order" data-role="mapping-sort-order" value="0" disabled/>
+                <input type="hidden" name="tree_code" data-role="locked-tree-code" value="" disabled/>
+                <input type="hidden" name="root_category_id" data-role="locked-root-category-id" value="" disabled/>
+
+                <p class="vec-new-mapping-intro" data-role="mapping-intro">
+                    <?= $escaper->escapeHtml($newMappingIntro) ?>
+                </p>
+
+                <label class="vec-new-mapping-toggle">
+                    <span>
+                        <strong><?= $escaper->escapeHtml(__('Aktywne')) ?></strong>
+                        <small><?= $escaper->escapeHtml(__('Uwzględniaj mapowanie podczas importu.')) ?></small>
+                    </span>
+                    <input type="checkbox" name="is_active" value="1" checked/>
+                </label>
+
+                <div class="vec-new-mapping-field">
+                    <span class="vec-new-mapping-field-heading">
+                        <label for="vec-category-tree-code">
+                            <?= $escaper->escapeHtml(__('Drzewo Ergonode')) ?>
+                        </label>
+                        <span class="vec-new-mapping-tree-actions" data-role="mapping-tree-actions">
+                            <?php if ($canRefreshCategoryTrees): ?>
+                                <button type="button"
+                                        class="veui-button veui-button-toolbar vec-tree-options-refresh"
+                                        data-role="refresh-tree-options"
+                                        title="<?= $escaper->escapeHtmlAttr($refreshTreeTitle) ?>">
+                                    <img class="vec-icon vec-icon-refresh"
+                                         src="<?= $escaper->escapeUrl($refreshIconUrl) ?>"
+                                         width="14"
+                                         height="14"
+                                         alt=""
+                                         aria-hidden="true">
+                                    <span data-role="tree-options-refresh-label">
+                                        <?= $escaper->escapeHtml(__('Refresh')) ?>
+                                    </span>
+                                </button>
+                            <?php endif; ?>
+                        </span>
+                    </span>
+                    <select id="vec-category-tree-code"
+                            name="tree_code"
+                            data-role="new-mapping-tree-code"
+                            required
+                            aria-required="true">
+                        <?php foreach ($ergonodeTreeOptions as $treeOption): ?>
+                            <?php
+                            $treeCode = (string)($treeOption['value'] ?? '');
+                            $treeLabel = (string)($treeOption['label'] ?? $treeCode);
+                            $treeOptionLabel = $treeCode !== '' && $treeLabel !== $treeCode
+                                ? $treeLabel . ' · ' . $treeCode
+                                : $treeLabel;
+                            ?>
+                            <option value="<?= $escaper->escapeHtmlAttr($treeCode) ?>">
+                                <?= $escaper->escapeHtml($treeOptionLabel) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p class="vec-new-mapping-summary" data-role="mapping-tree-summary" hidden></p>
+                    <small>
+                        <?= $escaper->escapeHtml(__('Lista pokazuje nazwę i kod drzewa pobrane z Ergonode.')) ?>
+                    </small>
+                    <span class="vec-tree-options-status"
+                          data-role="tree-options-status"
+                          role="status"
+                          aria-live="polite"
+                          hidden></span>
+                </div>
+
+                <div class="vec-new-mapping-field">
+                    <label id="vec-root-category-id-label" for="vec-root-category-id">
+                        <?= $escaper->escapeHtml(__('Kategoria główna Magento')) ?>
+                    </label>
+                    <div class="vec-root-picker" data-role="mapping-root-picker">
+                        <select id="vec-root-category-id"
+                                name="root_category_id"
+                                data-role="new-mapping-root-category-id"
+                                required
+                                aria-required="true">
+                            <option value=""><?= $escaper->escapeHtml(__('Wybierz kategorię główną')) ?></option>
+                            <?php foreach ($magentoRootOptions as $rootOption): ?>
+                                <?php
+                                $rootOptionValue = (string)($rootOption['value'] ?? '');
+                                $rootOptionId = (int)$rootOptionValue;
+                                $rootOptionMapped = $rootOptionId > 0
+                                    && isset($mappedRootCategoryIds[$rootOptionId]);
+                                ?>
+                                <option value="<?= $escaper->escapeHtmlAttr($rootOptionValue) ?>"
+                                        <?= $escaper->escapeHtmlAttr($rootOptionMapped ? 'disabled' : '') ?>>
+                                    <?= $escaper->escapeHtml((string)($rootOption['label'] ?? '')) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="button"
+                                class="vec-root-picker-trigger"
+                                data-role="mapping-root-picker-trigger"
+                                role="combobox"
+                                aria-labelledby="vec-root-category-id-label"
+                                aria-controls="vec-root-picker-options"
+                                aria-haspopup="listbox"
+                                aria-expanded="false"
+                                hidden>
+                            <span id="vec-root-picker-value" data-role="mapping-root-picker-value">
+                                <?= $escaper->escapeHtml(__('Wybierz kategorię główną')) ?>
+                            </span>
+                            <span class="vec-root-picker-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div id="vec-root-picker-options"
+                             class="vec-root-picker-options"
+                             data-role="mapping-root-picker-options"
+                             role="listbox"
+                             aria-labelledby="vec-root-category-id-label"
+                             hidden>
+                            <button type="button"
+                                    class="vec-root-picker-option"
+                                    data-role="mapping-root-picker-option"
+                                    data-value=""
+                                    role="option"
+                                    aria-selected="true">
+                                <span><?= $escaper->escapeHtml(__('Wybierz kategorię główną')) ?></span>
+                            </button>
+                            <?php foreach ($magentoRootOptions as $rootOption): ?>
+                                <?php
+                                $rootOptionValue = (string)($rootOption['value'] ?? '');
+                                $rootOptionId = (int)$rootOptionValue;
+                                $rootOptionMapped = $rootOptionId > 0
+                                    && isset($mappedRootCategoryIds[$rootOptionId]);
+                                $mappingHintId = 'vec-root-mapping-hint-' . $rootOptionId;
+                                ?>
+                                <button type="button"
+                                        class="vec-root-picker-option<?=
+                                            $escaper->escapeHtmlAttr($rootOptionMapped ? ' is-mapped' : '')
+                                        ?>"
+                                        data-role="mapping-root-picker-option"
+                                        data-value="<?= $escaper->escapeHtmlAttr($rootOptionValue) ?>"
+                                        role="option"
+                                        aria-selected="false"
+                                        aria-disabled="<?=
+                                            $escaper->escapeHtmlAttr($rootOptionMapped ? 'true' : 'false')
+                                        ?>"
+                                        <?php if ($rootOptionMapped): ?>
+                                            aria-describedby="<?= $escaper->escapeHtmlAttr($mappingHintId) ?>"
+                                        <?php endif; ?>>
+                                    <span><?= $escaper->escapeHtml((string)($rootOption['label'] ?? '')) ?></span>
+                                    <?php if ($rootOptionMapped): ?>
+                                        <span class="vec-root-picker-option-status" aria-hidden="true">
+                                            <span class="vec-mapping-status-icon"></span>
+                                        </span>
+                                        <span class="vec-mapping-hint"
+                                              id="<?= $escaper->escapeHtmlAttr($mappingHintId) ?>"
+                                              role="tooltip">
+                                            <strong>
+                                                <?= $escaper->escapeHtml(
+                                                    __('This Store Group already has a mapping.')
+                                                ) ?>
+                                            </strong>
+                                        </span>
+                                    <?php endif; ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                        <span class="vec-root-picker-error"
+                              data-role="mapping-root-picker-error"
+                              role="alert"
+                              hidden>
+                            <?= $escaper->escapeHtml(__('Choose a Magento root category.')) ?>
+                        </span>
+                    </div>
+                    <p class="vec-new-mapping-summary" data-role="mapping-root-summary" hidden></p>
+                    <small>
+                        <?= $escaper->escapeHtml(
+                            __('Kategorie Ergonode będą synchronizowane poniżej tego korzenia.')
+                        ) ?>
+                    </small>
+                </div>
+
+                <p class="vec-new-mapping-notice">
+                    <?= $escaper->escapeHtml(__(
+                        'Missing source categories are preserved in Magento. '
+                        . 'Review them before deleting categories manually in Magento.'
+                    )) ?>
+                </p>
+
+                <p class="vec-new-mapping-notice" data-role="mapping-reactivation-notice" role="status" hidden>
+                    <?= $escaper->escapeHtml(__(
+                        'Changes may have been skipped while this mapping was inactive. After saving, use '
+                        . '"Sync (force)" in the Sync menu to include earlier changes. '
+                        . 'This reprocesses all active mappings in the selected synchronization scope.'
+                    )) ?>
+                </p>
+
+                <div class="vec-new-mapping-actions">
+                    <button type="button"
+                            class="veui-button veui-button-toolbar vec-new-mapping-delete"
+                            data-role="delete-mapping"
+                            hidden>
+                        <?= $escaper->escapeHtml(__('Usuń mapowanie')) ?>
+                    </button>
+                    <button type="button"
+                            class="veui-button veui-button-toolbar"
+                            data-role="cancel-new-mapping">
+                        <?= $escaper->escapeHtml(__('Anuluj')) ?>
+                    </button>
+                    <button type="submit"
+                            class="veui-button veui-button-toolbar veui-button-primary"
+                            data-role="save-new-mapping">
+                        <?= $escaper->escapeHtml(__('Zapisz')) ?>
+                    </button>
+                </div>
+            </form>
+            <form method="post"
+                  action="<?= $escaper->escapeUrl((string)$config['urls']['settings_delete']) ?>"
+                  data-role="delete-category-tree-form">
+                <input type="hidden"
+                       name="form_key"
+                       value="<?= $escaper->escapeHtmlAttr((string)$config['form_key']) ?>"/>
+                <input type="hidden"
+                       name="category_tree_id"
+                       data-role="delete-category-tree-id"
+                       value="0"/>
+                <button type="submit" data-role="confirm-delete-mapping" hidden></button>
+            </form>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#ergonode-category-tree-mapping": {
+        "Ergonode_CategoryAdminUi/js/category-tree-mapping":
+            <?= /* @noEscape */ $block->getCategoryConfigJson() ?>
+    }
+}
+</script>

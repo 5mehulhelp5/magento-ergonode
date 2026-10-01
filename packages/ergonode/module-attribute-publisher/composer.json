@@ -1,0 +1,31 @@
+{
+    "name": "ergonode/module-attribute-publisher",
+    "description": "Ergonode attribute publication, batched definition and option reads and per-attempt verification.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-attribute": "dev-main@dev",
+        "ergonode/module-publisher": "dev-main@dev",
+        "ergonode/module-language": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\AttributePublisher\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

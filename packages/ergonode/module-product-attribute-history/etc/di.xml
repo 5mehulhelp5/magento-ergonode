@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\ProductAttributeHistory\Api\HistoryQueryInterface" type="Ergonode\ProductAttributeHistory\Model\ResourceModel\HistoryQuery"/>
+    <preference for="Ergonode\ProductAttributeHistory\Api\HistoryActorProviderInterface" type="Ergonode\ProductAttributeHistory\Model\Context\NullHistoryActorProvider"/>
+    <preference for="Ergonode\ProductAttributeHistory\Api\HistoryOperationCaptureInterface" type="Ergonode\ProductAttributeHistory\Model\OperationCapture"/>
+    <preference for="Ergonode\ProductAttributeHistory\Model\Persistence\HistoryWriterInterface" type="Ergonode\ProductAttributeHistory\Model\ResourceModel\HistoryWriter"/>
+    <type name="Ergonode\ProductAttribute\Model\Mapping\AttributeMappingSaver">
+        <plugin name="ergonode_product_attribute_history_save" type="Ergonode\ProductAttributeHistory\Plugin\MappingSaveHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Api\AttributeSnapshotRefreshInterface">
+        <plugin name="ergonode_product_attribute_history_refresh" type="Ergonode\ProductAttributeHistory\Plugin\RefreshHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Api\AttributeSnapshotRemoverInterface">
+        <plugin name="ergonode_product_attribute_history_remove" type="Ergonode\ProductAttributeHistory\Plugin\SnapshotRemovalHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\ProductAttribute\Model\Mapping\OptionMappingSaver">
+        <plugin name="ergonode_product_attribute_history_OptionMappingSaveHistoryPlugin" type="Ergonode\ProductAttributeHistory\Plugin\OptionMappingSaveHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Api\AttributeCacheRefresherInterface">
+        <plugin name="ergonode_product_attribute_history_OptionRefreshHistoryPlugin" type="Ergonode\ProductAttributeHistory\Plugin\OptionRefreshHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Api\OptionSnapshotRemoverInterface">
+        <plugin name="ergonode_product_attribute_history_OptionRemovalHistoryPlugin" type="Ergonode\ProductAttributeHistory\Plugin\OptionRemovalHistoryPlugin" sortOrder="200"/>
+    </type>
+    <preference for="Ergonode\ProductAttributeHistory\Model\Persistence\HistoryPrunerInterface" type="Ergonode\ProductAttributeHistory\Model\ResourceModel\HistoryPruner"/>
+</config>

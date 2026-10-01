@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SynchronizationActions;
+use Ergonode\TemplateConsumerAdminUi\Block\Adminhtml\Template\Actions;
+
+/** @var Actions $block */
+?>
+<?php if ($block->canSynchronize()): ?>
+    <?= /* @noEscape */ $block->getLayout()->createBlock(SynchronizationActions::class, '', ['data' => [
+        'primary_role' => 'sync-templates',
+        'primary_title' => (string)__('Synchronize templates with Magento'),
+        'has_cursor_actions' => true,
+    ]])->toHtml() ?>
+<?php endif; ?>
+<script type="text/x-magento-init">
+{"#ergonode-template-admin": {"Ergonode_TemplateConsumerAdminUi/js/template-consumer": {}}}
+</script>

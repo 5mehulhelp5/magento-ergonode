@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CategoryAttributeAdminUi\Model\Mapping\SourceMetadata">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="consumer" xsi:type="object">Ergonode\CategoryAttributeConsumerAdminUi\Model\Mapping\SourceMetadata</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CategoryAttributeAdminUi\Model\Mapping\SaveContext">
+        <plugin name="category_mapping_inbound_values" type="Ergonode\CategoryAttributeConsumerAdminUi\Plugin\MappingSynchronizationPlugin"/>
+    </type>
+    <type name="Ergonode\CategoryAttributeAdminUi\Model\Mapping\MappingCapabilities">
+        <plugin name="category_mapping_inbound_actions" type="Ergonode\CategoryAttributeConsumerAdminUi\Plugin\MappingCapabilitiesPlugin"/>
+    </type>
+    <type name="Ergonode\CategoryAttributeAdminUi\Model\Mapping\OptionMappingSaver">
+        <plugin name="category_mapping_create_magento_options" type="Ergonode\CategoryAttributeConsumerAdminUi\Plugin\OptionCreationPlugin"/>
+    </type>
+</config>

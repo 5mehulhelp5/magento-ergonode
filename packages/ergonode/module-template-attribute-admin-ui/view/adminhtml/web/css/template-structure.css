@@ -1,0 +1,294 @@
+.vets-workspace {
+    --vets-color-0: #30343b;
+    --vets-color-1: #515a68;
+    --vets-color-2: #555e6c;
+    --vets-color-3: #606977;
+    --vets-color-4: #626b78;
+    --vets-color-5: #6549c6;
+    --vets-color-6: #655286;
+    --vets-color-7: #687386;
+    --vets-color-8: #695493;
+    --vets-color-9: #6c4ed9;
+    --vets-color-10: #778297;
+    --vets-color-11: #7c828c;
+    --vets-color-12: #bb4800;
+    --vets-color-13: #dde2e8;
+    --vets-color-14: #dfe3e9;
+    --vets-color-15: #e1e5eb;
+    --vets-color-16: #eceff4;
+    --vets-color-17: #f0edf9;
+    --vets-color-18: #f0f2f6;
+    --vets-color-19: #f2eef9;
+    --vets-color-20: #f8f9fb;
+    --vets-color-21: #fff;
+}
+.vets-modal .modal-inner-wrap {
+    width: 94vw;
+    max-width: 1680px;
+}
+.vets-modal .modal-content {
+    padding: 0 24px 24px;
+}
+.vets-workspace {
+    color: var(--vets-color-0);
+}
+.vets-context {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0 22px;
+    gap: 20px;
+}
+.vets-context-names {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+}
+.vets-context-arrow {
+    color: var(--vets-color-11);
+    font-size: 22px;
+}
+.vets-readonly {
+    border: 1px solid var(--vets-color-13);
+    border-radius: 20px;
+    padding: 5px 12px;
+    color: var(--vets-color-1);
+    font-size: 12px;
+    white-space: nowrap;
+}
+.vets-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.86fr;
+    gap: 16px;
+    align-items: stretch;
+}
+.vets-panel {
+    min-width: 0;
+    overflow: hidden;
+}
+.vets-panel-head {
+    min-height: 76px;
+    gap: 12px;
+    padding: 16px;
+}
+.vets-panel-body {
+    padding: 12px;
+    height: min(62vh, 690px);
+    overflow: auto;
+    background: var(--vets-color-20);
+}
+.vets-brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-right: 8px;
+}
+.vets-brand-ergonode {
+    color: var(--vets-color-5);
+}
+.vets-brand-magento {
+    color: var(--vets-color-12);
+    font-size: 18px;
+}
+.vets-total,
+.vets-count {
+    background: var(--vets-color-16);
+    border-radius: 20px;
+    padding: 2px 8px;
+    color: var(--vets-color-2);
+    font-size: 12px;
+}
+.vets-group {
+    border: 1px solid var(--vets-color-14);
+    border-radius: 8px;
+    background: var(--vets-color-21);
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+.vets-group-heading {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 12px;
+    background: var(--vets-color-18);
+    list-style: none;
+}
+.vets-group-heading::-webkit-details-marker {
+    display: none;
+}
+.vets-group-heading::before {
+    content: '›';
+    transform: rotate(90deg);
+    color: var(--vets-color-7);
+    font-size: 19px;
+    line-height: 1;
+}
+.vets-group:not([open]) > .vets-group-heading::before {
+    transform: none;
+}
+.vets-group-heading:focus-visible {
+    outline: 2px solid var(--vets-color-9);
+    outline-offset: -3px;
+}
+.vets-group-heading strong {
+    flex: 1;
+    font-size: 13px;
+}
+.vets-folder {
+    width: 16px;
+    height: 12px;
+    border: 1.5px solid var(--vets-color-10);
+    border-radius: 2px;
+    position: relative;
+}
+.vets-folder::before {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 3px;
+    top: -4px;
+    left: -1.5px;
+    border: 1.5px solid var(--vets-color-10);
+    border-bottom: 0;
+    border-radius: 2px 2px 0 0;
+}
+.vets-section-code {
+    display: block;
+    padding: 8px 12px 0;
+    color: var(--vets-color-7);
+    font-size: 11px;
+}
+.vets-attribute {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 8px;
+    padding: 11px 10px;
+    background: var(--vets-color-21);
+    border: 1px solid var(--vets-color-15);
+    border-radius: 6px;
+    min-height: 58px;
+}
+.vets-attribute-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+.vets-attribute-copy strong {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+.vets-attribute-copy code {
+    color: var(--vets-color-3);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+.vets-attribute-icon {
+    font-size: 11px;
+    border-radius: 5px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--vets-color-17);
+    color: var(--vets-color-8);
+    flex-shrink: 0;
+}
+.vets-type {
+    color: var(--vets-color-4);
+    font-size: 10px;
+}
+.vets-required {
+    font-size: 9px;
+    color: var(--vets-color-6);
+    background: var(--vets-color-19);
+    border-radius: 3px;
+    padding: 3px 5px;
+}
+.vets-empty,
+.vets-status {
+    padding: 28px 18px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--vets-color-3);
+    line-height: 1.6;
+}
+.vets-status {
+    min-height: 200px;
+    display: grid;
+    place-items: center;
+}
+.vet-pair-card {
+    position: relative;
+}
+.vet-pair-card:has(.vet-structure-action) {
+    padding-bottom: 34px;
+}
+.vet-structure-action {
+    position: absolute;
+    right: 8px;
+    bottom: 3px;
+}
+@media (max-width: 1000px) {
+    .vets-columns {
+        grid-template-columns: 1fr;
+    }
+    .vets-panel-body {
+        height: auto;
+        max-height: 420px;
+    }
+}
+
+.vets-brand img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.vets-mapping-code {
+    display: block;
+    color: var(--vets-color-7);
+    font-size: 10px;
+    overflow-wrap: anywhere;
+}
+.vets-group-mapping {
+    padding: 8px 12px 0;
+}
+.vets-ownership {
+    font-size: 10px;
+    font-weight: 400;
+    max-width: 115px;
+    text-align: right;
+    color: var(--vets-color-1);
+}
+.vets-ownership.is-ergonode {
+    color: var(--vets-color-9);
+}
+.vets-retained {
+    display: block;
+    font-size: 10px;
+    color: var(--vets-color-9);
+}
+.vets-placement-actions {
+    margin-left: auto;
+}
+
+.vets-ownership:not(.is-ergonode)::before {
+    content: '';
+    display: inline-block;
+    width: 9px;
+    height: 11px;
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 0, 90% 70%, 50% 100%, 10% 70%);
+    margin-right: 4px;
+    vertical-align: middle;
+}

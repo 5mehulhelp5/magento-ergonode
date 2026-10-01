@@ -1,0 +1,19 @@
+<div class="vec-category-form-refresh">
+    <!-- ko if: canRefresh() -->
+    <button
+        type="button"
+        class="action-default scalable vec-category-form-refresh-button"
+        data-role="refresh-ergonode-category-from-form"
+        data-bind="click: refresh, disable: busy, attr: {'aria-busy': busy() ? 'true' : 'false'}"
+    >
+        <span data-bind="i18n: 'Refresh'"></span>
+    </button>
+    <!-- /ko -->
+    <!-- ko if: message -->
+    <div
+        class="vec-category-form-refresh-status"
+        role="status"
+        data-bind="text: message, css: {'is-success': messageType() === 'success', 'is-error': messageType() === 'error'}"
+    ></div>
+    <!-- /ko -->
+</div>

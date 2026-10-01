@@ -1,0 +1,404 @@
+:root {
+    --vet-c-1d4ed8: #1d4ed8;
+    --vet-c-8ba0b7: #8ba0b7;
+    --vet-c-d6ddeb: #d6ddeb;
+    --vet-c-dbeafe: #dbeafe;
+    --vet-c-eaf2ff: #eaf2ff;
+    --vet-c-f7f9ff: #f7f9ff;
+    --vet-c-fbfdff: #fbfdff;
+}
+
+body.ergonode-template-index {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+body.ergonode-template-index .page-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+body.ergonode-template-index #anchor-content.page-content {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding-bottom: 0;
+}
+
+body.ergonode-template-index .page-columns,
+body.ergonode-template-index .admin__old,
+body.ergonode-template-index .main-col {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+body.ergonode-template-index .page-footer {
+    display: block;
+    flex: 0 0 auto;
+}
+
+.vet-admin {
+    --vea-border: var(--veui-border);
+    --vea-green: var(--veui-green);
+    --vea-line: var(--veui-line);
+    --vea-muted: var(--veui-muted);
+    --vea-red: var(--veui-red);
+    --vea-text: var(--veui-text);
+    --vet-bg: var(--veui-bg);
+    --vet-panel: var(--veui-panel);
+    --vet-line: var(--veui-border);
+    --vet-soft: var(--veui-panel-soft);
+    --vet-text: var(--veui-text);
+    --vet-muted: var(--veui-muted);
+    --vet-blue: var(--veui-blue);
+    --vet-green: var(--veui-green);
+    --vet-amber: var(--veui-amber);
+    --vet-red: var(--veui-red);
+}
+
+.vet-admin .vet-mapping-layout {
+    height: calc(100% - 78px);
+}
+
+.vet-icon {
+    display: block;
+    height: 13px;
+    position: relative;
+    width: 13px;
+}
+
+.vet-icon-refresh {
+    height: 14px;
+    width: 14px;
+}
+
+.vet-mapping-actions {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+}
+
+.vet-template-card[data-source='ergo'] > .vea-card-toggle {
+    display: none;
+}
+
+.vet-template-refresh-state {
+    align-items: center;
+    background: rgba(248, 250, 252, .9);
+    bottom: 0;
+    color: var(--vet-text);
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    left: 0;
+    padding: 24px;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: 58px;
+    z-index: 6;
+}
+
+.vet-template-refresh-state[hidden] {
+    display: none;
+}
+
+.vet-template-refresh-state strong,
+.vet-template-refresh-state span:not(.vea-context-loading-spinner) {
+    display: block;
+}
+
+.vet-template-refresh-state strong {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.vet-template-refresh-state span:not(.vea-context-loading-spinner) {
+    color: var(--vet-muted);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-top: 4px;
+    max-width: 240px;
+}
+
+.vet-source-panel.is-refreshing {
+    border-color: var(--veui-border-strong);
+    position: relative;
+}
+
+.vet-source-panel.is-refreshing .vet-panel-head,
+.vet-source-panel.is-refreshing .vet-card-list {
+    filter: saturate(.65);
+    opacity: .55;
+}
+
+.vet-source-panel.is-refreshing .vet-icon-refresh,
+.vet-source-panel.is-refreshing .vea-refresh-ergonode-icon {
+    animation: vetRefreshSpin 720ms linear infinite;
+}
+
+@keyframes vetRefreshSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.vet-card-list,
+.vet-pair-workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 10px;
+    position: relative;
+}
+
+.vet-template-source-list {
+    padding: 12px 14px 14px;
+}
+
+.vet-pair-workspace {
+    padding: 10px 0 2px;
+    scrollbar-color: var(--veui-border-strong) transparent;
+    scrollbar-width: thin;
+}
+
+.vet-pair-list {
+    display: grid;
+    gap: 7px;
+    margin: 0 14px 13px;
+}
+
+.vet-mapping-empty,
+.vet-template-empty-state {
+    color: var(--vet-muted);
+    font-size: 12px;
+    line-height: 1.5;
+    margin: auto;
+    max-width: 300px;
+    padding: 32px 16px;
+    text-align: center;
+}
+
+.vet-mapping-empty {
+    align-self: center;
+}
+
+.vet-template-empty-state p {
+    margin: 0;
+}
+
+.vet-template-empty-state .vea-attribute-empty-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 14px;
+}
+
+.vet-template-empty-state .vea-attribute-empty-refresh {
+    gap: 7px;
+}
+
+.vet-pair-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    padding-bottom: 14px;
+    position: relative;
+    scrollbar-color: var(--veui-border-strong) transparent;
+    scrollbar-width: thin;
+}
+
+.vet-pair-panel.is-over {
+    background: var(--vet-c-f7f9ff);
+    border-color: var(--vet-blue);
+    box-shadow:
+        inset 0 0 0 2px var(--vet-c-dbeafe),
+        0 10px 28px rgba(37, 99, 235, .08);
+}
+
+.vet-admin.is-dragging-to-mapping .vet-pair-panel {
+    border-color: var(--veui-blue-border);
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .12);
+}
+
+.vet-map-card {
+    border-left-width: 1px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    transition: opacity .16s ease, transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    user-select: none;
+}
+
+.vet-map-card:active {
+    cursor: grabbing;
+}
+
+.vet-map-card.is-dragging {
+    opacity: .55;
+    transform: scale(.985);
+}
+
+.vet-drag-handle {
+    align-self: center;
+}
+
+.vet-card-copy {
+    min-width: 0;
+}
+
+.vet-card-copy > .vea-card-subline {
+    color: var(--vet-muted);
+    font-size: 11px;
+}
+
+.vet-link-action {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    color: var(--veui-muted);
+    cursor: pointer;
+    padding: 0;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.vet-link-action:hover,
+.vet-link-action:focus {
+    background: var(--veui-red-soft);
+    color: var(--vet-red);
+    outline: 0;
+}
+
+.vet-link-action:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--veui-danger-border);
+}
+
+.vet-create-zone {
+    align-items: center;
+    background: var(--veui-blue-softer);
+    border: 1px dashed var(--veui-blue-border-strong);
+    border-radius: 8px;
+    bottom: 14px;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, .08);
+    color: var(--veui-blue);
+    display: none;
+    gap: 10px;
+    justify-content: center;
+    left: 14px;
+    min-height: 48px;
+    padding: 10px 12px;
+    pointer-events: none;
+    position: absolute;
+    right: 14px;
+    text-align: left;
+    z-index: 5;
+}
+
+.vet-pair-panel.is-over .vet-create-zone {
+    display: flex;
+    background: var(--vet-c-eaf2ff);
+    border-color: var(--vet-blue);
+    box-shadow:
+        inset 0 0 0 2px var(--veui-blue-border),
+        0 10px 24px rgba(37, 99, 235, .08);
+    color: var(--veui-blue);
+}
+
+.vet-create-zone div > strong,
+.vet-create-zone div > span {
+    display: block;
+}
+
+.vet-create-zone div > strong {
+    color: var(--vet-c-1d4ed8);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.vet-create-zone div > span {
+    color: var(--veui-blue);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+.vet-create-icon {
+    border: 1.7px solid currentColor;
+    border-radius: 999px;
+    color: var(--veui-blue);
+    display: inline-block;
+    flex: 0 0 auto;
+    height: 16px;
+    position: relative;
+    width: 16px;
+}
+
+.vet-create-icon:before,
+.vet-create-icon:after {
+    background: currentColor;
+    content: '';
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.vet-create-icon:before {
+    height: 1.7px;
+    width: 6px;
+}
+
+.vet-create-icon:after {
+    height: 6px;
+    width: 1.7px;
+}
+
+.vet-empty-row {
+    color: var(--vet-muted);
+    font-size: 12px;
+    padding: 14px;
+}
+
+.vet-source-panel.is-over {
+    background: var(--veui-blue-soft);
+    box-shadow: inset 0 0 0 2px rgba(37, 99, 235, .18);
+}
+
+.vet-admin.is-init-error .vet-mapping-layout {
+    height: auto;
+    min-height: 240px;
+}
+
+.vet-admin.is-init-error .vet-panel {
+    min-height: 220px;
+}
+
+@keyframes vetDropPulse {
+    from {
+        opacity: .72;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

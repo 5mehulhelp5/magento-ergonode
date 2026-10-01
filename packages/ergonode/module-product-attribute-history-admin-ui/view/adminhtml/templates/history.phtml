@@ -1,0 +1,22 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+
+/** @var \Ergonode\ProductAttributeHistoryAdminUi\Block\Adminhtml\History $block */
+$navigation = $block->getLayout()->createBlock(SectionNavigation::class);
+?>
+<div class="veui-workspace veui-workspace-viewbar veah-workspace">
+    <div class="veui-toolbar veui-viewbar">
+        <?= /* @noEscape */ $navigation->toHtml() ?>
+        <span class="veah-view-title"><?= $escaper->escapeHtml(__('Attribute mapping history')) ?></span>
+    </div>
+    <div id="ergonode-product-attribute-history" class="veah-screen"></div>
+</div>
+<script type="text/x-magento-init">
+{
+    "#ergonode-product-attribute-history": {
+        "Ergonode_ProductAttributeHistoryAdminUi/js/history": <?= /* @noEscape */ $block->getConfigJson() ?>
+    }
+}
+</script>

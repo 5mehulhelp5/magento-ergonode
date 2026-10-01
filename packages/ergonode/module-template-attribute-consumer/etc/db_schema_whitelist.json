@@ -1,0 +1,55 @@
+{
+    "ergonode_template_group_ownership": {
+        "column": {
+            "entity_id": true,
+            "template_code": true,
+            "attribute_set_id": true,
+            "section_code": true,
+            "attribute_group_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_8CA69A6D054F809323537E19D3378082": true,
+            "FK_EFE5F835D7CC70B1343D0F07D92A92C1": true,
+            "UNQ_85CC4C63BCBD9C3BC970180B8C8DFDF4": true,
+            "ERGONODE_TEMPLATE_GROUP_OWNERSHIP_ATTRIBUTE_GROUP_ID": true,
+            "FK_023D314A02AD1B42C0752CB9854D5546": true
+        }
+    },
+    "ergonode_template_attribute_ownership": {
+        "column": {
+            "entity_id": true,
+            "template_code": true,
+            "attribute_set_id": true,
+            "ergonode_attribute_code": true,
+            "magento_attribute_id": true,
+            "attribute_group_id": true,
+            "entity_attribute_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_6AAD906EDFC6C0143912670FB07D1838": true,
+            "FK_475ACDA3195B7736E79CF839EDF97408": true,
+            "FK_B320D1D00F56A6E2EB3D667003E3C63D": true,
+            "FK_9EDEEC5215F10426A38A9F8D342538AE": true,
+            "UNQ_35F21513CC6BD3089811988D857B7C10": true,
+            "ERGONODE_TEMPLATE_ATTRIBUTE_OWNERSHIP_ENTITY_ATTRIBUTE_ID": true,
+            "FK_D02D2A751DCD7372417264E36C4E6A53": true
+        }
+    },
+    "ergonode_template_manual_placement": {
+        "column": {
+            "attribute_set_id": true,
+            "attribute_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_0AC5691523A8C43B2C6460B400A22E99": true,
+            "ERGONODE_TEMPLATE_MANUAL_PLACEMENT_ATTR_ID_EAV_ATTR_ATTR_ID": true
+        }
+    }
+}

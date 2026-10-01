@@ -1,0 +1,26 @@
+{
+    "ergonode_product_import_item": {
+        "column": {
+            "item_id": true,
+            "ergonode_sku": true,
+            "operation": true,
+            "payload_json": true,
+            "event_token": true,
+            "status": true,
+            "attempt_count": true,
+            "available_at": true,
+            "lease_token": true,
+            "lease_expires_at": true,
+            "last_error": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "IDX_38F5F052F990B925738D9B2A11892805": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_PRODUCT_IMPORT_ITEM_ERGONODE_SKU": true
+        }
+    }
+}

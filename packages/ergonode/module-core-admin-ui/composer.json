@@ -1,0 +1,29 @@
+{
+    "name": "ergonode/module-core-admin-ui",
+    "description": "Shared Ergonode connection configuration forms, workspace assets, mapping modals, publication progress and synchronization monitoring.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-core": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\CoreAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

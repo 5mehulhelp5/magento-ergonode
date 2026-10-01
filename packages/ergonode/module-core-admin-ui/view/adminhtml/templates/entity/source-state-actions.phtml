@@ -1,0 +1,34 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$showExcludedHint = (string)$block->getData('show_excluded_hint');
+$hideExcludedHint = (string)$block->getData('hide_excluded_hint');
+?>
+<button type="button"
+        class="veui-entity-options-action veui-visibility-control"
+        data-role="visibility-toggle"
+        data-show-hint="<?= $escaper->escapeHtmlAttr($showExcludedHint) ?>"
+        data-hide-hint="<?= $escaper->escapeHtmlAttr($hideExcludedHint) ?>"
+        title="<?= $escaper->escapeHtmlAttr($showExcludedHint) ?>"
+        aria-label="<?= $escaper->escapeHtmlAttr($showExcludedHint) ?>"
+        aria-pressed="false">
+    <span class="veui-visibility-icon" aria-hidden="true"></span>
+    <span class="veui-entity-options-action-label">
+        <?= $escaper->escapeHtml(__('Excluded')) ?>
+    </span>
+</button>
+<button type="button"
+        class="veui-entity-options-action"
+        data-role="attribute-sort-direction"
+        data-direction="asc"
+        title="<?= $escaper->escapeHtmlAttr(__('Sortuj rosnąco')) ?>"
+        aria-label="<?= $escaper->escapeHtmlAttr(__('Sortuj rosnąco')) ?>">
+    <span class="veui-sort-direction-icon" aria-hidden="true"></span>
+    <span class="veui-entity-options-action-label"
+          data-role="attribute-sort-direction-label">
+        <?= $escaper->escapeHtml(__('Góra')) ?>
+    </span>
+</button>

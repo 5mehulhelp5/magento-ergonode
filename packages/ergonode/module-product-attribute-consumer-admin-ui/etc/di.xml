@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\ProductAttributeAdminUi\Model\Mapping\ErgonodeMetadataCatalog">
+        <arguments>
+            <argument name="sources" xsi:type="array">
+                <item name="consumer_snapshot" xsi:type="object">Ergonode\ProductAttributeConsumerAdminUi\Model\Mapping\SnapshotMetadataSource</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\Readiness">
+        <arguments>
+            <argument name="domainLabels" xsi:type="array">
+                <item name="attributes" xsi:type="string">Attributes</item>
+            </argument>
+            <argument name="remediationRoutes" xsi:type="array">
+                <item name="attributes" xsi:type="string">ergonode/attribute/index</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\ViewModel\ReadinessChecks">
+        <arguments>
+            <argument name="definitions" xsi:type="array">
+                <item name="attributes" xsi:type="array">
+                    <item name="required_mapping" xsi:type="array">
+                        <item name="label" xsi:type="string">Every required Magento product attribute has an Ergonode mapping.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="required_mapping_missing" xsi:type="string">attributes.required_mapping_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">write</item>
+                    </item>
+                </item>
+            </argument>
+            <argument name="domainSortOrders" xsi:type="array">
+                <item name="attributes" xsi:type="number">20</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttributeAdminUi\Block\Adminhtml\Attribute\Mapping">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="allow_magento_creation" xsi:type="boolean">true</item>
+                <item name="snapshot_available" xsi:type="boolean">true</item>
+                <item name="sync_resource" xsi:type="string">Ergonode_ProductAttributeConsumer::attribute_sync</item>
+                <item name="sync_route" xsi:type="string">ergonode/attribute/sync</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttributeAdminUi\Block\Adminhtml\Option\Mapping">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="allow_magento_creation" xsi:type="boolean">true</item>
+                <item name="snapshot_available" xsi:type="boolean">true</item>
+                <item name="sync_resource" xsi:type="string">Ergonode_ProductAttributeConsumer::option_sync</item>
+                <item name="sync_route" xsi:type="string">ergonode/option/sync</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttributeAdminUi\Model\Mapping\AttributeMappingSaver">
+        <plugin name="ergonode_create_magento_attribute" type="Ergonode\ProductAttributeConsumerAdminUi\Plugin\AttributeMappingSaverPlugin" sortOrder="100"/>
+    </type>
+    <type name="Ergonode\ProductAttributeAdminUi\Model\Mapping\OptionMappingSaver">
+        <plugin name="ergonode_create_magento_option" type="Ergonode\ProductAttributeConsumerAdminUi\Plugin\OptionMappingSaverPlugin" sortOrder="100"/>
+    </type>
+</config>

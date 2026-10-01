@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-category-attribute",
+    "description": "Direction-neutral category attribute and option mappings, Magento metadata, visibility and mapping authorization.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-attribute": "*",
+        "ergonode/module-core": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\CategoryAttribute\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

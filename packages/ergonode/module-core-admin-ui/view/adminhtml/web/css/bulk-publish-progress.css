@@ -1,0 +1,235 @@
+:root {
+    --veui-bulk-progress-error-text: #7f1d1d;
+    --veui-bulk-progress-shadow: rgba(15, 23, 42, .22);
+    --veui-bulk-progress-success-end: #10b981;
+}
+
+.veui-bulk-publish-progress-shell .modal-inner-wrap {
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100dvh - 64px);
+    border-radius: 16px;
+    box-shadow: 0 24px 64px var(--veui-bulk-progress-shadow);
+    max-width: 720px;
+    overflow: hidden;
+    width: calc(100% - 32px);
+}
+
+.veui-bulk-publish-progress-shell .modal-header {
+    border-bottom: 1px solid var(--veui-border-soft);
+    flex: 0 0 auto;
+    position: relative;
+    padding: 22px 72px 18px 28px;
+}
+
+.veui-bulk-publish-progress-shell .modal-title {
+    color: var(--veui-text);
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.veui-bulk-publish-progress-shell .modal-content {
+    background: var(--veui-surface-hover);
+    min-height: 0;
+    overflow-y: auto;
+    padding: 24px 28px 28px;
+}
+
+.veui-bulk-publish-progress-shell .modal-footer {
+    background: var(--veui-surface);
+    border-top: 1px solid var(--veui-border-soft);
+    flex: 0 0 auto;
+    padding: 16px 28px;
+}
+
+.veui-bulk-publish-progress-shell .action-close,
+.veui-bulk-publish-progress-shell .action-close:hover,
+.veui-bulk-publish-progress-shell .action-close:focus,
+.veui-bulk-publish-progress-shell .action-close:active {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    transform: none;
+}
+
+.veui-bulk-publish-progress {
+    color: var(--veui-text-muted-strong);
+    display: grid;
+    gap: 16px;
+}
+
+.veui-publish-progress-summary {
+    align-items: baseline;
+    display: flex;
+    justify-content: space-between;
+}
+
+.veui-publish-progress-summary strong {
+    color: var(--veui-text);
+    font-size: 16px;
+}
+
+.veui-publish-progress-percent {
+    color: var(--veui-success-strong);
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.veui-bulk-publish-progress progress {
+    accent-color: var(--veui-success);
+    border: 0;
+    border-radius: 999px;
+    height: 14px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.veui-bulk-publish-progress progress::-webkit-progress-bar {
+    background: var(--veui-border-soft);
+    border-radius: 999px;
+}
+
+.veui-bulk-publish-progress progress::-webkit-progress-value {
+    background: linear-gradient(90deg, var(--veui-success), var(--veui-bulk-progress-success-end));
+    border-radius: 999px;
+    transition: width .25s ease;
+}
+
+.veui-bulk-publish-progress progress::-moz-progress-bar {
+    background: linear-gradient(90deg, var(--veui-success), var(--veui-bulk-progress-success-end));
+    border-radius: 999px;
+}
+
+.veui-publish-progress-metrics {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.veui-publish-progress-metrics span {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+}
+
+.veui-publish-progress-metrics strong {
+    color: var(--veui-text);
+    display: block;
+    font-size: 17px;
+}
+
+.veui-publish-progress-status {
+    background: var(--veui-success-soft);
+    border-left: 4px solid var(--veui-success);
+    border-radius: 8px;
+    color: var(--veui-success-strong);
+    font-weight: 700;
+    line-height: 1.45;
+    padding: 12px 14px;
+}
+
+.veui-publish-progress-eta {
+    color: var(--veui-muted);
+    font-size: 12px;
+    margin-top: -8px;
+}
+
+.veui-publish-progress-batch,
+.veui-publish-progress-errors,
+.veui-publish-progress-warnings {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.veui-publish-progress-batch h3,
+.veui-publish-progress-errors h3,
+.veui-publish-progress-warnings h3 {
+    color: var(--veui-text-muted-strong);
+    font-size: 12px;
+    font-weight: 800;
+    margin: 0 0 9px;
+    text-transform: uppercase;
+}
+
+.veui-publish-progress-batch ol,
+.veui-publish-progress-errors ol,
+.veui-publish-progress-warnings ol {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    max-height: 150px;
+    overflow: auto;
+    padding-left: 22px;
+}
+
+.veui-publish-progress-batch li {
+    color: var(--veui-text-muted-strong);
+    line-height: 1.4;
+}
+
+.veui-publish-progress-errors {
+    background: var(--veui-red-soft);
+    border-color: var(--veui-danger-border);
+}
+
+.veui-publish-progress-errors h3,
+.veui-publish-progress-errors li strong {
+    color: var(--veui-danger-strong);
+}
+
+.veui-publish-progress-errors li span {
+    color: var(--veui-bulk-progress-error-text);
+    display: block;
+    margin-top: 2px;
+}
+
+.veui-publish-progress-warnings {
+    background: var(--veui-warning-soft);
+    border-color: var(--veui-warning-border);
+}
+
+.veui-publish-progress-warnings h3,
+.veui-publish-progress-warnings li strong,
+.veui-publish-progress-warnings li span {
+    color: var(--veui-warning-text);
+}
+
+.veui-publish-progress-warnings li span {
+    display: block;
+    margin-top: 2px;
+}
+
+.veui-publish-progress-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.veui-publish-progress-actions [hidden] {
+    display: none;
+}
+
+.veui-publish-progress-actions .veui-button[aria-disabled='true'] {
+    cursor: wait;
+    opacity: 0.56;
+}
+
+@media (max-width: 640px) {
+    .veui-bulk-publish-progress-shell .modal-content {
+        padding: 20px;
+    }
+
+    .veui-publish-progress-metrics {
+        grid-template-columns: 1fr;
+    }
+}

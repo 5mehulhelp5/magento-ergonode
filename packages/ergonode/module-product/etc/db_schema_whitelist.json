@@ -1,0 +1,21 @@
+{
+    "ergonode_product_mapping": {
+        "column": {
+            "product_id": true,
+            "ergonode_sku": true,
+            "import_hash": true,
+            "published_at": true,
+            "imported_at": true,
+            "updated_at": true,
+            "identity_mode": true
+        },
+        "index": {
+            "ERGONODE_PRODUCT_MAPPING_IMPORT_HASH": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_PRD_MAPPING_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "ERGONODE_PRODUCT_MAPPING_ERGONODE_SKU": true
+        }
+    }
+}

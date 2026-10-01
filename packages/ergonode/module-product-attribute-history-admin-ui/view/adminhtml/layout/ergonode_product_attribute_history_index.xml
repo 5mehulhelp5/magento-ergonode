@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ergonode_CoreAdminUi::css/ergonode-workspace.css"/>
+        <css src="Ergonode_CoreAdminUi::css/history-operations.css"/>
+        <css src="Ergonode_ProductAttributeHistoryAdminUi::css/history.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Ergonode\ProductAttributeHistoryAdminUi\Block\Adminhtml\History" name="ergonode.product.attribute.history" template="Ergonode_ProductAttributeHistoryAdminUi::history.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

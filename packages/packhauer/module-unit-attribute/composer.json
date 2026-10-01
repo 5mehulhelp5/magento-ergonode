@@ -1,0 +1,30 @@
+{
+    "name": "packhauer/module-unit-attribute",
+    "description": "Reusable numeric product attributes with unit metadata for Magento 2.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "magento/module-swatches": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "PackHauer\\UnitAttribute\\": ""
+        }
+    },
+    "extra": {
+        "packhauer": {
+            "lifecycle": "development",
+            "package-family": "PackHauer_UnitAttribute"
+        }
+    }
+}

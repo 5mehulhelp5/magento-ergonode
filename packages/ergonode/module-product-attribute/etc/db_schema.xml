@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_product_attribute_mapping" resource="default" engine="innodb" comment="Ergonode Product Attribute Mappings">
+        <column xsi:type="int" name="mapping_id" unsigned="true" nullable="false" identity="true" comment="Mapping ID"/>
+        <column xsi:type="varchar" name="ergonode_attribute_code" nullable="true" length="255" comment="Ergonode Attribute Code"/>
+        <column xsi:type="varchar" name="magento_attribute_code" nullable="true" length="255" comment="Magento Attribute Code"/>
+        <column xsi:type="varchar" name="ergonode_type" nullable="true" length="64" comment="Ergonode Type"/>
+        <column xsi:type="varchar" name="magento_type" nullable="true" length="64" comment="Magento Type"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="32" default="complete" comment="Mapping Status"/>
+        <column xsi:type="varchar" name="value_adapter" nullable="true" length="64" comment="Required Value Adapter"/>
+        <column xsi:type="varchar" name="content_hash" nullable="false" length="64" comment="Normalized Content Hash"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="mapping_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_PRODUCT_MAPPING_ERGO">
+            <column name="ergonode_attribute_code"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_PRODUCT_MAPPING_MAGENTO">
+            <column name="magento_attribute_code"/>
+        </constraint>
+        <index referenceId="ERGONODE_PRODUCT_MAPPING_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+    <table name="ergonode_product_option_mapping" resource="default" engine="innodb" comment="Ergonode Product Attribute Option Mappings">
+        <column xsi:type="int" name="mapping_id" unsigned="true" nullable="false" identity="true" comment="Mapping ID"/>
+        <column xsi:type="int" name="attribute_mapping_id" unsigned="true" nullable="false" identity="false" comment="Attribute Mapping ID"/>
+        <column xsi:type="varchar" name="ergonode_option_code" nullable="true" length="255" comment="Ergonode Option Code"/>
+        <column xsi:type="int" name="magento_option_id" unsigned="true" nullable="true" identity="false" comment="Magento Option ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="32" default="complete" comment="Mapping Status"/>
+        <column xsi:type="varchar" name="content_hash" nullable="false" length="64" comment="Normalized Content Hash"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="mapping_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_PRODUCT_OPTION_MAPPING_ATTRIBUTE"
+            table="ergonode_product_option_mapping"
+            column="attribute_mapping_id"
+            referenceTable="ergonode_product_attribute_mapping"
+            referenceColumn="mapping_id"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_PRODUCT_OPTION_MAPPING_ERGO">
+            <column name="attribute_mapping_id"/>
+            <column name="ergonode_option_code"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_PRODUCT_OPTION_MAPPING_MAGENTO">
+            <column name="attribute_mapping_id"/>
+            <column name="magento_option_id"/>
+        </constraint>
+        <index referenceId="ERGONODE_PRODUCT_OPTION_MAPPING_STATUS" indexType="btree">
+            <column name="attribute_mapping_id"/>
+            <column name="status"/>
+        </index>
+    </table>
+</schema>

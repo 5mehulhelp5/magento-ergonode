@@ -1,0 +1,295 @@
+.ves-synchronizations-content {
+    height: calc(100% - 78px);
+    margin: 0 auto;
+    max-width: 1800px;
+    overflow: auto;
+    padding: 0 0 24px;
+    scrollbar-color: var(--veui-border-strong) transparent;
+    scrollbar-width: thin;
+}
+
+.ves-synchronizations-panel {
+    background: rgba(255, 255, 255, .92);
+    overflow: hidden;
+}
+
+.ves-synchronizations-panel-head {
+    align-items: center;
+    gap: 18px;
+    height: auto;
+    justify-content: space-between;
+    min-height: 76px;
+    padding: 14px 18px;
+}
+
+.ves-synchronizations-panel-heading,
+.ves-synchronizations-panel-actions {
+    align-items: center;
+    display: flex;
+}
+
+.ves-synchronizations-panel-heading {
+    gap: 11px;
+    min-width: 0;
+}
+
+.ves-synchronizations-summary-icon {
+    background: var(--veui-accent-soft);
+    border: 1px solid var(--veui-accent-border);
+    border-radius: 8px;
+    flex: 0 0 34px;
+    height: 34px;
+    position: relative;
+    width: 34px;
+}
+
+.ves-synchronizations-summary-icon::before {
+    background: var(--veui-accent);
+    content: '';
+    inset: 9px;
+    -webkit-mask: url('../images/sync-ergonode.svg') center / contain no-repeat;
+    mask: url('../images/sync-ergonode.svg') center / contain no-repeat;
+    position: absolute;
+}
+
+.ves-synchronizations-panel-head h2 {
+    color: var(--veui-text);
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0 0 4px;
+}
+
+.ves-synchronizations-panel-head p {
+    color: var(--veui-muted);
+    font-size: 12px;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.ves-synchronizations-panel-actions {
+    flex: 0 0 auto;
+    gap: 8px;
+}
+
+.ves-synchronizations-count,
+
+.ves-synchronizations-count {
+    background: var(--veui-accent-soft);
+    color: var(--veui-accent);
+}
+
+.ves-synchronizations-action {
+    min-height: 34px;
+}
+
+.ves-synchronizations-message {
+    margin: 12px 18px 0;
+}
+
+.ves-synchronizations-message-dot {
+    background: currentColor;
+    border-radius: 50%;
+    flex: 0 0 7px;
+    height: 7px;
+    width: 7px;
+}
+
+.ves-synchronizations-table-wrap {
+    overflow-x: auto;
+}
+
+.ves-synchronizations-table {
+    border-collapse: collapse;
+    min-width: 740px;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.ves-synchronizations-table th,
+.ves-synchronizations-table td {
+    border-bottom: 1px solid var(--veui-line);
+    color: var(--veui-text-muted-strong);
+    font-size: 12px;
+    padding: 15px 18px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.ves-synchronizations-table thead th {
+    background: var(--veui-panel-soft);
+    color: var(--veui-muted);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+}
+
+.ves-synchronizations-table .ves-synchronizations-select {
+    padding-left: 18px;
+    padding-right: 6px;
+    text-align: center;
+    width: 42px;
+}
+
+.ves-synchronizations-select input {
+    accent-color: var(--veui-accent);
+    cursor: pointer;
+    height: 15px;
+    margin: 0;
+    vertical-align: middle;
+    width: 15px;
+}
+
+.ves-synchronizations-select input:disabled {
+    cursor: not-allowed;
+    opacity: .45;
+}
+
+.ves-synchronizations-table th:nth-child(2) {
+    width: 28%;
+}
+
+.ves-synchronizations-table th:nth-child(3) {
+    width: 24%;
+}
+
+.ves-synchronizations-table th:nth-child(4) {
+    width: auto;
+}
+
+.ves-synchronizations-table tbody tr:last-child > * {
+    border-bottom: 0;
+}
+
+.ves-synchronizations-table tbody tr:hover > * {
+    background: var(--veui-surface-hover);
+}
+
+.ves-synchronizations-table tbody th strong,
+.ves-synchronizations-table tbody th span {
+    display: block;
+}
+
+.ves-synchronizations-table tbody th strong {
+    color: var(--veui-text);
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.ves-synchronizations-table tbody th span {
+    color: var(--veui-muted);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.ves-synchronizations-table code {
+    background: var(--veui-panel-soft);
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 5px;
+    color: var(--veui-text-muted-strong);
+    display: inline-block;
+    font-size: 11px;
+    line-height: 1.45;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: 4px 6px;
+}
+
+
+
+.ves-synchronizations-empty {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+    padding: 52px 24px;
+    text-align: center;
+}
+
+.ves-synchronizations-empty > span {
+    background: var(--veui-muted);
+    height: 34px;
+    margin-bottom: 14px;
+    -webkit-mask: url('../images/sync-ergonode.svg') center / contain no-repeat;
+    mask: url('../images/sync-ergonode.svg') center / contain no-repeat;
+    opacity: .55;
+    width: 34px;
+}
+
+.ves-synchronizations-empty h3 {
+    color: var(--veui-text);
+    font-size: 14px;
+    margin: 0 0 6px;
+}
+
+.ves-synchronizations-empty p {
+    color: var(--veui-muted);
+    font-size: 12px;
+    margin: 0;
+}
+
+.ves-visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+@media (max-width: 900px) {
+    .ves-synchronizations-panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .ves-synchronizations-panel-actions {
+        flex-wrap: wrap;
+        padding-left: 45px;
+    }
+}
+
+.ves-monitor-freshness {
+    padding: 12px 18px;
+    margin: 0;
+    border-bottom: 1px solid var(--veui-border-soft);
+}
+.ves-monitor-freshness.is-error {
+    color: var(--veui-danger-strong);
+}
+
+
+
+
+
+
+
+
+
+.ves-monitor-cursor {
+    margin-top: 10px;
+}
+
+.ves-monitor-observation {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 16px;
+    margin: 0;
+    font-size: 12px;
+}
+
+.ves-monitor-observation dt {
+    color: var(--veui-muted);
+    font-weight: normal;
+}
+
+.ves-monitor-observation dd {
+    margin: 0;
+    white-space: normal;
+}
+
+.ves-monitor-observation .is-error {
+    color: var(--veui-danger-strong);
+}

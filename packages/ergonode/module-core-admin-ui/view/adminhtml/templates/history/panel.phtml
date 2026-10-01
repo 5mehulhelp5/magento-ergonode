@@ -1,0 +1,16 @@
+<?php
+declare(strict_types=1);
+
+/** @var \Ergonode\CoreAdminUi\Block\Adminhtml\History\Panel $block */
+?>
+<aside class="veah-workspace veah-mapping-history"
+       aria-label="<?= $escaper->escapeHtmlAttr(__('Attribute mapping history')) ?>"
+       data-mage-init="<?= $escaper->escapeHtmlAttr(
+           '{"Ergonode_CoreAdminUi/js/history/panel":' . $block->getConfigJson() . '}'
+       ) ?>">
+    <header class="veah-mapping-head">
+        <strong class="veui-panel-title"><?= $escaper->escapeHtml(__('Attribute mapping history')) ?></strong>
+    </header>
+    <div class="veah-operation-list" data-role="history-operations"></div>
+    <div class="veui-message" data-role="history-message" role="status" hidden></div>
+</aside>

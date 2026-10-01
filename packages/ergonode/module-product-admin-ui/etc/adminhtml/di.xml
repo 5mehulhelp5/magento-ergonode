@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Ui\DataProvider\Product\ProductDataProvider">
+        <arguments>
+            <argument name="addFieldStrategies" xsi:type="array">
+                <item name="ergonode_sku" xsi:type="object">Ergonode\ProductAdminUi\Ui\DataProvider\Product\AddErgonodeSkuFieldToCollection</item>
+            </argument>
+            <argument name="addFilterStrategies" xsi:type="array">
+                <item name="ergonode_sku" xsi:type="object">Ergonode\ProductAdminUi\Ui\DataProvider\Product\AddErgonodeSkuFilterToCollection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="ergonode_identity" xsi:type="array">
+                    <item name="class" xsi:type="string">Ergonode\ProductAdminUi\Ui\DataProvider\Product\Form\Modifier\ErgonodeIdentity</item>
+                    <item name="sortOrder" xsi:type="number">115</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <preference for="Ergonode\ProductAdminUi\Api\ProductSelectionInterface" type="Ergonode\ProductAdminUi\Model\ProductSelection"/>
+</config>

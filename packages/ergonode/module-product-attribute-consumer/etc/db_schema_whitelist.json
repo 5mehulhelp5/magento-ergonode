@@ -1,0 +1,12 @@
+{
+    "ergonode_attribute_option": {
+        "column": {
+            "magento_option_id": true,
+            "sync_status": true,
+            "sync_message": true
+        },
+        "index": {
+            "ERGONODE_ATTRIBUTE_OPTION_MAGENTO_OPTION_ID": true
+        }
+    }
+}

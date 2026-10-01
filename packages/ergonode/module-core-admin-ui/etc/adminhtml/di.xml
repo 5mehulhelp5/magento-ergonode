@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Config\Model\Config\Structure\AbstractElement">
+        <plugin name="ergonode_automatic_sync_visibility" type="Ergonode\CoreAdminUi\Plugin\AutomaticSynchronizationVisibility"/>
+    </type>
+    <type name="Magento\Framework\View\Layout">
+        <plugin name="ergonode_workspace_connection_gate" type="Ergonode\CoreAdminUi\Plugin\Adminhtml\WorkspaceConnectionGate"/>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Model\WorkspaceAvailability">
+        <arguments>
+            <argument name="connectionCheck" xsi:type="object">Ergonode\Core\Model\Readiness\ConnectionConfigurationCheck</argument>
+        </arguments>
+    </type>
+</config>

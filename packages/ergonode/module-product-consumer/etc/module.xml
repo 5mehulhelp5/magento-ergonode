@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Ergonode_ProductConsumer">
+        <sequence>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_CatalogUrlRewrite"/>
+            <module name="Magento_Cron"/>
+            <module name="Magento_MessageQueue"/>
+            <module name="PackHauer_FileAttribute"/>
+            <module name="Ergonode_Product"/>
+            <module name="Ergonode_Attribute"/>
+            <module name="Ergonode_AttributeConsumer"/>
+            <module name="Ergonode_Template"/>
+            <module name="Ergonode_Language"/>
+            <module name="Ergonode_ProductAttributeConsumer"/>
+        </sequence>
+    </module>
+</config>

@@ -1,0 +1,6 @@
+"Language mappings have changed in another session. Reload the page before making further changes.","Mapowania języków zmieniły się w innej sesji. Odśwież stronę przed wprowadzeniem kolejnych zmian."
+"Language mappings are being changed. Please try again.","Trwa zmiana mapowań języków. Spróbuj ponownie."
+"Ergonode returned an invalid language list. The snapshot was preserved.","Ergonode zwróciło nieprawidłową listę języków. Zachowano poprzednie dane."
+"Missing or invalid language mapping revision. Reload the page.","Brak poprawnej wersji mapowań języków. Odśwież stronę."
+"Invalid language mapping row.","Nieprawidłowy wiersz mapowania języka."
+"Magento Default Values cannot be excluded from language mapping.","Nie można wyłączyć zakresu wartości domyślnych Magento z mapowania języków."

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference
+        for="Ergonode\CategoryAttributeConsumer\Model\Snapshot\CategoryBackfillSnapshotReaderInterface"
+        type="Ergonode\CategoryAttributeConsumer\Model\ResourceModel\CategoryBackfillSnapshotReader"
+    />
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryOptionAutoMatcherInterface" type="Ergonode\CategoryAttributeConsumer\Model\Mapping\CategoryOptionAutoMatcher"/>
+    <preference for="Ergonode\CategoryAttribute\Api\MappingPolicyInterface" type="Ergonode\CategoryAttributeConsumer\Model\Config\CategoryAttributePolicy"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeCodeLoaderInterface" type="Ergonode\CategoryAttributeConsumer\Model\GraphQl\CategoryAttributeCodeLoader"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryEntityRefresherInterface" type="Ergonode\CategoryAttributeConsumer\Model\Sync\CategoryEntityRefresher"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeManagementProviderInterface" type="Ergonode\CategoryAttributeConsumer\Model\Provider\CategoryAttributeManagementProvider"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeMappingProviderInterface" type="Ergonode\CategoryAttributeConsumer\Model\Mapping\CategoryAttributeMappingProvider"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeMappingUpdaterInterface" type="Ergonode\CategoryAttributeConsumer\Model\Mapping\CategoryAttributeMappingUpdater"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryOptionMappingUpdaterInterface" type="Ergonode\CategoryAttributeConsumer\Model\Mapping\CategoryOptionMappingUpdater"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeRegistryRefresherInterface" type="Ergonode\CategoryAttributeConsumer\Model\Import\CategoryAttributeRegistryRefresher"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeSnapshotRemoverInterface" type="Ergonode\CategoryAttributeConsumer\Model\Snapshot\CategoryAttributeSnapshotRemover"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryCreationConfigurationProviderInterface" type="Ergonode\CategoryAttributeConsumer\Model\Sync\CategoryCreationConfigurationProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryCreationDataProviderInterface" type="Ergonode\CategoryAttributeConsumer\Model\Sync\CategoryCreationDataProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryEntitySynchronizerInterface" type="Ergonode\CategoryAttributeConsumer\Model\Sync\CategoryEntitySynchronizer"/>
+    <type name="Ergonode\CategoryAttributeConsumer\Model\Config\CategoryAttributePolicy">
+        <arguments>
+            <argument name="excludedAttributeCodes" xsi:type="array">
+                <item name="default_sort_by" xsi:type="string">default_sort_by</item>
+                <item name="is_anchor" xsi:type="string">is_anchor</item>
+                <item name="url_key" xsi:type="string">url_key</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryEntityLoaderInterface" type="Ergonode\CategoryAttributeConsumer\Model\Import\CategoryEntityLoader"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryNameTargetProviderInterface" type="Ergonode\CategoryAttributeConsumer\Model\Config\CategoryNameTargetProvider"/>
+    <type name="Ergonode\Core\Model\Import\SynchronizationStatusProvider">
+        <arguments>
+            <argument name="synchronizations" xsi:type="array">
+                <item name="category_stream" xsi:type="array">
+                    <item name="label" xsi:type="string">Attributes</item>
+                    <item name="description" xsi:type="string">Updates names and mapped category attributes.</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\MappingSynchronizationInterface" type="Ergonode\CategoryAttributeConsumer\Model\Mapping\MappingSynchronization"/>
+    <preference for="Ergonode\CategoryAttributeConsumer\Api\MagentoOptionCreatorInterface" type="Ergonode\CategoryAttributeConsumer\Model\Provider\MagentoCategoryOptionCreator"/>
+    <type name="Ergonode\CategoryConsumer\Model\Import\CategoryEntityStreamImporter">
+        <plugin name="ergonode_prepare_category_attributes" type="Ergonode\CategoryAttributeConsumer\Plugin\PrepareCategoryAttributes"/>
+    </type>
+</config>

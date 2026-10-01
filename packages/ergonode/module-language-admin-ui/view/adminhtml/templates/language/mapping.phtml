@@ -1,0 +1,416 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+use Magento\Framework\View\Element\Template;
+
+/** @var \Ergonode\LanguageAdminUi\Block\Adminhtml\Language\Mapping $block */
+$languages = $block->getErgonodeLanguages();
+$storeViews = $block->getStoreViews();
+$mappings = $block->getMappings();
+$canSave = $block->canSaveMappings();
+$mappedStoreViewIds = array_fill_keys(
+    array_map(
+        static fn (array $mapping): string => (string)$mapping['right']['id'],
+        array_filter($mappings, static fn (array $mapping): bool => $mapping['right'] !== null)
+    ),
+    true
+);
+$requiredStoreViewId = 0;
+$ergonodeIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/m2_configuration.svg');
+$magentoIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/magento-mark.svg');
+$languageActionsLabel = __('Language actions: Ergonode');
+$storeViewActionsLabel = __('Language actions: Magento');
+$mappingActionsLabel = __('Opcje mapowania');
+$autoMatchTitle = __('Automatically connect languages to Store View locales');
+$showExcludedHint = __('Show excluded languages');
+$hideExcludedHint = __('Hide excluded languages');
+$showExcludedStoreViewsHint = __('Show excluded Store Views');
+$hideExcludedStoreViewsHint = __('Hide excluded Store Views');
+$emptyMappingMessage = __('Nie ma jeszcze mapowań. Wybierz element z lewej i z prawej strony.');
+$defaultLanguageRequirement = __(
+    'Przypisz język Ergonode, który ma być używany jako domyślny. Bez tego synchronizacja nie może się rozpocząć.'
+);
+$storeViewToggleTitle = __('Włącz / wyłącz Store View w mapowaniu');
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => SectionNavigation::SECTION_LANGUAGES]]
+);
+$cardSelectionHtml = $canSave ? $block->getLayout()->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::entity/selection.phtml')
+    ->toHtml() : '';
+?>
+<div id="ergonode-language-mapping" class="veui-workspace vea-mapping vel-mapping">
+    <div class="vel-language-loader"
+         data-role="language-loader"
+         role="status"
+         aria-live="polite"
+         hidden>
+        <span class="vel-language-loader-icon" aria-hidden="true"></span>
+        <span><?= $escaper->escapeHtml(__('Zapisywanie zmian...')) ?></span>
+    </div>
+    <div class="veui-toolbar vea-viewbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+    </div>
+
+    <div class="veui-message veui-global-message"
+         data-role="global-message"
+         aria-live="polite"
+         hidden>
+        <span class="veui-message-status-icon" aria-hidden="true"></span>
+        <span data-role="global-message-text"></span>
+    </div>
+
+    <div class="veui-layout vea-shell veui-autosave-region"
+         data-role="autosave-region"
+         data-autosave-state="saved"
+         aria-busy="false">
+        <div class="veui-autosave-error"
+             data-role="autosave-error"
+             role="alert"
+             hidden>
+            <span><?= $escaper->escapeHtml(__('Nie udało się zapisać mapowania języków')) ?></span>
+            <button type="button"
+                    class="veui-autosave-retry"
+                    data-role="retry-autosave">
+                <?= $escaper->escapeHtml(__('Spróbuj ponownie.')) ?>
+            </button>
+        </div>
+        <section class="veui-panel vea-panel vea-side-panel"
+                 data-role="source-panel"
+                 data-source-panel="ergo"
+                 data-can-refresh="<?= $block->canRefreshLanguages() ? '1' : '0' ?>"
+                 data-source-options-label="<?= $escaper->escapeHtmlAttr($languageActionsLabel) ?>"
+                 data-show-excluded-hint="<?= $escaper->escapeHtmlAttr($showExcludedHint) ?>"
+                 data-hide-excluded-hint="<?= $escaper->escapeHtmlAttr($hideExcludedHint) ?>">
+            <div class="veui-panel-head vea-panel-head">
+                <strong class="veui-panel-title">
+                    <span class="veui-brand-mark veui-brand-ergonode"
+                          aria-hidden="true">
+                        <img src="<?= $escaper->escapeUrl($ergonodeIconUrl) ?>" alt=""/>
+                    </span>
+                    <?= $escaper->escapeHtml(__('Languages')) ?>
+                </strong>
+                <div class="veui-panel-actions">
+                    <span class="veui-count vea-count"><?= $escaper->escapeHtml((string)count($languages)) ?></span>
+                </div>
+            </div>
+            <div class="veui-tools veui-tools-inline vea-side-tools vel-side-tools">
+                <label class="veui-search">
+                    <span class="veui-search-icon" aria-hidden="true"></span>
+                    <input type="search"
+                           data-role="source-search"
+                           placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj języka...')) ?>"/>
+                </label>
+                <span class="veui-entity-options veui-source-options vel-source-options vel-options-placeholder"
+                      data-role="entity-options-placeholder"
+                      aria-hidden="true">
+                    <span class="veui-entity-options-placeholder-trigger vel-options-placeholder-trigger">
+                        <span class="veui-entity-options-icon"></span>
+                    </span>
+                </span>
+            </div>
+            <div class="vea-attribute-list vel-source-list" data-role="source-list">
+                <?php foreach ($languages as $language): ?>
+                    <?php
+                    $languageCardClass = 'vea-attribute-card vel-source-card';
+                    $languageCardClass .= $language['active'] ? '' : ' is-filter-hidden is-inactive';
+                    $languageAriaLabel = __('Wybierz język Ergonode: %1', $language['label']);
+                    $languageSearch = $language['label'] . ' ' . $language['code'];
+                    ?>
+                    <div class="<?= $escaper->escapeHtmlAttr($languageCardClass) ?>"
+                             data-role="entity-card"
+                             data-source="ergo"
+                             data-code="<?= $escaper->escapeHtmlAttr($language['code']) ?>"
+                             data-label="<?= $escaper->escapeHtmlAttr($language['label']) ?>"
+                             data-search="<?= $escaper->escapeHtmlAttr($languageSearch) ?>"
+                             draggable="<?= $canSave ? 'true' : 'false' ?>"
+                             role="group"
+                             tabindex="0"
+                             <?= $language['active'] ? '' : 'hidden' ?>
+                             aria-label="<?= $escaper->escapeHtmlAttr($languageAriaLabel) ?>">
+                        <?= /* @noEscape */ $cardSelectionHtml ?>
+                        <span class="vea-drag-handle" aria-hidden="true" <?= $canSave ? '' : 'hidden' ?>></span>
+                        <div class="vea-card-copy">
+                            <strong><?= $escaper->escapeHtml($language['label']) ?></strong>
+                            <span class="vea-card-subline">
+                                <code><?= $escaper->escapeHtml($language['code']) ?></code>
+                            </span>
+                        </div>
+                        <button type="button"
+                                class="vea-card-toggle"
+                                data-role="source-active-toggle"
+                                <?= $canSave ? '' : 'disabled' ?>
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Język aktywny do mapowania')) ?>"
+                                aria-pressed="<?= $language['active'] ? 'true' : 'false' ?>"
+                                title="<?= $escaper->escapeHtmlAttr(__('Włącz / wyłącz język w mapowaniu')) ?>">
+                            <span aria-hidden="true"></span>
+                        </button>
+                        <span <?= $canSave ? '' : 'hidden' ?> class="veui-entity-options vel-options-placeholder"
+                              data-role="entity-options-placeholder"
+                              aria-hidden="true">
+                            <span class="veui-entity-options-placeholder-trigger vel-options-placeholder-trigger">
+                                <span class="veui-entity-options-icon"></span>
+                            </span>
+                        </span>
+                    </div>
+                <?php endforeach; ?>
+                <?php if ($languages === []): ?>
+                    <div class="vel-empty-state" data-role="language-empty-state">
+                        <p><?= $escaper->escapeHtml(__('Brak pobranych języków Ergonode.')) ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <div <?= $canSave ? '' : 'hidden' ?> class="vea-disable-zone"
+                 data-role="disable-drop-zone"
+                 data-drop-action="remove-from-list">
+                <span class="vea-disable-icon" aria-hidden="true"></span>
+                <div>
+                    <strong><?= $escaper->escapeHtml(__('Remove from list')) ?></strong>
+                    <span><?= $escaper->escapeHtml(__('Drag here to remove this language')) ?></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="veui-panel vea-panel vea-pairs-panel"
+                 data-role="mapping-panel"
+                 data-mapping-options-label="<?= $escaper->escapeHtmlAttr($mappingActionsLabel) ?>">
+            <div class="veui-panel-head vea-panel-head">
+                <div>
+                    <strong class="veui-panel-title"><?= $escaper->escapeHtml(__('Mapowanie języków')) ?></strong>
+                </div>
+                <span class="veui-count vea-count" data-role="mapping-count">
+                    <?= $escaper->escapeHtml((string)count($mappings)) ?>
+                </span>
+            </div>
+            <?php if ($canSave): ?>
+                <div class="veui-tools veui-tools-inline vel-middle-tools">
+                    <details class="veui-entity-options veui-source-options vel-mapping-options"
+                             data-role="entity-options"
+                             data-language-mapping-options="1">
+                        <summary role="button"
+                                 title="<?= $escaper->escapeHtmlAttr($mappingActionsLabel) ?>"
+                                 aria-label="<?= $escaper->escapeHtmlAttr($mappingActionsLabel) ?>">
+                            <span class="veui-entity-options-icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="veui-entity-options-menu"
+                             role="group"
+                             aria-label="<?= $escaper->escapeHtmlAttr($mappingActionsLabel) ?>">
+                            <button type="button"
+                                    class="veui-entity-options-action vea-auto-match"
+                                    data-role="auto-match"
+                                    title="<?= $escaper->escapeHtmlAttr($autoMatchTitle) ?>"
+                                    aria-label="<?= $escaper->escapeHtmlAttr($autoMatchTitle) ?>"
+                                    disabled>
+                                <span class="vea-auto-match-icon" aria-hidden="true"></span>
+                                <span class="veui-entity-options-action-label" data-role="auto-match-label">
+                                    <?= $escaper->escapeHtml(__('Auto Connect')) ?>
+                                </span>
+                            </button>
+                        </div>
+                    </details>
+                </div>
+            <?php endif; ?>
+            <div class="vea-pair-list vel-pair-list" data-role="mapping-list">
+                <?php foreach ($mappings as $mapping): ?>
+                    <?php $isComplete = $mapping['left'] !== null && $mapping['right'] !== null; ?>
+                    <?php $pairTone = $mapping['active'] ? 'vea-status-tone-ok' : 'vea-status-tone-warning'; ?>
+                    <article class="vea-pair-row <?= $escaper->escapeHtmlAttr($pairTone) ?> vel-pair-row"
+                             data-role="mapping-row"
+                             data-mapping-active="<?= $mapping['active'] ? 'true' : 'false' ?>">
+                        <?php if ($mapping['left'] !== null): ?>
+                            <div class="vea-pair-card"
+                                 data-role="pair-slot"
+                                 data-side="ergo"
+                                 data-code="<?= $escaper->escapeHtmlAttr($mapping['left']['code']) ?>"
+                                 data-label="<?= $escaper->escapeHtmlAttr($mapping['left']['label']) ?>">
+                                <strong><?= $escaper->escapeHtml($mapping['left']['label']) ?></strong>
+                                <span class="vea-card-subline">
+                                    <code><?= $escaper->escapeHtml($mapping['left']['code']) ?></code>
+                                    <?php if ($isComplete && !$mapping['active']): ?>
+                                        <span class="veui-pending-badge" data-role="mapping-inactive">
+                                            <?= $escaper->escapeHtml(
+                                                __('Mapping inactive: language or Store View unavailable.')
+                                            ) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </span>
+                            </div>
+                        <?php else: ?>
+                            <div class="vea-pair-card is-empty"
+                                 data-role="pair-slot"
+                                 data-side="ergo"
+                                 data-code=""
+                                 data-label="">
+                                <strong><?= $escaper->escapeHtml(__('Upuść język')) ?></strong>
+                                <span data-role="slot-hint"><?= $escaper->escapeHtml(__('z Ergonode')) ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <button type="button"
+                                class="vea-link-indicator vel-unlink-mapping"
+                                data-role="unlink-mapping"
+                                <?= $canSave ? '' : 'disabled' ?>
+                                title="<?= $escaper->escapeHtmlAttr(__('Unlink mapping')) ?>"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Unlink mapping')) ?>">
+                            <span aria-hidden="true"></span>
+                        </button>
+                        <?php if ($mapping['right'] !== null): ?>
+                            <div class="vea-pair-card"
+                                 data-role="pair-slot"
+                                 data-side="magento"
+                                 data-code="<?= $escaper->escapeHtmlAttr((string)$mapping['right']['id']) ?>"
+                                 data-label="<?= $escaper->escapeHtmlAttr($mapping['right']['name']) ?>"
+                                 data-store-code="<?= $escaper->escapeHtmlAttr($mapping['right']['code']) ?>"
+                                 data-locale="<?= $escaper->escapeHtmlAttr($mapping['right']['locale']) ?>">
+                                <strong><?= $escaper->escapeHtml($mapping['right']['name']) ?></strong>
+                                <span class="vea-card-subline">
+                                    <code><?= $escaper->escapeHtml($mapping['right']['code']) ?></code>
+                                    <span class="vea-type-badge vea-type-store-view">
+                                        <?= $escaper->escapeHtml($mapping['right']['locale']) ?>
+                                    </span>
+                                </span>
+                            </div>
+                        <?php else: ?>
+                            <div class="vea-pair-card is-empty"
+                                 data-role="pair-slot"
+                                 data-side="magento"
+                                 data-code=""
+                                 data-label="">
+                                <strong><?= $escaper->escapeHtml(__('Upuść Store View')) ?></strong>
+                                <span data-role="slot-hint"><?= $escaper->escapeHtml(__('z Magento')) ?></span>
+                            </div>
+                        <?php endif; ?>
+                    </article>
+                <?php endforeach; ?>
+                <p class="vel-empty-state" data-role="mapping-empty" <?= $mappings !== [] ? 'hidden' : '' ?>>
+                    <?= $escaper->escapeHtml($emptyMappingMessage) ?>
+                </p>
+            </div>
+        </section>
+
+        <section class="veui-panel vea-panel vea-side-panel"
+                 data-role="source-panel"
+                 data-source-panel="magento"
+                 data-source-options-label="<?= $escaper->escapeHtmlAttr($storeViewActionsLabel) ?>"
+                 data-show-excluded-hint="<?= $escaper->escapeHtmlAttr($showExcludedStoreViewsHint) ?>"
+                 data-hide-excluded-hint="<?= $escaper->escapeHtmlAttr($hideExcludedStoreViewsHint) ?>">
+            <div class="veui-panel-head vea-panel-head">
+                <strong class="veui-panel-title">
+                    <span class="veui-brand-mark veui-brand-magento"
+                          aria-hidden="true">
+                        <img src="<?= $escaper->escapeUrl($magentoIconUrl) ?>" alt=""/>
+                    </span>
+                    <?= $escaper->escapeHtml(__('Languages')) ?>
+                </strong>
+                <span class="veui-count vea-count" data-role="store-mapping-count">
+                    <?= $escaper->escapeHtml(
+                        (string)count($mappedStoreViewIds) . ' / ' . (string)count($storeViews)
+                    ) ?>
+                </span>
+            </div>
+            <div class="veui-tools veui-tools-inline vea-side-tools vel-side-tools">
+                <label class="veui-search">
+                    <span class="veui-search-icon" aria-hidden="true"></span>
+                    <input type="search"
+                           data-role="source-search"
+                           placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj Store View...')) ?>"/>
+                </label>
+                <span class="veui-entity-options veui-source-options vel-source-options vel-options-placeholder"
+                      data-role="entity-options-placeholder"
+                      aria-hidden="true">
+                    <span class="veui-entity-options-placeholder-trigger vel-options-placeholder-trigger">
+                        <span class="veui-entity-options-icon"></span>
+                    </span>
+                </span>
+            </div>
+            <div class="vea-attribute-list vel-source-list" data-role="source-list">
+                <?php foreach ($storeViews as $storeView): ?>
+                    <?php $scope = $storeView['website'] . ' / ' . $storeView['group']; ?>
+                    <?php $isMapped = isset($mappedStoreViewIds[(string)$storeView['id']]); ?>
+                    <?php $isRequired = (int)$storeView['id'] === $requiredStoreViewId; ?>
+                    <?php $isActive = $isRequired || $storeView['active']; ?>
+                    <?php
+                    $storeViewCardClass = 'vea-attribute-card vel-source-card';
+                    $storeViewCardClass .= $isActive ? '' : ' is-filter-hidden is-inactive';
+                    $storeViewCardClass .= $isMapped ? ' is-mapped' : '';
+                    $storeViewCardClass .= $isRequired && !$isMapped ? ' is-requirement-missing' : '';
+                    $storeViewSearch = implode(
+                        ' ',
+                        [$storeView['name'], $storeView['code'], $storeView['locale'], $scope]
+                    );
+                    $storeViewAriaLabel = __('Wybierz Magento Store View: %1', $storeView['name']);
+                    ?>
+                    <div class="<?= $escaper->escapeHtmlAttr($storeViewCardClass) ?>"
+                             data-role="entity-card"
+                             data-source="magento"
+                             data-code="<?= $escaper->escapeHtmlAttr((string)$storeView['id']) ?>"
+                             data-label="<?= $escaper->escapeHtmlAttr($storeView['name']) ?>"
+                             data-store-code="<?= $escaper->escapeHtmlAttr($storeView['code']) ?>"
+                             data-locale="<?= $escaper->escapeHtmlAttr($storeView['locale']) ?>"
+                             <?= $isRequired ? 'data-mapping-required="true"' : '' ?>
+                             data-search="<?= $escaper->escapeHtmlAttr($storeViewSearch) ?>"
+                             draggable="<?= $canSave ? 'true' : 'false' ?>"
+                             role="group"
+                             tabindex="0"
+                             <?= $isMapped ? 'aria-disabled="true"' : '' ?>
+                             <?= $isRequired && !$isMapped ? 'aria-invalid="true"' : '' ?>
+                             <?= $isActive ? '' : 'hidden' ?>
+                             aria-label="<?= $escaper->escapeHtmlAttr($storeViewAriaLabel) ?>">
+                        <?= /* @noEscape */ $cardSelectionHtml ?>
+                        <span class="vea-drag-handle" aria-hidden="true" <?= $canSave ? '' : 'hidden' ?>></span>
+                        <div class="vea-card-copy">
+                            <strong><?= $escaper->escapeHtml($storeView['name']) ?></strong>
+                            <span class="vea-card-subline">
+                                <code><?= $escaper->escapeHtml($storeView['code']) ?></code>
+                                <span class="vea-type-badge vea-type-store-view">
+                                    <?= $escaper->escapeHtml($storeView['locale']) ?>
+                                </span>
+                                <?php if ($isRequired): ?>
+                                    <span class="veui-required-badge">
+                                        <?= $escaper->escapeHtml(__('* Wymagane')) ?>
+                                    </span>
+                                <?php endif; ?>
+                                <span class="vea-scope"><?= $escaper->escapeHtml($scope) ?></span>
+                            </span>
+                        </div>
+                        <?php if ($isRequired): ?>
+                            <button type="button"
+                                    class="veui-mapping-requirement-control"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Wybierz język domyślny')) ?>"
+                                    aria-describedby="language-default-store-requirement-tooltip">
+                                <span class="veui-mapping-requirement-icon" aria-hidden="true"></span>
+                                <span class="veui-mapping-requirement-tooltip"
+                                      id="language-default-store-requirement-tooltip"
+                                      role="tooltip">
+                                    <strong><?= $escaper->escapeHtml(__('Wybierz język domyślny')) ?></strong>
+                                    <span>
+                                        <?= $escaper->escapeHtml($defaultLanguageRequirement) ?>
+                                    </span>
+                                </span>
+                            </button>
+                        <?php else: ?>
+                            <button type="button"
+                                    class="vea-card-toggle"
+                                    data-role="source-active-toggle"
+                                <?= $canSave ? '' : 'disabled' ?>
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Store View aktywny do mapowania')) ?>"
+                                    aria-pressed="<?= $isActive ? 'true' : 'false' ?>"
+                                    title="<?= $escaper->escapeHtmlAttr($storeViewToggleTitle) ?>">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#ergonode-language-mapping": {
+        "Ergonode_LanguageAdminUi/js/language-mapping": <?= /* @noEscape */ $block->getMappingConfigJson() ?>
+    }
+}
+</script>

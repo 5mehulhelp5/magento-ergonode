@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_categories">
+            <group id="synchronization">
+                <field id="status" translate="label">
+                    <label>Synchronize names and attributes</label>
+                </field>
+                <field id="name_attribute" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Destination field</label>
+                    <comment
+                    >Used only for Name &gt; In a field. Copies the Ergonode category name into this Magento text field. Ordinary attribute mapping for the selected destination is suspended.</comment>
+                    <source_model>Ergonode\CategoryAttributeConsumerAdminUi\Model\Config\Source\CategoryNameAttribute</source_model>
+                    <validate>required-entry</validate>
+                    <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\RequiredField</frontend_model>
+                    <depends>
+                        <field id="name_mode">attribute</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="data_cron" translate="label">
+                <label>Attributes</label>
+                <field id="name_mode" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Name mapping</label>
+                    <comment
+                    >Allow a separate Ergonode attribute, for example web_name, to supply the Magento name. Map that attribute to name in the attribute mapping screen. Name &gt; Update in Settings takes priority. Off disables only this attribute-to-name mapping.</comment>
+                    <config_path>ergonode_category_attributes/synchronization/name_mode</config_path>
+                    <source_model>Ergonode\CategoryAttributeConsumerAdminUi\Model\Config\Source\CategoryNameMode</source_model>
+                </field>
+                <field id="include_in_menu_mode" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Include in Navigation Menu</label>
+                    <comment
+                    >Mapping requires an Ergonode attribute and updates existing categories. Magento mode uses the default only when creating a category and never overwrites it later.</comment>
+                    <config_path>ergonode_category_attributes/synchronization/include_in_menu_mode</config_path>
+                    <source_model>Ergonode\CategoryAttributeConsumerAdminUi\Model\Config\Source\CategoryAttributeMode</source_model>
+                </field>
+                <field id="include_in_menu_default" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Include in Navigation Menu</label>
+                    <comment>Used only when synchronization creates a Magento category. It does not update existing categories.</comment>
+                    <config_path>ergonode_category_attributes/synchronization/include_in_menu_default</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="include_in_menu_mode">manual</field>
+                    </depends>
+                </field>
+                <field id="is_active_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Is Active</label>
+                    <comment
+                    >Mapping requires an Ergonode attribute and updates existing categories. Magento mode uses the default only when creating a category and never overwrites it later.</comment>
+                    <config_path>ergonode_category_attributes/synchronization/is_active_mode</config_path>
+                    <source_model>Ergonode\CategoryAttributeConsumerAdminUi\Model\Config\Source\CategoryAttributeMode</source_model>
+                </field>
+                <field id="is_active_default" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Is Active</label>
+                    <comment>Used only when synchronization creates a Magento category. It does not update existing categories.</comment>
+                    <config_path>ergonode_category_attributes/synchronization/is_active_default</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="is_active_mode">manual</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

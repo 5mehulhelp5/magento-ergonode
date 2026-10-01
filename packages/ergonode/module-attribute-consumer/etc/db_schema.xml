@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_attribute" resource="default" engine="innodb" comment="Ergonode Attribute Cache">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="code" nullable="false" length="255" comment="Ergonode Attribute Code"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="64" comment="Normalized Attribute Type"/>
+        <column xsi:type="varchar" name="scope" nullable="false" length="32" default="global" comment="Attribute Scope"/>
+        <column xsi:type="mediumtext" name="labels_json" nullable="false" comment="Localized Labels JSON"/>
+        <column xsi:type="mediumtext" name="parameters_json" nullable="false" comment="Normalized Type Parameters JSON"/>
+        <column xsi:type="varchar" name="content_hash" nullable="false" length="64" comment="Normalized Content Hash"/>
+        <column xsi:type="timestamp" name="synced_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Synced At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_ATTRIBUTE_CODE">
+            <column name="code"/>
+        </constraint>
+        <index referenceId="ERGONODE_ATTRIBUTE_TYPE" indexType="btree">
+            <column name="type"/>
+        </index>
+    </table>
+
+    <table name="ergonode_attribute_option" resource="default" engine="innodb" comment="Ergonode Attribute Option Cache">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="attribute_code" nullable="false" length="255" comment="Ergonode Attribute Code"/>
+        <column xsi:type="varchar" name="option_code" nullable="false" length="255" comment="Ergonode Option Code"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" identity="false" default="0" comment="Option Sort Order"/>
+        <column xsi:type="mediumtext" name="labels_json" nullable="false" comment="Localized Labels JSON"/>
+        <column xsi:type="varchar" name="content_hash" nullable="false" length="64" comment="Normalized Content Hash"/>
+        <column xsi:type="timestamp" name="synced_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Synced At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_OPTION_ATTRIBUTE_CODE">
+            <column name="attribute_code"/>
+            <column name="option_code"/>
+        </constraint>
+        <index referenceId="ERGONODE_OPTION_ATTRIBUTE" indexType="btree">
+            <column name="attribute_code"/>
+        </index>
+    </table>
+</schema>

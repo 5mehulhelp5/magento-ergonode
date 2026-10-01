@@ -1,0 +1,8 @@
+"Pozycja zarządzana ręcznie","Manually managed placement"
+"Pozycja chroniona przez integrację. Synchronizacja zachowuje grupę i kolejność tego atrybutu.","Placement protected by the integration. Synchronization preserves this attribute’s group and order."
+"Synchronizacja zachowa grupę i kolejność atrybutu. Pozycję zmień w edycji zestawu atrybutów Magento. Atrybut pozostanie w zestawie po usunięciu z szablonu Ergonode.","Synchronization will preserve the attribute’s group and order. Change its position in the Magento attribute set editor. The attribute will remain in the set when removed from the Ergonode template."
+"Zapisano","Saved"
+"Nie udało się zapisać ustawienia.","Unable to save the setting."
+"Brak w szablonie Ergonode — zachowany ręcznie","Missing from the Ergonode template — kept manually"
+"Ustawienia rozmieszczenia","Placement settings"
+"Włącz ręczne rozmieszczenie. ","Enable manual placement. "

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation">
+        <arguments>
+            <argument name="sections" xsi:type="array">
+                <item name="readiness" xsi:type="array">
+                    <item name="label" xsi:type="string">Readiness</item>
+                    <item name="icon" xsi:type="string">complete-missing</item>
+                    <item name="route" xsi:type="string">ergonode/readiness/index</item>
+                    <item name="resource" xsi:type="string">Ergonode_Core::readiness</item>
+                    <item name="sort_order" xsi:type="number">60</item>
+                </item>
+                <item name="synchronizations" xsi:type="array">
+                    <item name="label" xsi:type="string">Synchronizations</item>
+                    <item name="icon" xsi:type="string">sync-ergonode</item>
+                    <item name="route" xsi:type="string">ergonode/synchronization/index</item>
+                    <item name="resource" xsi:type="string">Ergonode_Core::synchronizations</item>
+                    <item name="sort_order" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\Readiness">
+        <arguments>
+            <argument name="domainLabels" xsi:type="array">
+                <item name="connection" xsi:type="string">Connection</item>
+                <item name="products" xsi:type="string">Products</item>
+            </argument>
+            <argument name="remediationRoutes" xsi:type="array">
+                <item name="connection" xsi:type="string">adminhtml/system_config/edit/section/ergonode_connection</item>
+                <item name="products" xsi:type="string">adminhtml/system_config/edit/section/ergonode_products</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\ViewModel\ReadinessChecks">
+        <arguments>
+            <argument name="definitions" xsi:type="array">
+                <item name="connection" xsi:type="array">
+                    <item name="graphql_url" xsi:type="array">
+                        <item name="label" xsi:type="string">Ergonode GraphQL URL is configured.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="graphql_url_missing" xsi:type="string">connection.graphql_url_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">read</item>
+                    </item>
+                    <item name="connection_available" xsi:type="array">
+                        <item name="label" xsi:type="string">The active connection is enabled and its operating mode is available.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="connection_unavailable" xsi:type="string">connection.unavailable</item>
+                        </item>
+                        <item name="group" xsi:type="string">read</item>
+                    </item>
+                    <item name="api_key" xsi:type="array">
+                        <item name="label" xsi:type="string">The active connection API key is configured.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="api_key_missing" xsi:type="string">connection.api_key_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">read</item>
+                    </item>
+                </item>
+            </argument>
+            <argument name="domainSortOrders" xsi:type="array">
+                <item name="connection" xsi:type="number">10</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

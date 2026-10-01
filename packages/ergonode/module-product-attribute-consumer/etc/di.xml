@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\ProductAttributeConsumer\Api\AttributeAutoMapperInterface" type="Ergonode\ProductAttributeConsumer\Model\Mapping\AttributeAutoMapper"/>
+    <preference for="Ergonode\ProductAttributeConsumer\Api\AttributeSynchronizationBatchInterface" type="Ergonode\ProductAttributeConsumer\Model\Sync\AttributeSynchronizationBatch"/>
+    <preference for="Ergonode\ProductAttributeConsumer\Api\AttributeSynchronizationProcessInterface" type="Ergonode\ProductAttributeConsumer\Model\Import\AttributeImportProcess"/>
+    <preference for="Ergonode\ProductAttributeConsumer\Api\OptionSynchronizationProcessInterface" type="Ergonode\ProductAttributeConsumer\Model\Sync\OptionSynchronizationProcess"/>
+    <preference for="Ergonode\ProductAttributeConsumer\Api\ProductAttributeMappingProviderInterface" type="Ergonode\ProductAttributeConsumer\Model\Product\ProductMappingProvider"/>
+    <preference for="Ergonode\ProductAttributeConsumer\Api\SkuIdentityMappingResolverInterface" type="Ergonode\ProductAttributeConsumer\Model\Product\SkuIdentityMappingResolver"/>
+    <type name="Ergonode\ProductAttributeConsumer\Model\Import\AttributeSynchronizationOperation">
+        <arguments>
+            <argument name="attributeImportProcess" xsi:type="object">Ergonode\ProductAttributeConsumer\Api\AttributeSynchronizationProcessInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Import\SynchronizationOperationExecutor">
+        <arguments>
+            <argument name="operations" xsi:type="array">
+                <item name="attributeStream" xsi:type="object">Ergonode\ProductAttributeConsumer\Model\Import\AttributeSynchronizationOperation\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Api\OptionSynchronizationInterface">
+        <arguments>
+            <argument name="participants" xsi:type="array">
+                <item name="product" xsi:type="object">Ergonode\ProductAttributeConsumer\Model\Sync\ProductOptionSynchronizationParticipant</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="ergonode_attributes_import" xsi:type="object">Ergonode\ProductAttributeConsumer\Console\Command\ImportAttributesCommand</item>
+                <item name="ergonode_options_sync" xsi:type="object">Ergonode\ProductAttributeConsumer\Console\Command\SyncOptionsCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttributeConsumer\Console\Command\ImportAttributesCommand">
+        <arguments>
+            <argument name="attributeImportProcess" xsi:type="object">Ergonode\ProductAttributeConsumer\Model\Import\AttributeImportProcess\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttributeConsumer\Console\Command\SyncOptionsCommand">
+        <arguments>
+            <argument name="optionSynchronizationProcess" xsi:type="object">Ergonode\ProductAttributeConsumer\Model\Sync\OptionSynchronizationProcess\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Readiness\ReadinessService">
+        <arguments>
+            <argument name="checks" xsi:type="array">
+                <item name="ergonode_required_product_attribute_mapping" xsi:type="object">Ergonode\ProductAttributeConsumer\Model\Readiness\RequiredAttributeMappingCheck</item>
+                <item name="ergonode_sku_identity_mapping" xsi:type="object">Ergonode\ProductAttributeConsumer\Model\Readiness\SkuIdentityMappingCheck</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\ProductAttributeConsumer\Api\ProductAttributeSourcePreparationInterface" type="Ergonode\ProductAttributeConsumer\Model\Product\ProductAttributeSourcePreparation"/>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="environment" xsi:type="array">
+                <item name="ergonode_attributes/cron/status" xsi:type="string">1</item>
+                <item name="ergonode_attributes/cron/schedule" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

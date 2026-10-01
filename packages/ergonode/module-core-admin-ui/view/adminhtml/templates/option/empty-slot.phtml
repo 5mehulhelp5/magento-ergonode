@@ -1,0 +1,37 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$side = (string)$block->getData('side');
+$requiredType = (string)$block->getData('required_type');
+$requiredTypeClass = 'vea-type-'
+    . (preg_replace('/[^a-z0-9_-]+/', '-', strtolower(trim($requiredType))) ?: 'unknown');
+$canCreate = (bool)$block->getData('can_create');
+$createTitle = (string)$block->getData('create_title');
+?>
+<span class="vea-slot-empty-line">
+    <span class="vea-slot-drop-icon" aria-hidden="true"></span>
+    <strong><?= $escaper->escapeHtml(__('Przeciągnij opcję')) ?></strong>
+</span>
+<?php if ($requiredType !== ''): ?>
+    <span class="vea-type-badge <?= $escaper->escapeHtmlAttr($requiredTypeClass) ?>" data-role="slot-hint">
+        <?= $escaper->escapeHtml($requiredType) ?>
+    </span>
+    <?php if ($side === 'magento' && $canCreate): ?>
+        <button type="button"
+                class="vea-create-option"
+                data-role="create-magento-option"
+                data-completes-missing-side="1"
+                title="<?= $escaper->escapeHtmlAttr($createTitle) ?>"
+                aria-label="<?= $escaper->escapeHtmlAttr($createTitle) ?>">
+            <span class="vea-create-option-icon" aria-hidden="true"></span>
+            <span class="vea-visually-hidden"><?= $escaper->escapeHtml(__('Utwórz opcję w Magento')) ?></span>
+        </button>
+    <?php endif; ?>
+<?php else: ?>
+    <span data-role="slot-hint">
+        <?= $escaper->escapeHtml($side === 'ergo' ? __('z Ergonode') : __('z Magento')) ?>
+    </span>
+<?php endif; ?>

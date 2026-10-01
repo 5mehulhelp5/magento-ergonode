@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Ergonode\CategoryPublisherAdminUi\Model\GraphQl\ImmediateMutationExecutor" type="Ergonode\Publisher\Model\GraphQl\MutationExecutor">
+        <arguments>
+            <argument name="maxAttempts" xsi:type="number">1</argument>
+            <argument name="baseDelaySeconds" xsi:type="number">0</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Ergonode\CategoryPublisherAdminUi\Model\ManualTree\ImmediateStrictCategoryCreator" type="Ergonode\CategoryPublisher\Model\Sync\StrictCategoryCreator">
+        <arguments>
+            <argument name="executor" xsi:type="object">Ergonode\CategoryPublisherAdminUi\Model\GraphQl\ImmediateMutationExecutor</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Ergonode\CategoryPublisherAdminUi\Model\ManualTree\ImmediateCategorySynchronizer" type="Ergonode\CategoryPublisher\Model\Sync\CategorySynchronizer">
+        <arguments>
+            <argument name="strictCreator" xsi:type="object">Ergonode\CategoryPublisherAdminUi\Model\ManualTree\ImmediateStrictCategoryCreator</argument>
+            <argument name="executor" xsi:type="object">Ergonode\CategoryPublisherAdminUi\Model\GraphQl\ImmediateMutationExecutor</argument>
+        </arguments>
+    </virtualType>
+    <type name="Ergonode\CategoryPublisherAdminUi\Model\ManualTree\CategoryBatchPublisher">
+        <plugin name="ergonode_category_validate_batch" type="Ergonode\CategoryPublisherAdminUi\Plugin\CategoryBatchValidationPlugin" sortOrder="10"/>
+        <arguments>
+            <argument name="batchSynchronizer" xsi:type="object">Ergonode\CategoryPublisherAdminUi\Model\ManualTree\ImmediateCategorySynchronizer</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Category\Model\Mapping\CategoryLayoutSaver">
+        <plugin name="ergonode_category_publisher_create" type="Ergonode\CategoryPublisherAdminUi\Plugin\CategoryLayoutSaverPlugin"/>
+    </type>
+</config>

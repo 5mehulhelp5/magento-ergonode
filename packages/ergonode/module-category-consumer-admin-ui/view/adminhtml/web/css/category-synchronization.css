@@ -1,0 +1,454 @@
+.vec-sync-progress-shell .modal-inner-wrap {
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    margin: 5vh auto;
+    max-height: 90vh;
+    max-width: 920px;
+    overflow: hidden;
+    width: calc(100% - 32px);
+}
+
+.vec-sync-progress-shell .modal-header {
+    border-bottom: 1px solid var(--veui-border-soft);
+    flex-shrink: 0;
+    padding: 20px 28px;
+}
+
+.vec-sync-progress-shell .modal-title {
+    color: var(--veui-text);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.vec-sync-progress-shell .action-close,
+.vec-sync-progress-shell .modal-footer,
+.vec-sync-progress [hidden] {
+    display: none;
+}
+
+.vec-sync-progress-shell .modal-content {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.vec-sync-progress {
+    --veui-magento-orange: var(--veui-c-c24100);
+    --veui-magento-orange-border: var(--veui-c-c24100);
+    --veui-magento-orange-hover: var(--veui-c-c24100);
+    --veui-magento-orange-hover-border: var(--veui-c-c24100);
+    color: var(--veui-text-muted-strong);
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 0;
+    width: 100%;
+}
+
+.vec-sync-progress p {
+    margin: 0;
+}
+
+.vec-sync-progress-scope {
+    flex-shrink: 0;
+    padding: 16px 28px 0;
+}
+
+.vec-sync-progress-body {
+    min-height: 0;
+    overflow: auto;
+    padding: 20px 28px 24px;
+}
+
+.vec-sync-progress-heading {
+    align-items: flex-start;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.vec-sync-progress-status {
+    color: var(--veui-text);
+    font-size: 16px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.vec-sync-progress-percent {
+    color: var(--veui-text);
+    flex-shrink: 0;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.vec-sync-progress-context {
+    padding-top: 5px;
+}
+
+.vec-sync-progress-bar {
+    background: var(--veui-border-soft);
+    border-radius: 6px;
+    height: 10px;
+    margin: 18px 0 12px;
+    overflow: hidden;
+}
+
+.vec-sync-progress-bar span {
+    background: var(--veui-magento-orange);
+    border-radius: inherit;
+    display: block;
+    height: 100%;
+    transition: width 240ms ease;
+}
+
+.vec-sync-progress-bar[data-determinate='false'] span {
+    animation: vecSyncProgress 1.5s ease-in-out infinite alternate;
+    width: 40%;
+}
+
+.vec-sync-progress-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    justify-content: space-between;
+}
+
+.vec-sync-progress-metrics > div {
+    min-width: 0;
+}
+.vec-sync-progress-estimate {
+    text-align: right;
+}
+.vec-sync-progress-secondary {
+    font-size: 12px;
+}
+.vec-sync-progress-metrics .vec-sync-progress-secondary {
+    padding-top: 3px;
+}
+
+.vec-sync-progress-stages {
+    border-bottom: 1px solid var(--veui-border-soft);
+    border-top: 1px solid var(--veui-border-soft);
+    display: flex;
+    gap: 14px;
+    list-style: none;
+    margin: 22px 0;
+    padding: 18px 0;
+}
+
+.vec-sync-progress-stages > li {
+    align-items: center;
+    display: flex;
+    flex: 1 1 0;
+    font-size: 12px;
+    gap: 8px;
+    margin: 0;
+    min-width: 0;
+}
+
+.vec-sync-stage-marker {
+    align-items: center;
+    background: var(--veui-surface-muted);
+    border-radius: 50%;
+    display: flex;
+    flex: 0 0 24px;
+    height: 24px;
+    justify-content: center;
+    width: 24px;
+}
+
+.vec-sync-progress-stages [data-state='complete'] .vec-sync-stage-marker {
+    background: var(--veui-success-soft);
+    color: var(--veui-success-strong);
+}
+
+.vec-sync-progress-stages [data-state='active'] .vec-sync-stage-marker {
+    background: var(--veui-magento-orange);
+    color: var(--veui-surface);
+}
+
+.vec-sync-progress[data-state='paused'] .vec-sync-progress-bar span,
+.vec-sync-progress[data-state='pausing'] .vec-sync-progress-bar span {
+    animation-play-state: paused;
+    background: var(--veui-text-muted-strong);
+}
+
+.vec-sync-progress[data-state='success'] .vec-sync-progress-status,
+.vec-sync-progress[data-state='warning'] .vec-sync-progress-status,
+.vec-sync-progress[data-state='error'] .vec-sync-progress-status {
+    border-radius: 8px;
+    flex: 1;
+    font-size: 15px;
+    padding: 14px 16px;
+}
+
+.vec-sync-progress[data-state='success'] .vec-sync-progress-status {
+    background: var(--veui-success-soft);
+    color: var(--veui-success-strong);
+}
+
+.vec-sync-progress[data-state='warning'] .vec-sync-progress-status {
+    background: var(--veui-warning-soft);
+    color: var(--veui-warning-text);
+}
+
+.vec-sync-progress[data-state='error'] .vec-sync-progress-status {
+    background: var(--veui-red-soft);
+    color: var(--veui-danger-strong);
+}
+
+.vec-sync-progress-data-item {
+    padding-bottom: 10px;
+}
+.vec-sync-progress-results {
+    padding-top: 18px;
+}
+
+.vec-sync-section-title {
+    color: var(--veui-text);
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+
+.vec-sync-results-layout {
+    align-items: start;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 180px minmax(0, 1fr);
+}
+
+.vec-sync-tree-list {
+    display: grid;
+    gap: 8px;
+}
+
+.vec-sync-tree-button {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 8px;
+    color: var(--veui-text);
+    cursor: pointer;
+    display: grid;
+    font-size: 13px;
+    gap: 3px;
+    padding: 12px;
+    text-align: left;
+    white-space: normal;
+    width: 100%;
+}
+
+.vec-sync-tree-button span {
+    color: var(--veui-text-muted-strong);
+    font-size: 12px;
+}
+
+.vec-sync-tree-button[aria-pressed='true'] {
+    background: var(--veui-blue-softer);
+    border-color: var(--veui-blue-border-strong);
+    box-shadow: inset 3px 0 var(--veui-blue);
+}
+
+.vec-sync-tree-button[data-state='warning'] span {
+    color: var(--veui-warning-text);
+}
+.vec-sync-tree-button[data-state='success'] span {
+    color: var(--veui-success-strong);
+}
+.vec-sync-tree-detail {
+    min-width: 0;
+}
+.vec-sync-tree-summary {
+    padding-bottom: 14px;
+}
+.vec-sync-tree-success {
+    color: var(--veui-success-strong);
+}
+
+.vec-sync-current-activity {
+    background: var(--veui-surface-hover);
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.vec-sync-current-activity strong {
+    color: var(--veui-text);
+    display: block;
+    font-size: 17px;
+    margin-top: 8px;
+}
+
+.vec-sync-conflict-group {
+    border-top: 1px solid var(--veui-border-soft);
+}
+.vec-sync-conflict-group summary {
+    cursor: pointer;
+    padding: 13px 0;
+}
+.vec-sync-conflict-group summary strong {
+    color: var(--veui-text);
+}
+.vec-sync-conflict-group summary span {
+    display: block;
+    font-size: 12px;
+    padding-left: 16px;
+}
+.vec-sync-conflict-group ul {
+    margin: 0 0 14px;
+    padding-left: 20px;
+}
+.vec-sync-conflict-group li {
+    margin-bottom: 8px;
+}
+.vec-sync-results-note {
+    border-top: 1px solid var(--veui-border-soft);
+    padding-top: 13px;
+}
+.vec-sync-progress .vec-sync-data-summary {
+    border-top: 1px solid var(--veui-border-soft);
+    margin-top: 18px;
+    padding-top: 14px;
+}
+
+.vec-sync-progress-footer {
+    align-items: center;
+    border-top: 1px solid var(--veui-border-soft);
+    display: flex;
+    flex-shrink: 0;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 16px 28px;
+}
+
+.vec-sync-progress-actions {
+    display: flex;
+    gap: 8px;
+}
+.vec-sync-progress [data-role='sync-progress-count'],
+.vec-sync-progress-time,
+.vec-sync-progress-percent {
+    font-variant-numeric: tabular-nums;
+}
+.vec-sync-progress-body p,
+.vec-sync-progress-body li,
+.vec-sync-progress-body strong {
+    overflow-wrap: anywhere;
+}
+
+@keyframes vecSyncProgress {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(150%);
+    }
+}
+
+@media (max-width: 680px) {
+    .vec-sync-results-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    .vec-sync-tree-list {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+    .vec-sync-progress-shell .modal-header {
+        padding: 18px 20px;
+    }
+    .vec-sync-progress-scope {
+        padding: 14px 20px 0;
+    }
+    .vec-sync-progress-body {
+        padding: 18px 20px;
+    }
+    .vec-sync-progress-footer {
+        padding: 14px 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .vec-sync-progress-estimate {
+        text-align: left;
+    }
+    .vec-sync-progress-stages {
+        gap: 8px;
+    }
+    .vec-sync-progress-stages > li {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .vec-sync-progress-footer {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vec-sync-progress-bar span,
+    .vec-sync-progress-bar[data-determinate='false'] span {
+        animation: none;
+        transition: none;
+    }
+}
+
+.vec-sync-group + .vec-sync-group {
+    border-top: 1px solid var(--veui-line);
+    margin-top: 6px;
+    padding-top: 6px;
+}
+
+.vec-sync-group-label {
+    display: block;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.vec-sync-action {
+    position: relative;
+}
+
+.vec-sync-hint {
+    white-space: normal;
+}
+
+.vec-sync-action[aria-disabled='true'] {
+    cursor: not-allowed;
+}
+
+.vec-sync-action[aria-disabled='true'] > [aria-hidden='true'],
+.vec-sync-action[aria-disabled='true'] > .vec-sync-action-label {
+    opacity: .56;
+}
+
+.vec-sync-action[aria-disabled='true']:not(.is-hint-dismissed):hover > .vec-sync-hint,
+.vec-sync-action[aria-disabled='true']:not(.is-hint-dismissed):focus > .vec-sync-hint {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.vec-sync-progress-operations {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+.vec-sync-progress-operations[hidden] {
+    display: none;
+}
+.vec-sync-progress-operations dt {
+    color: var(--veui-text-muted-strong);
+    font-weight: 400;
+}
+.vec-sync-progress-operations dd {
+    margin: 4px 0 0;
+    font-size: 24px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}

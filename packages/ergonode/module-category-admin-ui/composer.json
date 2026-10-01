@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-category-admin-ui",
+    "description": "Shared category tree mapping workspace with auto-mapping suggestions, configuration and navigation with optional directional extensions.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-core-admin-ui": "dev-main@dev",
+        "ergonode/module-category": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\CategoryAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

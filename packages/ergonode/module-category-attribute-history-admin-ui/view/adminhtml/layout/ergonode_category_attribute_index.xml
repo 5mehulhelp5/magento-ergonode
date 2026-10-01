@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ergonode_CoreAdminUi::css/history-operations.css"/>
+    </head>
+    <body>
+        <referenceContainer name="ergonode.category.attribute.mapping.sidebar">
+            <block
+                class="Ergonode\CoreAdminUi\Block\Adminhtml\History\Panel"
+                name="ergonode.category.attribute.mapping.history"
+                template="Ergonode_CoreAdminUi::history/panel.phtml"
+                aclResource="Ergonode_CategoryAttributeHistory::view"
+            >
+                <arguments>
+                    <argument name="operations_route" xsi:type="string">ergonode/category_attribute_history/operations</argument>
+                    <argument name="history_route" xsi:type="string">ergonode/category_attribute_history/index</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\AttributeConsumer\Api\AttributeBatchImporterInterface" type="Ergonode\AttributeConsumer\Model\Import\AttributeBatchImporter"/>
+    <preference for="Ergonode\AttributeConsumer\Api\OptionSynchronizationInterface" type="Ergonode\AttributeConsumer\Model\Sync\OptionSynchronizationPool"/>
+    <preference for="Ergonode\AttributeConsumer\Api\AttributeCacheRefresherInterface" type="Ergonode\AttributeConsumer\Model\Import\AttributeCacheRefresher"/>
+    <preference for="Ergonode\AttributeConsumer\Api\AttributeSnapshotRemoverInterface" type="Ergonode\AttributeConsumer\Model\Snapshot\AttributeSnapshotRemover"/>
+    <preference for="Ergonode\AttributeConsumer\Api\ErgonodeAttributeProviderInterface" type="Ergonode\AttributeConsumer\Model\Provider\ErgonodeAttributeProvider"/>
+    <preference for="Ergonode\AttributeConsumer\Api\ErgonodeRelationAttributeProviderInterface" type="Ergonode\AttributeConsumer\Model\Provider\ErgonodeAttributeProvider"/>
+    <preference for="Ergonode\AttributeConsumer\Api\ErgonodeFileDownloaderInterface" type="Ergonode\AttributeConsumer\Model\File\FileDownloader"/>
+    <preference for="Ergonode\AttributeConsumer\Api\ErgonodeOptionProviderInterface" type="Ergonode\AttributeConsumer\Model\Provider\ErgonodeOptionProvider"/>
+    <preference for="Ergonode\AttributeConsumer\Api\OptionSnapshotRemoverInterface" type="Ergonode\AttributeConsumer\Model\Snapshot\OptionSnapshotRemover"/>
+    <type name="Ergonode\Core\Model\Import\SynchronizationStatusProvider">
+        <arguments>
+            <argument name="synchronizations" xsi:type="array">
+                <item name="attributeDefinitionCheck" xsi:type="array">
+                    <item name="label" xsi:type="string">Attribute definition checks</item>
+                    <item
+                        name="description"
+                        xsi:type="string"
+                    >Checks attributeStream and attributeDeletedStream before dependent imports. Refreshes the complete shared snapshot when changes are detected.</item>
+                    <item name="sort_order" xsi:type="number">11</item>
+                    <item name="monitor_only" xsi:type="boolean">true</item>
+                </item>
+                <item name="attributeStream" xsi:type="array">
+                    <item name="label" xsi:type="string">Attributes</item>
+                    <item name="description" xsi:type="string">Imports Ergonode attribute changes and refreshes shared attribute and option snapshots.</item>
+                    <item name="sort_order" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\AttributeConsumer\Api\AttributeSnapshotRefreshInterface" type="Ergonode\AttributeConsumer\Model\Snapshot\AttributeSnapshotRefresh"/>
+    <preference for="Ergonode\AttributeConsumer\Api\AttributeAvailabilityInterface" type="Ergonode\AttributeConsumer\Model\ResourceModel\AttributeDefinitionSnapshot"/>
+    <preference for="Ergonode\AttributeConsumer\Api\AttributeDefinitionSynchronizationInterface" type="Ergonode\AttributeConsumer\Model\Import\AttributeDefinitionSynchronization"/>
+    <preference for="Ergonode\AttributeConsumer\Model\Port\AttributeDefinitionSnapshotInterface" type="Ergonode\AttributeConsumer\Model\ResourceModel\AttributeDefinitionSnapshot"/>
+    <preference for="Ergonode\AttributeConsumer\Model\Port\AttributeDefinitionCheckRecorderInterface" type="Ergonode\AttributeConsumer\Model\ResourceModel\AttributeDefinitionCheck"/>
+    <type name="Ergonode\Core\Model\Import\SynchronizationMonitor">
+        <arguments>
+            <argument name="observationProviders" xsi:type="array">
+                <item name="attributeDefinitionCheck" xsi:type="object">Ergonode\AttributeConsumer\Model\ResourceModel\AttributeDefinitionCheck</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Model\Import\AttributeCacheRefresher">
+        <plugin name="ergonode_attribute_snapshot_write" type="Ergonode\AttributeConsumer\Plugin\SnapshotWriteLockPlugin"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Model\Import\AttributeCacheWriter">
+        <plugin name="ergonode_attribute_snapshot_write" type="Ergonode\AttributeConsumer\Plugin\SnapshotWriteLockPlugin"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Model\Import\OptionCacheReconciler">
+        <plugin name="ergonode_attribute_snapshot_write" type="Ergonode\AttributeConsumer\Plugin\SnapshotWriteLockPlugin"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Model\ResourceModel\AttributeDefinitionSnapshot">
+        <plugin name="ergonode_attribute_snapshot_write" type="Ergonode\AttributeConsumer\Plugin\SnapshotWriteLockPlugin"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Model\Snapshot\AttributeSnapshotRemover">
+        <plugin name="ergonode_attribute_snapshot_write" type="Ergonode\AttributeConsumer\Plugin\SnapshotWriteLockPlugin"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Model\Snapshot\OptionSnapshotRemover">
+        <plugin name="ergonode_attribute_snapshot_write" type="Ergonode\AttributeConsumer\Plugin\SnapshotWriteLockPlugin"/>
+    </type>
+</config>

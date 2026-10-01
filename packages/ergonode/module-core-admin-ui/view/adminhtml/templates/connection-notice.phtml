@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Ergonode\CoreAdminUi\Block\Adminhtml\ConnectionNotice $block */
+/** @var \Magento\Framework\Escaper $escaper */
+if ($block->getProblems() === []) {
+    return;
+}
+$configurationUrl = $block->getConfigurationUrl();
+$settingsIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/settings.svg');
+?>
+<div class="veui-workspace veui-workspace-blocked">
+    <section class="veui-connection-notice" data-role="connection-notice" role="status"
+             aria-labelledby="ergonode-connection-notice-title">
+        <div class="veui-connection-notice-content">
+            <h2 id="ergonode-connection-notice-title">
+                <?= $escaper->escapeHtml(__('This view is unavailable.')) ?>
+            </h2>
+            <p><?= $escaper->escapeHtml($configurationUrl !== ''
+                ? __('Configure the Ergonode connection to access this view.')
+                : __('Ask an administrator to configure the Ergonode connection.')) ?></p>
+        </div>
+        <?php if ($configurationUrl !== ''): ?>
+            <div class="veui-connection-notice-actions">
+                <a class="veui-button veui-button-toolbar" href="<?= $escaper->escapeUrl($configurationUrl) ?>"
+                   target="_blank" rel="noopener noreferrer">
+                    <img src="<?= $escaper->escapeUrl($settingsIconUrl) ?>"
+                         width="16" height="16" alt="" aria-hidden="true">
+                    <?= $escaper->escapeHtml(__('Open configuration')) ?>
+                </a>
+            </div>
+        <?php endif; ?>
+    </section>
+</div>

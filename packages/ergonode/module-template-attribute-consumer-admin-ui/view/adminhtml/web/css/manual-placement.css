@@ -1,0 +1,40 @@
+.vets-workspace {
+    --vetp-border: #d9dee7;
+    --vetp-surface: #fff;
+    --vetp-muted: #697586;
+    --vetp-active-surface: #eeebf8;
+    --vetp-active: #66538c;
+    --vetp-active-border: #c2b7da;
+}
+.vetp-manual-action {
+    border: 1px solid var(--vetp-border);
+    border-radius: 6px;
+    background: var(--vetp-surface);
+    color: var(--vetp-muted);
+    padding: 6px;
+    display: inline-flex;
+    cursor: pointer;
+}
+.vetp-manual-action[aria-pressed='true'] {
+    background: var(--vetp-active-surface);
+    color: var(--vetp-active);
+    border-color: var(--vetp-active-border);
+}
+.vetp-manual-action:disabled {
+    cursor: default;
+}
+.vetp-manual-action:focus-visible {
+    outline: 2px solid var(--vetp-active);
+    outline-offset: 2px;
+}
+.vetp-pin {
+    width: 14px;
+    height: 14px;
+    background: currentColor;
+    clip-path: polygon(24% 0, 76% 0, 67% 15%, 67% 43%, 90% 66%, 56% 66%, 50% 100%, 44% 66%, 10% 66%, 33% 43%, 33% 15%);
+}
+.vetp-feedback {
+    display: block;
+    font-size: 10px;
+    max-width: 180px;
+}

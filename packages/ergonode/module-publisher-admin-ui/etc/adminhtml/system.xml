@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_connection">
+            <group id="test">
+                <group id="publisher" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label/>
+                    <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\OpenFieldset</frontend_model>
+                    <depends>
+                        <field id="ergonode_connection/general/enabled">1</field>
+                        <field id="ergonode_connection/general/environment">test</field>
+                        <field id="ergonode_connection/general/mode">write</field>
+                    </depends>
+                    <field id="api_key" translate="label comment" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" type="obscure">
+                        <label>API key</label>
+                        <validate>required-entry</validate>
+                        <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\RequiredField</frontend_model>
+                        <comment
+                        >Use a read-and-write API key without an assigned segment. Product publication requires access to the entire product catalog. Required when the connection is enabled and this profile is active.</comment>
+                        <backend_model>Ergonode\PublisherAdminUi\Model\Config\Backend\ApiKey</backend_model>
+                    </field>
+                    <field id="connection" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label/>
+                        <frontend_model>Ergonode\PublisherAdminUi\Block\Adminhtml\System\Config\TestConnection</frontend_model>
+                        <comment>Checks connectivity with this environment's key. Does not verify write permissions or change the active environment.</comment>
+                    </field>
+                </group>
+            </group>
+            <group id="production">
+                <group id="publisher" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label/>
+                    <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\OpenFieldset</frontend_model>
+                    <depends>
+                        <field id="ergonode_connection/general/enabled">1</field>
+                        <field id="ergonode_connection/general/environment">production</field>
+                        <field id="ergonode_connection/general/mode">write</field>
+                    </depends>
+                    <field id="api_key" translate="label comment" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" type="obscure">
+                        <label>API key</label>
+                        <validate>required-entry</validate>
+                        <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\RequiredField</frontend_model>
+                        <comment
+                        >Use a read-and-write API key without an assigned segment. Product publication requires access to the entire product catalog. Required when the connection is enabled and this profile is active.</comment>
+                        <backend_model>Ergonode\PublisherAdminUi\Model\Config\Backend\ApiKey</backend_model>
+                    </field>
+                    <field id="connection" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label/>
+                        <frontend_model>Ergonode\PublisherAdminUi\Block\Adminhtml\System\Config\TestConnection</frontend_model>
+                        <comment>Checks connectivity with this environment's key. Does not verify write permissions or change the active environment.</comment>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

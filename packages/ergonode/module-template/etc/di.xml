@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\Template\Api\TemplateAttributeSetMappingProviderInterface" type="Ergonode\Template\Model\Mapping\TemplateAttributeSetMappingProvider"/>
+    <preference for="Ergonode\Template\Api\TemplateAttributeSetResolverInterface" type="Ergonode\Template\Model\Mapping\TemplateAttributeSetMappingProvider"/>
+    <preference for="Ergonode\Template\Api\ProductAttributeSetProviderInterface" type="Ergonode\Template\Model\Mapping\ProductAttributeSetProvider"/>
+    <preference for="Ergonode\Template\Api\TemplateMappingSaverInterface" type="Ergonode\Template\Model\Mapping\TemplateAttributeSetMappingSaver"/>
+    <preference for="Ergonode\Template\Api\TemplateSnapshotProviderInterface" type="Ergonode\Template\Model\TemplateSnapshotProvider"/>
+    <preference for="Ergonode\Template\Api\PublishedTemplateRecorderInterface" type="Ergonode\Template\Model\PublishedTemplateRecorder"/>
+</config>

@@ -1,0 +1,67 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$mapping = (array)$block->getData('mapping');
+$canCreateMagentoOption = (bool)$block->getData('can_create_magento_option');
+$left = isset($mapping['left']) && is_array($mapping['left']) ? $mapping['left'] : null;
+$right = isset($mapping['right']) && is_array($mapping['right']) ? $mapping['right'] : null;
+$isDraft = !$left || !$right;
+$leftType = $left ? (string)($left['type'] ?? '') : '';
+$rightType = $right ? (string)($right['type'] ?? '') : '';
+$leftScope = $left ? (string)($left['scope'] ?? '') : '';
+$rightScope = $right ? (string)($right['scope'] ?? '') : '';
+$statusTone = (string)($mapping['tone'] ?? 'ok');
+if ($isDraft) {
+    $statusTone = 'warning';
+}
+if (!in_array($statusTone, ['ok', 'warning', 'error'], true)) {
+    $statusTone = 'ok';
+}
+$label = [];
+if ($left) {
+    $label[] = $left['label'] ?? '';
+}
+if ($right) {
+    $label[] = $right['label'] ?? '';
+}
+$disconnectTitle = __('Usuń mapowanie opcji');
+$disconnectLabel = __('Usuń mapowanie opcji: %1', implode(' - ', array_filter($label)));
+$createMagentoOptionLabel = __('Utwórz opcję w Magento z opcji Ergonode');
+$leftSlot = [
+    'item' => $left,
+    'side' => 'ergo',
+    'type' => $leftType,
+    'scope' => $leftScope,
+    'required_type' => $rightType,
+    'empty_template' => 'Ergonode_CoreAdminUi::option/empty-slot.phtml',
+];
+$rightSlot = [
+    'item' => $right,
+    'side' => 'magento',
+    'type' => $rightType,
+    'scope' => $rightScope,
+    'required_type' => $leftType,
+    'empty_template' => 'Ergonode_CoreAdminUi::option/empty-slot.phtml',
+    'can_create' => $canCreateMagentoOption,
+    'create_title' => $createMagentoOptionLabel,
+];
+$message = (string)($mapping['note'] ?? '');
+?>
+<?= /* @noEscape */ $block->getLayout()
+    ->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::mapping/pair.phtml')
+    ->setData([
+        'pair_class' => 'vea-pair-row vea-status-tone-' . $statusTone,
+        'status_tone' => $statusTone,
+        'left_slot' => $leftSlot,
+        'right_slot' => $rightSlot,
+        'unlink_title' => $disconnectTitle,
+        'unlink_label' => $disconnectLabel,
+        'message' => $message,
+        'message_hidden' => $message === '',
+        'search_extra' => $message,
+    ])
+    ->toHtml() ?>

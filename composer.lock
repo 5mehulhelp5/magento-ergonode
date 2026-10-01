@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "050a16c7fb07758cf7d97e0229598552",
+    "content-hash": "570329f9870f4db9479650389681f966",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -1863,6 +1863,2612 @@
                 }
             ],
             "time": "2026-02-05T07:01:58+00:00"
+        },
+        {
+            "name": "ergonode/module-attribute",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-attribute",
+                "reference": "9526be9717ad9a9670d9c7dcc539e953b4700ea7"
+            },
+            "require": {
+                "magento/module-catalog": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Attribute\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Ergonode and Magento attribute types and scalar/list value normalization contracts.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-attribute-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-attribute-consumer",
+                "reference": "0ae757afda2f1627a02b5f0485d4612c4d1ae436"
+            },
+            "require": {
+                "ergonode/module-attribute": "dev-main@dev",
+                "ergonode/module-language": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\AttributeConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Ergonode attribute and option snapshots, public page import and option synchronization contracts, complete definition reconciliation, bounded reads and attribute-value file downloads. Owns definition check observations.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-attribute-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-attribute-publisher",
+                "reference": "0d85072c08c744d2422a7da25eebd3c1650e24f9"
+            },
+            "require": {
+                "ergonode/module-attribute": "dev-main@dev",
+                "ergonode/module-language": "dev-main@dev",
+                "ergonode/module-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\AttributePublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Ergonode attribute publication, batched definition and option reads and per-attempt verification.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-attribute-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-attribute-publisher-admin-ui",
+                "reference": "c8449db04d7e660878d8e8e2ffe5962654c6ead9"
+            },
+            "require": {
+                "ergonode/module-attribute-publisher": "dev-main@dev",
+                "ergonode/module-publisher-admin-ui": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\AttributePublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared optional attribute publication actions for mapping editors using Attribute compatibility contracts.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category",
+                "reference": "2e0218b966080a6f85f8a37514119bea8195cba7"
+            },
+            "require": {
+                "ergonode/module-language": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Category\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared category tree and mapping persistence, read-only auto-mapping, visibility and authorization lifecycle, validation, operation locking, catalog context and remote registry access.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-admin-ui",
+                "reference": "9121e3c760e964e96241b4df8914f2ef2da56655"
+            },
+            "require": {
+                "ergonode/module-category": "dev-main@dev",
+                "ergonode/module-core-admin-ui": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared category tree mapping workspace with auto-mapping suggestions, configuration and navigation with optional directional extensions.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute",
+                "reference": "0ae9403396f89ee75a4d38ec6bee7ca85ba53bb7"
+            },
+            "require": {
+                "ergonode/module-attribute": "*",
+                "ergonode/module-core": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttribute\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Direction-neutral category attribute and option mappings, Magento metadata, visibility and mapping authorization.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-admin-ui",
+                "reference": "a78ec8bf46cfbcb9d508256293e065249d71fb9e"
+            },
+            "require": {
+                "ergonode/module-category-attribute": "*",
+                "ergonode/module-core-admin-ui": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributeAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Neutral category attribute and option mapping editor with optional inbound and outbound extensions. Requires active connection configuration for operational workspaces.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-consumer",
+                "reference": "1ab266be02c7cc0376fb43e5c7231b7dbe0eecb4"
+            },
+            "require": {
+                "ergonode/module-attribute-consumer": "dev-main@dev",
+                "ergonode/module-category-attribute": "*",
+                "ergonode/module-category-consumer": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributeConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Inbound category attribute registry reconciliation and value synchronization using neutral CategoryAttribute mappings.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-consumer-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-consumer-admin-ui",
+                "reference": "4ef0f2841a6256bf3e64bfc3c940f04a2537f8ea"
+            },
+            "require": {
+                "ergonode/module-category-attribute-admin-ui": "*",
+                "ergonode/module-category-attribute-consumer": "*",
+                "ergonode/module-category-consumer-admin-ui": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributeConsumerAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional category attribute source metadata, synchronization actions and inbound settings for the neutral category attribute editor.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-consumer-history",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-consumer-history",
+                "reference": "5c1a07dff3a46e15598debb3efdca811f3ee72ad"
+            },
+            "require": {
+                "ergonode/module-category-attribute-consumer": "*",
+                "ergonode/module-category-attribute-history": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributeConsumerHistory\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Category attribute inbound operation capture and fresh source metadata adapter for neutral history.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-history",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-history",
+                "reference": "4c90baea0c8a71e3c14c48063abc48aad6964fca"
+            },
+            "require": {
+                "ergonode/module-category-attribute": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributeHistory\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Direction-neutral category attribute mapping history with immutable states and optional source capture, with independently configurable capture and scheduled retention.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-history-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-history-admin-ui",
+                "reference": "0c549f18c4049eafeb6c35f66f48a7b024908d6c"
+            },
+            "require": {
+                "ergonode/module-category-attribute-admin-ui": "*",
+                "ergonode/module-category-attribute-history": "*",
+                "ergonode/module-category-consumer-admin-ui": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributeHistoryAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Magento Admin category attribute history viewer, shared-panel configuration, navigation and actor context, including capture and retention configuration fields.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-publisher",
+                "reference": "90b66acdda4c26b8db120cbe65565f29370ccbd0"
+            },
+            "require": {
+                "ergonode/module-attribute-publisher": "*",
+                "ergonode/module-category-publisher": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributePublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Category-attribute definition and value publication to Ergonode.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-attribute-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-attribute-publisher-admin-ui",
+                "reference": "77a7f69c825a362deb0b6ade54c005a1c85c34b5"
+            },
+            "require": {
+                "ergonode/module-attribute-publisher-admin-ui": "dev-main@dev",
+                "ergonode/module-category-attribute-admin-ui": "*",
+                "ergonode/module-category-attribute-publisher": "dev-main@dev",
+                "ergonode/module-category-publisher-admin-ui": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryAttributePublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional Ergonode publishing actions and batched write-scope metadata for category attribute mapping in Magento Admin.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-consumer",
+                "reference": "a1be851d8529eddeefa0f695f948d6ed18b36c29"
+            },
+            "require": {
+                "ergonode/module-category": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Ergonode category synchronization with source availability checks and preservation of missing categories.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-consumer-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-consumer-admin-ui",
+                "reference": "2248a32b9faebd5efbad92743d109c7c7ec6f649"
+            },
+            "require": {
+                "ergonode/module-category-admin-ui": "dev-main@dev",
+                "ergonode/module-category-consumer": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryConsumerAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Inbound category synchronization controls and configuration extending the shared category mapping workspace.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-consumer-history",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-consumer-history",
+                "reference": "32d30c57f82b0b7e42f2e0e798f2147f5ab1fc3d"
+            },
+            "require": {
+                "ergonode/module-category-consumer": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryConsumerHistory\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Append-only category-tree history for structural operations, data synchronization batches and local snapshot removal, with deterministic state reconstruction, configurable capture and retention.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-consumer-history-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-consumer-history-admin-ui",
+                "reference": "9488582b1f333a8ed083f83628bf6dc017112f4d"
+            },
+            "require": {
+                "ergonode/module-category-consumer-admin-ui": "*",
+                "ergonode/module-category-consumer-history": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryConsumerHistoryAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Magento Admin history viewer and mapping sidebar for grouped Ergonode category-tree operations, including capture and retention configuration fields.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-publisher",
+                "reference": "2814de7d2d5b67e1327fd7fe16b756083e5004a1"
+            },
+            "require": {
+                "ergonode/module-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryPublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Stateless GraphQL reconciliation of category entities and names with contribution contracts for domain extensions.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-category-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-category-publisher-admin-ui",
+                "reference": "e8e253dbc3cb578388b4eaaeb596eff2cb642efb"
+            },
+            "require": {
+                "ergonode/module-category-admin-ui": "dev-main@dev",
+                "ergonode/module-category-publisher": "dev-main@dev",
+                "ergonode/module-publisher-admin-ui": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CategoryPublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Category publication UI and tree operations consuming shared Publisher REST login and transport.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-consumer",
+                "reference": "8c74d3d8b79c2f1cd07b76945c21e943280ad5a3"
+            },
+            "require": {
+                "ergonode/module-core": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Consumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared read-only Ergonode connection mode, encrypted environment credentials and export classification of current and retired read credentials.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-consumer-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-consumer-admin-ui",
+                "reference": "1761a3790c38191da771c142610df79b40ef21cb"
+            },
+            "require": {
+                "ergonode/module-consumer": "dev-main@dev",
+                "ergonode/module-core-admin-ui": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ConsumerAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Read-only Ergonode connection credentials and connection-test controls for Magento Admin.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-core",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-core",
+                "reference": "5f7a909ad8e9d453d89c7cbd77bfa8f101e97060"
+            },
+            "require": {
+                "magento/module-backend": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Core\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Ergonode connection selection, transport, environment quotas, download-source authorization and bounded change reports; integration and domain observation contracts.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-core-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-core-admin-ui",
+                "reference": "5a02ce55a4232c03f3f4af1ca41d9ad06c46d481"
+            },
+            "require": {
+                "ergonode/module-core": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\CoreAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Ergonode connection configuration forms, workspace assets, mapping modals, publication progress and synchronization monitoring.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-language",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-language",
+                "reference": "9c40ee24ff06288a7641d53cc40142bf94054743"
+            },
+            "require": {
+                "ergonode/module-core": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Language\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Ergonode language-to-store-view mapping domain services for Magento 2.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-language-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-language-admin-ui",
+                "reference": "e956a3a5bae0f76465e956a8e4686be78fdbf2d2"
+            },
+            "require": {
+                "ergonode/module-core-admin-ui": "dev-main@dev",
+                "ergonode/module-language": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\LanguageAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Admin UI for shared Ergonode language-to-store-view mappings. Requires active connection configuration for operational workspaces.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product",
+                "reference": "8aec0f225a0647eeaae07bb4593e10dc41a3a15c"
+            },
+            "require": {
+                "ergonode/module-attribute": "dev-main@dev",
+                "ergonode/module-core": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Product\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared product catalog reads, identities, SKU mode configuration and optional assigned-SKU support contracts.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-admin-ui",
+                "reference": "3492d596d17e252877726ccf2c6868c7b77b31a5"
+            },
+            "require": {
+                "ergonode/module-core-admin-ui": "dev-main@dev",
+                "ergonode/module-product": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Magento Admin product workspace, extensible actions with preflight checks, identity fields and SKU configuration. Requires active connection configuration for operational workspaces.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute",
+                "reference": "09c2a02cd831d176e6853d7a36129b3cd3fee283"
+            },
+            "require": {
+                "ergonode/module-product": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttribute\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Direction-neutral product attribute mappings, persistent value adapter requirements, Magento metadata and mapping policy.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-admin-ui",
+                "reference": "be18b0154f4f626513ebaa26b1ec2e1a2668b747"
+            },
+            "require": {
+                "ergonode/module-core-admin-ui": "*",
+                "ergonode/module-language": "*",
+                "ergonode/module-product-attribute": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributeAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Neutral product attribute and option mapping screens, manual mapping and shared mapping configuration. Requires active connection configuration for operational workspaces.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-consumer",
+                "reference": "7b30aef23e27964b411150c5c587e6fad9cd894c"
+            },
+            "require": {
+                "ergonode/module-attribute-consumer": "*",
+                "ergonode/module-product-attribute": "*",
+                "packhauer/module-unit-attribute": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributeConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Inbound product attribute and option synchronization through shared snapshot APIs, automatic mapping and source availability preparation. Owns product attribute import execution and its cursor.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-consumer-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-consumer-admin-ui",
+                "reference": "3d9836e0ae9077e68126a50a1b3c36366de80af3"
+            },
+            "require": {
+                "ergonode/module-product-attribute-admin-ui": "*",
+                "ergonode/module-product-attribute-consumer": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributeConsumerAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional inbound attribute synchronization, snapshot metadata and Magento creation actions for the neutral mapping editor.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-consumer-history",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-consumer-history",
+                "reference": "59645da93adf9ca4125c9ddb28f2bf3e5f7cd648"
+            },
+            "require": {
+                "ergonode/module-product-attribute-consumer": "*",
+                "ergonode/module-product-attribute-history": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributeConsumerHistory\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional inbound product attribute operation capture for direction-neutral mapping history.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-history",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-history",
+                "reference": "3c175bc917c0f227934fd6ef9a6ecb7a8f0ac4bb"
+            },
+            "require": {
+                "ergonode/module-attribute-consumer": "*",
+                "ergonode/module-product-attribute": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributeHistory\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Direction-neutral product attribute and option mapping history with immutable states and grouped operation capture, with independently configurable capture and scheduled retention.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-history-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-history-admin-ui",
+                "reference": "045c72e9ea1750179ee6511998ec93ed8ff2d4d9"
+            },
+            "require": {
+                "ergonode/module-product-attribute-admin-ui": "*",
+                "ergonode/module-product-attribute-history": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributeHistoryAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Read-only Admin product attribute and option history viewer, shared-panel configuration, navigation and authenticated actor, including capture and retention configuration fields.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-publisher",
+                "reference": "bf3d0879765780f9a050e4f59503781282ed61b1"
+            },
+            "require": {
+                "ergonode/module-product-publisher": "*",
+                "packhauer/module-unit-attribute": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributePublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Mapped product publication values and adapter availability diagnostics.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-attribute-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-attribute-publisher-admin-ui",
+                "reference": "d08e013f086123d792775f3596400054925ce10e"
+            },
+            "require": {
+                "ergonode/module-attribute-publisher-admin-ui": "dev-main@dev",
+                "ergonode/module-product-attribute-admin-ui": "*",
+                "ergonode/module-product-attribute-publisher": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductAttributePublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Admin UI publication actions and write-scope metadata verification for product attributes and options.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-category-attribute",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-category-attribute",
+                "reference": "dd8c9729e06059c67da5da6cf5ccbd9e3c2a6677"
+            },
+            "require": {
+                "ergonode/module-product-attribute": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductCategoryAttribute\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared configuration, mapping policy and value adapter declaration for an optional product category-reference attribute.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-category-attribute-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-category-attribute-admin-ui",
+                "reference": "379357e231b5fcc829dedb74e56ff4ce7dba78fc"
+            },
+            "require": {
+                "ergonode/module-product-attribute-admin-ui": "dev-main@dev",
+                "ergonode/module-product-category-attribute": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductCategoryAttributeAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Admin configuration for optional product category-reference attributes.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-category-attribute-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-category-attribute-consumer",
+                "reference": "b6a4d6683f66e12db819d3a93ee66ca45de89909"
+            },
+            "require": {
+                "ergonode/module-category": "dev-main@dev",
+                "ergonode/module-product-category-attribute": "dev-main@dev",
+                "ergonode/module-product-consumer": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductCategoryAttributeConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional import adapter for product category-reference attribute values.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-category-attribute-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-category-attribute-publisher",
+                "reference": "694cff8384ee7685d8160365da32eb3d6ffe9c28"
+            },
+            "require": {
+                "ergonode/module-category": "dev-main@dev",
+                "ergonode/module-product-category-attribute": "dev-main@dev",
+                "ergonode/module-product-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductCategoryAttributePublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Category reference conversion and membership validation for product publication.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-category-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-category-consumer",
+                "reference": "e5041cf053979a9fd0402c2f7ef73228db66abde"
+            },
+            "require": {
+                "ergonode/module-category": "dev-main@dev",
+                "ergonode/module-product-consumer": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductCategoryConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional import of product category assignments by Ergonode category code.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-category-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-category-publisher",
+                "reference": "7d3eaf9435d0812e05dba88c0b97c5618597eb36"
+            },
+            "require": {
+                "ergonode/module-category": "dev-main@dev",
+                "ergonode/module-product-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductCategoryPublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional publication of product category assignments by Ergonode category code.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-category-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-category-publisher-admin-ui",
+                "reference": "0d593ee429b1794c6f5839a16286d540670db589"
+            },
+            "require": {
+                "ergonode/module-product-category-publisher": "dev-main@dev",
+                "ergonode/module-product-publisher-admin-ui": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductCategoryPublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Admin configuration for optional product category publication.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-consumer",
+                "reference": "fb8dbd19c8102aaf03477c94c4a3f192c66a913e"
+            },
+            "require": {
+                "ergonode/module-product-attribute-consumer": "dev-main@dev",
+                "ergonode/module-template": "dev-main@dev",
+                "magento/module-message-queue": "*",
+                "packhauer/module-file-attribute": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Inbound Ergonode product synchronization with source definition preparation and optional stream processing.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-consumer-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-consumer-admin-ui",
+                "reference": "b98ce4af63d2f1767e57a68a71e9341a2f723e34"
+            },
+            "require": {
+                "ergonode/module-product-admin-ui": "dev-main@dev",
+                "ergonode/module-product-consumer": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductConsumerAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Magento Admin action and request handling for importing product data from Ergonode.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-publisher",
+                "reference": "93d0ddb37e39db0bc074f759e59356e87c3948d4"
+            },
+            "require": {
+                "ergonode/module-language": "dev-main@dev",
+                "ergonode/module-product": "dev-main@dev",
+                "ergonode/module-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductPublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Magento GraphQL product publication using an unsegmented read-and-write API key.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-publisher-admin-ui",
+                "reference": "248b62b74c14a2a2a12cd162dce0b30ecd7ccbe7"
+            },
+            "require": {
+                "ergonode/module-product-admin-ui": "dev-main@dev",
+                "ergonode/module-product-publisher": "dev-main@dev",
+                "ergonode/module-publisher-admin-ui": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductPublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Magento Admin outbound product publication action for the product workspace.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-template-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-template-publisher",
+                "reference": "0bcf4ba406ddaa5e2f7f8d72c8970e3b2f20daf5"
+            },
+            "require": {
+                "ergonode/module-product-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductTemplatePublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional Magento attribute-set to Ergonode product-template publication adapter.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-publisher",
+                "reference": "ee7288b6db81cdea61adfe200597a4468a9eab0e"
+            },
+            "require": {
+                "ergonode/module-core": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Publisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared publication contracts, GraphQL execution with verification rounds and encrypted REST connections.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-publisher-admin-ui",
+                "reference": "74c87d8c0a96b789fc764e4b581fd6ccf7c34d83"
+            },
+            "require": {
+                "ergonode/module-core-admin-ui": "dev-main@dev",
+                "ergonode/module-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\PublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Write configuration, shared REST login UI, admin-session credential storage and publishing actions.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template",
+                "reference": "a8975b9fc9e694d2ca1a27e13090125efdc5d08b"
+            },
+            "require": {
+                "magento/module-authorization": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Template\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Ergonode template identity, attribute-set mapping contracts and persistence.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-admin-ui",
+                "reference": "ca50daf036d314b99127c5ad0eb499b3c4b76c83"
+            },
+            "require": {
+                "ergonode/module-core-admin-ui": "*",
+                "ergonode/module-language": "*",
+                "ergonode/module-template": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplateAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Independent Admin workspace for Ergonode template and Magento attribute-set mapping. Requires active connection configuration for operational workspaces.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-attribute",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-attribute",
+                "reference": "d569bc8a18cd9397aa133b0be35eb03f73a2343b"
+            },
+            "require": {
+                "ergonode/module-product-attribute": "*",
+                "ergonode/module-template": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplateAttribute\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Shared Ergonode template-section and template-attribute persistence.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-attribute-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-attribute-admin-ui",
+                "reference": "2dd4d2dc0712abe07c97f60e2ea1b7206f0e4a65"
+            },
+            "require": {
+                "ergonode/module-template-admin-ui": "*",
+                "ergonode/module-template-attribute": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplateAttributeAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Read-only Admin presentation of template sections and Magento attribute-set structure.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-attribute-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-attribute-consumer",
+                "reference": "32d61afc7dbe0e96990db6d8f2bcca594ec8ad78"
+            },
+            "require": {
+                "ergonode/module-template-attribute": "*",
+                "ergonode/module-template-consumer": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplateAttributeConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Ergonode template structure snapshots, Magento placement synchronization, cleanup and manual placement policy.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-attribute-consumer-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-attribute-consumer-admin-ui",
+                "reference": "136294acd660791b47e709836e38a3c00ba1c9ee"
+            },
+            "require": {
+                "ergonode/module-template-attribute-admin-ui": "*",
+                "ergonode/module-template-attribute-consumer": "*",
+                "ergonode/module-template-consumer-admin-ui": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplateAttributeConsumerAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Admin configuration and manual placement controls for Ergonode template structure synchronization.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-consumer",
+                "reference": "553caafb81275ce9c4bd6ca26a323a7ef7eb3ee9"
+            },
+            "require": {
+                "ergonode/module-language": "dev-main@dev",
+                "ergonode/module-template": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplateConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Ergonode template snapshot import and optional Magento attribute-set synchronization orchestration.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-consumer-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-consumer-admin-ui",
+                "reference": "9716b4f76d58baff81fc3b032ae7943f44a7d455"
+            },
+            "require": {
+                "ergonode/module-template-admin-ui": "*",
+                "ergonode/module-template-consumer": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplateConsumerAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Optional Admin actions and configuration for importing and synchronizing Ergonode templates.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-publisher",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-publisher",
+                "reference": "d700c0ba94818aeed8787e6c26c6d273b82eebcc"
+            },
+            "require": {
+                "ergonode/module-publisher": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplatePublisher\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Stateless creation of Ergonode templates through the shared publishing infrastructure.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-template-publisher-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-template-publisher-admin-ui",
+                "reference": "bca21163651624761e104836ee8b3134d006f48e"
+            },
+            "require": {
+                "ergonode/module-template-admin-ui": "*",
+                "ergonode/module-template-publisher": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\TemplatePublisherAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Admin UI integration for template creation from Magento product attribute sets.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "ezimuel/guzzlestreams",
@@ -19179,6 +21785,90 @@
             "time": "2026-09-14T04:51:09+00:00"
         },
         {
+            "name": "packhauer/module-file-attribute",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/packhauer/module-file-attribute",
+                "reference": "4b35a8a8ec5361a3935cae1f1992fc45dfd2fb21"
+            },
+            "require": {
+                "magento/module-catalog": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "packhauer": {
+                    "lifecycle": "development",
+                    "package-family": "PackHauer_FileAttribute"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "PackHauer\\FileAttribute\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Reusable file product attributes with safe media storage for Magento 2.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "packhauer/module-unit-attribute",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/packhauer/module-unit-attribute",
+                "reference": "f1cf53a94f633dc9e47e1970342492e7282d42a2"
+            },
+            "require": {
+                "magento/module-swatches": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "packhauer": {
+                    "lifecycle": "development",
+                    "package-family": "PackHauer_UnitAttribute"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "PackHauer\\UnitAttribute\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Reusable numeric product attributes with unit metadata for Magento 2.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "paragonie/constant_time_encoding",
             "version": "v3.1.3",
             "source": {
@@ -29976,7 +32666,71 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "ergonode/module-attribute": 20,
+        "ergonode/module-attribute-consumer": 20,
+        "ergonode/module-attribute-publisher": 20,
+        "ergonode/module-attribute-publisher-admin-ui": 20,
+        "ergonode/module-category": 20,
+        "ergonode/module-category-admin-ui": 20,
+        "ergonode/module-category-attribute": 20,
+        "ergonode/module-category-attribute-admin-ui": 20,
+        "ergonode/module-category-attribute-consumer": 20,
+        "ergonode/module-category-attribute-consumer-admin-ui": 20,
+        "ergonode/module-category-attribute-consumer-history": 20,
+        "ergonode/module-category-attribute-history": 20,
+        "ergonode/module-category-attribute-history-admin-ui": 20,
+        "ergonode/module-category-attribute-publisher": 20,
+        "ergonode/module-category-attribute-publisher-admin-ui": 20,
+        "ergonode/module-category-consumer": 20,
+        "ergonode/module-category-consumer-admin-ui": 20,
+        "ergonode/module-category-consumer-history": 20,
+        "ergonode/module-category-consumer-history-admin-ui": 20,
+        "ergonode/module-category-publisher": 20,
+        "ergonode/module-category-publisher-admin-ui": 20,
+        "ergonode/module-consumer": 20,
+        "ergonode/module-consumer-admin-ui": 20,
+        "ergonode/module-core": 20,
+        "ergonode/module-core-admin-ui": 20,
+        "ergonode/module-language": 20,
+        "ergonode/module-language-admin-ui": 20,
+        "ergonode/module-product": 20,
+        "ergonode/module-product-admin-ui": 20,
+        "ergonode/module-product-attribute": 20,
+        "ergonode/module-product-attribute-admin-ui": 20,
+        "ergonode/module-product-attribute-consumer": 20,
+        "ergonode/module-product-attribute-consumer-admin-ui": 20,
+        "ergonode/module-product-attribute-consumer-history": 20,
+        "ergonode/module-product-attribute-history": 20,
+        "ergonode/module-product-attribute-history-admin-ui": 20,
+        "ergonode/module-product-attribute-publisher": 20,
+        "ergonode/module-product-attribute-publisher-admin-ui": 20,
+        "ergonode/module-product-category-attribute": 20,
+        "ergonode/module-product-category-attribute-admin-ui": 20,
+        "ergonode/module-product-category-attribute-consumer": 20,
+        "ergonode/module-product-category-attribute-publisher": 20,
+        "ergonode/module-product-category-consumer": 20,
+        "ergonode/module-product-category-publisher": 20,
+        "ergonode/module-product-category-publisher-admin-ui": 20,
+        "ergonode/module-product-consumer": 20,
+        "ergonode/module-product-consumer-admin-ui": 20,
+        "ergonode/module-product-publisher": 20,
+        "ergonode/module-product-publisher-admin-ui": 20,
+        "ergonode/module-product-template-publisher": 20,
+        "ergonode/module-publisher": 20,
+        "ergonode/module-publisher-admin-ui": 20,
+        "ergonode/module-template": 20,
+        "ergonode/module-template-admin-ui": 20,
+        "ergonode/module-template-attribute": 20,
+        "ergonode/module-template-attribute-admin-ui": 20,
+        "ergonode/module-template-attribute-consumer": 20,
+        "ergonode/module-template-attribute-consumer-admin-ui": 20,
+        "ergonode/module-template-consumer": 20,
+        "ergonode/module-template-consumer-admin-ui": 20,
+        "ergonode/module-template-publisher": 20,
+        "ergonode/module-template-publisher-admin-ui": 20,
         "magento/composer": 10,
+        "packhauer/module-file-attribute": 20,
+        "packhauer/module-unit-attribute": 20,
         "pdepend/pdepend": 20,
         "phpmd/phpmd": 20
     },

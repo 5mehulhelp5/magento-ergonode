@@ -1,0 +1,44 @@
+[
+  {
+    "labels": [
+      "Collections",
+      "New Luma Yoga Collection"
+    ],
+    "expected": "collections__new_luma_yoga_collection"
+  },
+  {
+    "labels": [
+      "Meble",
+      "Łóżka dziecięce"
+    ],
+    "expected": "meble__lozka_dzieciece"
+  },
+  {
+    "labels": [
+      "Promocja 10.99",
+      "Straße & Æsir"
+    ],
+    "expected": "promocja_10_99__strasse_aesir"
+  },
+  {
+    "labels": [
+      "",
+      "  Akcesoria / Dom  "
+    ],
+    "expected": "akcesoria_dom"
+  },
+  {
+    "labels": [
+      "Sale",
+      "0",
+      "Shoes"
+    ],
+    "expected": "sale__0__shoes"
+  },
+  {
+    "labels": [
+      "0"
+    ],
+    "expected": "0"
+  }
+]

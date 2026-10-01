@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_product_import_item" resource="default" engine="innodb" comment="Ergonode Product Import Work Item">
+        <column xsi:type="bigint" name="item_id" unsigned="true" nullable="false" identity="true" comment="Item ID"/>
+        <column xsi:type="varchar" name="ergonode_sku" nullable="false" length="64" comment="Immutable Ergonode SKU"/>
+        <column xsi:type="varchar" name="operation" nullable="false" length="16" comment="Import Operation"/>
+        <column xsi:type="mediumtext" name="payload_json" nullable="true" comment="Ergonode Product Snapshot JSON"/>
+        <column xsi:type="varbinary" name="event_token" nullable="false" length="16" comment="Latest Event Token"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16" default="pending" comment="Work Status"/>
+        <column xsi:type="smallint" name="attempt_count" unsigned="true" nullable="false" default="0" comment="Processing Attempt Count"/>
+        <column xsi:type="timestamp" name="available_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Next Attempt Time"/>
+        <column xsi:type="varbinary" name="lease_token" nullable="true" length="16" comment="Lease Token"/>
+        <column xsi:type="timestamp" name="lease_expires_at" nullable="true" on_update="false" comment="Lease Expiry"/>
+        <column xsi:type="text" name="last_error" nullable="true" comment="Last Error"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="item_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_PRODUCT_IMPORT_ITEM_SKU">
+            <column name="ergonode_sku"/>
+        </constraint>
+        <index referenceId="ERGONODE_PRODUCT_IMPORT_ITEM_CLAIM" indexType="btree">
+            <column name="status"/>
+            <column name="available_at"/>
+            <column name="lease_expires_at"/>
+            <column name="item_id"/>
+        </index>
+    </table>
+</schema>

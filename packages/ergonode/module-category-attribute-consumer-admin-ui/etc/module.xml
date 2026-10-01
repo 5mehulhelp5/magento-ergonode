@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Ergonode_CategoryAttributeConsumerAdminUi">
+        <sequence>
+            <module name="Ergonode_CategoryAttributeAdminUi"/>
+            <module name="Ergonode_CategoryConsumerAdminUi"/>
+            <module name="Ergonode_CategoryAttributeConsumer"/>
+        </sequence>
+    </module>
+</config>

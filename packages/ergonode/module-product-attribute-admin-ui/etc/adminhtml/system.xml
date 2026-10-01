@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_products" translate="label" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Products</label>
+            <tab>ergonode</tab>
+            <resource>Ergonode_Core::config</resource>
+            <group id="attributes" translate="label" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Attributes</label>
+                <field id="url_key" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>URL Key</label>
+                    <comment>Map an Ergonode Text attribute or let Magento generate URL Key from the product name. Magento normalizes mapped values and updates URL rewrites.</comment>
+                    <source_model>Ergonode\ProductAttributeAdminUi\Model\Config\Source\ProductUrlKeyMode</source_model>
+                </field>
+                <field id="price_mode" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Price</label>
+                    <comment
+                    >Map Price from Ergonode or keep it managed by Magento. Magento-managed Price is not mapped or published to Ergonode; the default is used only when synchronization creates a Magento product.</comment>
+                    <source_model>Ergonode\ProductAttributeAdminUi\Model\Config\Source\ProductAttributeMode</source_model>
+                </field>
+                <field id="price_default" translate="label comment tooltip" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Price</label>
+                    <comment>Required non-negative decimal value assigned when synchronization creates a Magento product.</comment>
+                    <tooltip>The default Magento value is assigned only when synchronization creates a product. It is never used to update an existing product.</tooltip>
+                    <validate>required-entry validate-number validate-zero-or-greater</validate>
+                    <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\RequiredField</frontend_model>
+                    <depends>
+                        <field id="price_mode">manual</field>
+                    </depends>
+                </field>
+                <field id="status" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Status</label>
+                    <comment
+                    >Map Status from Ergonode or keep it managed by Magento. Magento-managed Status is not mapped or published to Ergonode; the default is used only when synchronization creates a Magento product.</comment>
+                    <source_model>Ergonode\ProductAttributeAdminUi\Model\Config\Source\ProductAttributeMode</source_model>
+                </field>
+                <field id="status_default" translate="label comment tooltip" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Status</label>
+                    <comment>Value assigned when synchronization creates a Magento product.</comment>
+                    <tooltip>The default Magento value is assigned only when synchronization creates a product. It is never used to update an existing product.</tooltip>
+                    <source_model>Magento\Catalog\Model\Product\Attribute\Source\Status</source_model>
+                    <depends>
+                        <field id="status">manual</field>
+                    </depends>
+                </field>
+                <field id="visibility" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Visibility</label>
+                    <comment
+                    >Map Visibility from Ergonode or keep it managed by Magento. Magento-managed Visibility is not mapped or published to Ergonode; the default is used only when synchronization creates a Magento product.</comment>
+                    <source_model>Ergonode\ProductAttributeAdminUi\Model\Config\Source\ProductAttributeMode</source_model>
+                </field>
+                <field id="visibility_default" translate="label comment tooltip" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Visibility</label>
+                    <comment>Value assigned when synchronization creates a Magento product.</comment>
+                    <tooltip>The default Magento value is assigned only when synchronization creates a product. It is never used to update an existing product.</tooltip>
+                    <source_model>Magento\Catalog\Model\Product\Visibility</source_model>
+                    <depends>
+                        <field id="visibility">manual</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

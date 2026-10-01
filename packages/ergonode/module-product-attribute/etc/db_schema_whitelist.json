@@ -1,0 +1,54 @@
+{
+    "ergonode_product_attribute_mapping": {
+        "column": {
+            "mapping_id": true,
+            "ergonode_attribute_code": true,
+            "magento_attribute_code": true,
+            "ergonode_type": true,
+            "magento_type": true,
+            "status": true,
+            "content_hash": true,
+            "sort_order": true,
+            "created_at": true,
+            "updated_at": true,
+            "value_adapter": true
+        },
+        "index": {
+            "ERGONODE_ATTRIBUTE_MAPPING_STATUS": true,
+            "ERGONODE_PRODUCT_ATTRIBUTE_MAPPING_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_ATTRIBUTE_MAPPING_ERGONODE_ATTRIBUTE_CODE": true,
+            "ERGONODE_ATTRIBUTE_MAPPING_MAGENTO_ATTRIBUTE_CODE": true,
+            "ERGONODE_PRODUCT_ATTRIBUTE_MAPPING_ERGONODE_ATTRIBUTE_CODE": true,
+            "ERGONODE_PRODUCT_ATTRIBUTE_MAPPING_MAGENTO_ATTRIBUTE_CODE": true
+        }
+    },
+    "ergonode_product_option_mapping": {
+        "column": {
+            "mapping_id": true,
+            "attribute_mapping_id": true,
+            "ergonode_option_code": true,
+            "magento_option_id": true,
+            "status": true,
+            "content_hash": true,
+            "sort_order": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_OPTION_MAPPING_ATTRIBUTE_MAPPING_ID_STATUS": true,
+            "ERGONODE_PRODUCT_OPTION_MAPPING_ATTRIBUTE_MAPPING_ID_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_0481F33B1AA1451C6350BE96BB9A77D6": true,
+            "ERGONODE_OPT_MAPPING_ATTR_MAPPING_ID_ERGONODE_OPT_CODE": true,
+            "ERGONODE_OPTION_MAPPING_ATTRIBUTE_MAPPING_ID_MAGENTO_OPTION_ID": true,
+            "FK_B6040CFD80E92B355AF172ED52915F1D": true,
+            "ERGONODE_PRD_OPT_MAPPING_ATTR_MAPPING_ID_ERGONODE_OPT_CODE": true,
+            "ERGONODE_PRD_OPT_MAPPING_ATTR_MAPPING_ID_MAGENTO_OPT_ID": true
+        }
+    }
+}

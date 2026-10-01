@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\Attribute\Api\AttributeDataNormalizerInterface" type="Ergonode\Attribute\Model\AttributeDataNormalizer"/>
+    <preference for="Ergonode\Attribute\Api\AttributeValueNormalizerInterface" type="Ergonode\Attribute\Model\AttributeValueNormalizer"/>
+    <preference for="Ergonode\Attribute\Api\AttributeTypeCompatibilityInterface" type="Ergonode\Attribute\Model\Mapping\AttributeTypeCompatibility"/>
+    <preference for="Ergonode\Attribute\Api\ErgonodeAttributeTypeResolverInterface" type="Ergonode\Attribute\Model\ErgonodeAttributeTypeResolver"/>
+    <preference for="Ergonode\Attribute\Api\MagentoAttributeTypeResolverInterface" type="Ergonode\Attribute\Model\MagentoAttributeTypeResolver"/>
+    <preference for="Ergonode\Attribute\Api\TranslationNormalizerInterface" type="Ergonode\Attribute\Model\AttributeValueNormalizer"/>
+</config>

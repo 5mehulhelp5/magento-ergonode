@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Ergonode_ProductAttributeConsumer">
+        <sequence>
+            <module name="Ergonode_AttributeConsumer"/>
+            <module name="Ergonode_Core"/>
+            <module name="Ergonode_ProductAttribute"/>
+            <module name="PackHauer_UnitAttribute"/>
+        </sequence>
+    </module>
+</config>

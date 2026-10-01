@@ -1,0 +1,15 @@
+<?php
+declare(strict_types=1);
+
+/** @var \Magento\Framework\View\Element\Template $block */
+$label = __('Zaznacz element');
+?>
+<label class="veui-source-bulk-selection"
+       data-role="source-bulk-selection"
+       draggable="false"
+       title="<?= $escaper->escapeHtmlAttr($label) ?>">
+    <input type="checkbox"
+           data-role="source-bulk-select"
+           aria-label="<?= $escaper->escapeHtmlAttr($label) ?>"/>
+    <span aria-hidden="true"></span>
+</label>

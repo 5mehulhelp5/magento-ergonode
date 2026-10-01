@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\Readiness">
+        <arguments>
+            <argument name="domainLabels" xsi:type="array">
+                <item name="categories" xsi:type="string">Categories</item>
+            </argument>
+            <argument name="remediationRoutes" xsi:type="array">
+                <item name="categories" xsi:type="string">ergonode/category_tree_mapping/edit</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\ViewModel\ReadinessChecks">
+        <arguments>
+            <argument name="definitions" xsi:type="array">
+                <item name="categories" xsi:type="array">
+                    <item name="active_tree_mapping" xsi:type="array">
+                        <item name="label" xsi:type="string">An active Ergonode category tree is connected to a Magento root category.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="active_tree_mapping_missing" xsi:type="string">categories.active_tree_mapping_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">read</item>
+                    </item>
+                    <item name="root_category" xsi:type="array">
+                        <item name="label" xsi:type="string">Mapped Magento root categories exist.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="root_category_missing" xsi:type="string">categories.root_category_missing</item>
+                        </item>
+                        <item name="blocked_by" xsi:type="array">
+                            <item name="active_tree_mapping_missing" xsi:type="string">categories.active_tree_mapping_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">read</item>
+                    </item>
+                    <item name="category_mapping" xsi:type="array">
+                        <item name="label" xsi:type="string">New categories have values for Is Active and Include in Navigation Menu from fixed configuration or complete attribute mappings.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="category_mapping_missing" xsi:type="string">categories.category_mapping_missing</item>
+                        </item>
+                        <item name="blocked_by" xsi:type="array">
+                            <item name="active_tree_mapping_missing" xsi:type="string">categories.active_tree_mapping_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">write</item>
+                    </item>
+                </item>
+            </argument>
+            <argument name="domainSortOrders" xsi:type="array">
+                <item name="categories" xsi:type="number">40</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation">
+        <arguments>
+            <argument name="navigationGroupProviders" xsi:type="array">
+                <item name="categories" xsi:type="object">Ergonode\CategoryConsumerAdminUi\Model\Navigation\CategoryNavigationGroupProvider</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

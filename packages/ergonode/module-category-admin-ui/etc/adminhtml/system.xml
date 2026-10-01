@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_categories" translate="label" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Categories</label>
+            <tab>ergonode</tab>
+            <resource>Ergonode_Core::config</resource>
+            <group id="cron" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Tree</label>
+                <field id="initial_page_size" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Limit/req</label>
+                    <comment
+                    >Start each tree download with this many categories (100–1000; default 700). The next full page grows by 100 below 2 seconds, stays unchanged at 2–4 seconds, and shrinks by 100 above 4 seconds.</comment>
+                    <config_path>ergonode_categories/tree/initial_page_size</config_path>
+                    <backend_model>Ergonode\CategoryAdminUi\Model\Config\Backend\InitialPageSize</backend_model>
+                    <validate>required-entry validate-digits validate-digits-range digits-range-100-1000</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

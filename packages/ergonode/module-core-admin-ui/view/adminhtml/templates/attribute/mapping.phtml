@@ -1,0 +1,464 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+use Ergonode\CoreAdminUi\Block\Adminhtml\SynchronizationActions;
+use Magento\Framework\View\Element\Template;
+
+/** @var \Ergonode\ProductAttributeAdminUi\Block\Adminhtml\Attribute\Mapping $block */
+$sidebarHtml = trim($block->getChildHtml('sidebar'));
+$ergonodeAttributes = $block->getErgonodeAttributes();
+$magentoAttributes = $block->getMagentoAttributes();
+$canCreateMagentoAttributes = $block->canCreateMagentoAttributes();
+$existingMagentoAttributeCodes = $canCreateMagentoAttributes
+    ? array_fill_keys(
+        array_map(
+            static fn (string $code): string => strtolower(trim($code)),
+            $block->getExistingMagentoAttributeCodes()
+        ),
+        true
+    )
+    : [];
+$draftMappings = $block->getDraftMappings();
+$mappedAttributes = $block->getMappedAttributes();
+$canSynchronizeAttributes = $block->canSynchronizeAttributes();
+$mappedCodes = ['ergo' => [], 'magento' => []];
+foreach (array_merge($draftMappings, $mappedAttributes) as $mapping) {
+    foreach (['left' => 'ergo', 'right' => 'magento'] as $side => $source) {
+        $code = trim((string)($mapping[$side]['code'] ?? ''));
+        if ($code !== '') {
+            $mappedCodes[$source][$code] = true;
+        }
+    }
+}
+$typeClass = static function (string $type): string {
+    return 'vea-type-' . (preg_replace('/[^a-z0-9_-]+/', '-', strtolower(trim($type))) ?: 'unknown');
+};
+$isActiveAttribute = static function (array $attribute): bool {
+    if (array_key_exists('active', $attribute)) {
+        return (bool)$attribute['active'];
+    }
+
+    return strtolower((string)($attribute['scope'] ?? '')) !== 'ignore';
+};
+$canCreateMagentoAttribute = static function (string $type) use ($canCreateMagentoAttributes): bool {
+    return $canCreateMagentoAttributes
+        && !in_array(strtolower(trim($type)), ['', 'gallery', 'relation'], true);
+};
+$requirementTooltipId = static function (string $source, string $code): string {
+    return 'attribute-mapping-requirement-' . substr(hash('sha256', $source . ':' . $code), 0, 12);
+};
+$ergonodeIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/m2_configuration.svg');
+$magentoIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/magento-mark.svg');
+$saveIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/save.svg');
+$autoMatchTitle = __('Automatycznie dopasuj aktywne atrybuty');
+$showExcludedHint = __('Pokaż atrybuty pominięte w mapowaniu');
+$hideExcludedHint = __('Ukryj atrybuty pominięte w mapowaniu');
+$renderPartial = static function (Template $context, string $template, array $data): string {
+    return $context->getLayout()
+        ->createBlock(Template::class)
+        ->setTemplate($template)
+        ->setData($data)
+        ->toHtml();
+};
+$sourceStateActionsHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::entity/source-state-actions.phtml',
+    [
+        'show_excluded_hint' => $showExcludedHint,
+        'hide_excluded_hint' => $hideExcludedHint,
+    ]
+);
+$mappingActionsHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/actions.phtml',
+    [
+        'search_placeholder' => __('Szukaj: nazwa, kod...'),
+        'save_title' => __('Zapisz mapowanie'),
+        'save_icon_url' => $saveIconUrl,
+        'auto_match_title' => $autoMatchTitle,
+        'complete_title' => __('Uzupełnij brakujące atrybuty w Ergonode i Magento'),
+        'auto_match_disabled' => true,
+        'complete_disabled' => true,
+    ]
+);
+$disableDropZoneHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/drop-zone.phtml',
+    [
+        'kind' => 'disable',
+        'title' => __('Wyłącz z mapowania'),
+        'description' => __('Upuść tutaj, aby usunąć z mapowania'),
+    ]
+);
+$createDropZoneHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/drop-zone.phtml',
+    [
+        'kind' => 'create',
+        'title' => __('Nowe mapowanie'),
+        'description' => __('Upuść tutaj, aby rozpocząć nowe mapowanie'),
+    ]
+);
+$requiredAttributeMessage = __(
+    'Ten atrybut jest wymagany w Magento. Przypisz mu odpowiadający atrybut Ergonode. ' .
+    'Bez tego synchronizacja nie może się rozpocząć.'
+);
+$workspaceId = $block->getWorkspaceId();
+$pairTemplate = $block->getPairTemplate();
+$mappingInitHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/init.phtml',
+    [
+        'workspace_id' => $workspaceId,
+        'module_name' => 'Ergonode_CoreAdminUi/js/attribute-mapping',
+        'config_json' => $block->getMappingConfigJson(),
+    ]
+);
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => $block->getCurrentNavigationSection()]]
+);
+$cardSelectionHtml = $block->getLayout()->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::entity/selection.phtml')
+    ->toHtml();
+$entityOptionsPlaceholderHtml = $block->getLayout()->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::entity/options-placeholder.phtml')
+    ->toHtml();
+?>
+<div id="<?= $escaper->escapeHtmlAttr($workspaceId) ?>" class="veui-workspace vea-mapping">
+    <div class="veui-toolbar vea-viewbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+        <?php if ($canSynchronizeAttributes): ?>
+            <?= /* @noEscape */ $block->getLayout()->createBlock(
+                SynchronizationActions::class,
+                '',
+                ['data' => [
+                    'primary_role' => 'sync-ergonode',
+                    'primary_title' => (string)__('Synchronize attributes with Magento'),
+                    'has_cursor_actions' => true,
+                ]]
+            )->toHtml() ?>
+        <?php endif; ?>
+    </div>
+
+    <div class="veui-message veui-global-message"
+         data-role="global-message"
+         aria-live="polite"
+         hidden>
+        <span class="veui-message-status-icon" aria-hidden="true"></span>
+        <span data-role="global-message-text"></span>
+    </div>
+
+    <div class="veui-layout vea-shell">
+        <section class="veui-panel vea-panel vea-side-panel" data-role="attribute-side" data-source-panel="ergo">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head">
+                <div class="veui-panel-heading">
+                    <strong class="veui-panel-title">
+                        <span class="veui-brand-mark veui-brand-ergonode"
+                              aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($ergonodeIconUrl) ?>" alt=""/>
+                        </span>
+                        <span class="veui-panel-title-text">
+                            <?= $escaper->escapeHtml(__('Attributes')) ?>
+                        </span>
+                    </strong>
+                </div>
+                <div class="veui-panel-head-tools vea-side-tools">
+                    <label class="veui-search veui-search-expandable">
+                        <span class="veui-search-icon" aria-hidden="true"></span>
+                        <input type="search"
+                               data-role="attribute-search"
+                               aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj: nazwa, kod...')) ?>"
+                               placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj: nazwa, kod...')) ?>"/>
+                    </label>
+                    <details class="veui-entity-options veui-source-options"
+                             data-role="entity-options"
+                             data-source-options="ergo">
+                        <summary role="button"
+                                 title="<?= $escaper->escapeHtmlAttr(__('Attribute actions: Ergonode')) ?>"
+                                 aria-label="<?= $escaper->escapeHtmlAttr(__('Attribute actions: Ergonode')) ?>">
+                            <span class="veui-entity-options-icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="veui-entity-options-menu"
+                             role="group"
+                             aria-label="<?= $escaper->escapeHtmlAttr(__('Attribute actions: Ergonode')) ?>">
+                            <?php if ($ergonodeAttributes !== []): ?>
+                                <button type="button"
+                                        class="veui-entity-options-action vea-refresh-ergonode"
+                                        data-role="refresh-ergonode"
+                                        title="<?= $escaper->escapeHtmlAttr(__('Wczytaj atrybuty z Ergonode')) ?>"
+                                        aria-label="<?= $escaper->escapeHtmlAttr(__('Wczytaj atrybuty z Ergonode')) ?>">
+                                    <span class="vea-refresh-ergonode-icon" aria-hidden="true"></span>
+                                    <span class="veui-entity-options-action-label">
+                                        <?= $escaper->escapeHtml(__('Odśwież')) ?>
+                                    </span>
+                                </button>
+                            <?php endif; ?>
+                            <?= /* @noEscape */ $sourceStateActionsHtml ?>
+                            <button type="button"
+                                    class="veui-entity-options-action"
+                                    data-role="attribute-sort-toggle"
+                                    data-sort-value="label"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Sortuj po nazwie')) ?>"
+                                    title="<?= $escaper->escapeHtmlAttr(__('Sortuj po nazwie')) ?>">
+                                <span class="veui-sort-field-icon" aria-hidden="true"></span>
+                                <span class="veui-entity-options-action-label" data-role="attribute-sort-label">
+                                    <?= $escaper->escapeHtml(__('Nazwa')) ?>
+                                </span>
+                            </button>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="vea-attribute-list" data-role="attribute-list">
+                <?php foreach ($ergonodeAttributes as $attribute): ?>
+                    <?php
+                    $searchText = implode(
+                        ' ',
+                        [$attribute['label'], $attribute['code'], $attribute['scope'], $attribute['type']]
+                    );
+                    $isActive = $isActiveAttribute($attribute);
+                    $isMapped = isset($mappedCodes['ergo'][(string)$attribute['code']]);
+                    $attributeCardClass = 'vea-attribute-card';
+                    $attributeCardClass .= $isMapped ? ' is-mapped' : '';
+                    $attributeCardClass .= $isActive ? '' : ' is-filter-hidden is-inactive';
+                    $addAttributeLabel = __('Dodaj atrybut do mapowania: %1', $attribute['label']);
+                    $attributeTypeClass = $typeClass((string)$attribute['type']);
+                    ?>
+                    <div class="<?= $escaper->escapeHtmlAttr($attributeCardClass) ?>"
+                             data-role="entity-card"
+                             data-search="<?= $escaper->escapeHtmlAttr($searchText) ?>"
+                             data-label="<?= $escaper->escapeHtmlAttr($attribute['label']) ?>"
+                             data-code="<?= $escaper->escapeHtmlAttr($attribute['code']) ?>"
+                             data-type="<?= $escaper->escapeHtmlAttr($attribute['type']) ?>"
+                             data-scope="<?= $escaper->escapeHtmlAttr($attribute['scope']) ?>"
+                             data-source="ergo"
+                             data-mapped="<?= $isMapped ? '1' : '0' ?>"
+                             <?= $isMapped || !$isActive ? 'hidden' : '' ?>
+                             role="group"
+                             tabindex="0"
+                             aria-label="<?= $escaper->escapeHtmlAttr($addAttributeLabel) ?>"
+                             draggable="true">
+                        <?= /* @noEscape */ $cardSelectionHtml ?>
+                        <span class="vea-drag-handle" aria-hidden="true"></span>
+                        <div class="vea-card-copy">
+                            <strong><?= $escaper->escapeHtml($attribute['label']) ?></strong>
+                            <span class="vea-card-subline">
+                                <code><?= $escaper->escapeHtml($attribute['code']) ?></code>
+                                <span class="vea-type-badge <?= $escaper->escapeHtmlAttr($attributeTypeClass) ?>">
+                                    <?= $escaper->escapeHtml($attribute['type']) ?>
+                                </span>
+                                <span class="vea-scope"><?= $escaper->escapeHtml($attribute['scope']) ?></span>
+                            </span>
+                        </div>
+                        <button type="button"
+                                class="vea-card-toggle"
+                                data-role="attribute-active-toggle"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Atrybut aktywny do mapowania')) ?>"
+                                aria-pressed="<?= $isActive ? 'true' : 'false' ?>"
+                                title="<?= $escaper->escapeHtmlAttr(__('Włącz / wyłącz mapowanie')) ?>">
+                            <span aria-hidden="true"></span>
+                        </button>
+                        <?= /* @noEscape */ $entityOptionsPlaceholderHtml ?>
+                    </div>
+                <?php endforeach; ?>
+                <?php if ($ergonodeAttributes === []): ?>
+                    <div class="vea-attribute-empty-state" data-role="attribute-empty-state">
+                        <p><?= $escaper->escapeHtml(__('Brak pobranych atrybutów Ergonode.')) ?></p>
+                        <div class="vea-attribute-empty-actions" data-role="attribute-empty-actions">
+                            <button type="button"
+                                    class="veui-button vea-attribute-empty-refresh"
+                                    data-role="refresh-ergonode">
+                                <span class="vea-refresh-ergonode-icon" aria-hidden="true"></span>
+                                <span><?= $escaper->escapeHtml(__('Odśwież')) ?></span>
+                            </button>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?= /* @noEscape */ $disableDropZoneHtml ?>
+        </section>
+
+        <section class="veui-panel vea-panel vea-mapping-panel" data-role="mapping-panel">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head vea-mapping-head">
+                <?= /* @noEscape */ $mappingActionsHtml ?>
+            </div>
+
+            <div class="vea-pairs-scroll">
+                <div class="vea-pair-list" data-role="mapping-list">
+                    <?php foreach ($draftMappings as $mapping): ?>
+                        <?php
+                        $leftCode = strtolower(trim((string)($mapping['left']['code'] ?? '')));
+                        $magentoAttributeExists = $leftCode !== ''
+                            && isset($existingMagentoAttributeCodes[$leftCode]);
+                        ?>
+                        <?= /* @noEscape */ $block->getLayout()
+                            ->createBlock(Template::class)
+                            ->setTemplate($pairTemplate)
+                            ->setData('mapping', $mapping)
+                            ->setData('type_compatible', $block->isTypeCompatible($mapping))
+                            ->setData(
+                                'can_create_magento_attribute',
+                                $canCreateMagentoAttribute((string)($mapping['left']['type'] ?? ''))
+                            )
+                            ->setData('magento_attribute_exists', $magentoAttributeExists)
+                            ->toHtml() ?>
+                    <?php endforeach; ?>
+
+                    <?php foreach ($mappedAttributes as $mapping): ?>
+                        <?= /* @noEscape */ $block->getLayout()
+                            ->createBlock(Template::class)
+                            ->setTemplate($pairTemplate)
+                            ->setData('mapping', $mapping)
+                            ->setData('type_compatible', $block->isTypeCompatible($mapping))
+                            ->setData('can_create_magento_attribute', false)
+                            ->toHtml() ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <?= /* @noEscape */ $createDropZoneHtml ?>
+        </section>
+
+        <section class="veui-panel vea-panel vea-side-panel" data-role="attribute-side" data-source-panel="magento">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head">
+                <div class="veui-panel-heading">
+                    <strong class="veui-panel-title">
+                        <span class="veui-brand-mark veui-brand-magento"
+                              aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($magentoIconUrl) ?>" alt=""/>
+                        </span>
+                        <span class="veui-panel-title-text">
+                            <?= $escaper->escapeHtml(__('Attributes')) ?>
+                        </span>
+                    </strong>
+                </div>
+                <div class="veui-panel-head-tools vea-side-tools">
+                    <label class="veui-search veui-search-expandable">
+                        <span class="veui-search-icon" aria-hidden="true"></span>
+                        <input type="search"
+                               data-role="attribute-search"
+                               aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj: nazwa, kod...')) ?>"
+                               placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj: nazwa, kod...')) ?>"/>
+                    </label>
+                    <details class="veui-entity-options veui-source-options"
+                             data-role="entity-options"
+                             data-source-options="magento">
+                        <summary role="button"
+                                 title="<?= $escaper->escapeHtmlAttr(__('Attribute actions: Magento')) ?>"
+                                 aria-label="<?= $escaper->escapeHtmlAttr(__('Attribute actions: Magento')) ?>">
+                            <span class="veui-entity-options-icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="veui-entity-options-menu"
+                             role="group"
+                             aria-label="<?= $escaper->escapeHtmlAttr(__('Attribute actions: Magento')) ?>">
+                            <?= /* @noEscape */ $sourceStateActionsHtml ?>
+                            <button type="button"
+                                    class="veui-entity-options-action"
+                                    data-role="attribute-sort-toggle"
+                                    data-sort-value="label"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Sortuj po nazwie')) ?>"
+                                    title="<?= $escaper->escapeHtmlAttr(__('Sortuj po nazwie')) ?>">
+                                <span class="veui-sort-field-icon" aria-hidden="true"></span>
+                                <span class="veui-entity-options-action-label" data-role="attribute-sort-label">
+                                    <?= $escaper->escapeHtml(__('Nazwa')) ?>
+                                </span>
+                            </button>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <?php if ($sidebarHtml !== ''): ?>
+                <div class="vea-side-content">
+            <?php endif; ?>
+            <div class="vea-attribute-list" data-role="attribute-list">
+                <?php foreach ($magentoAttributes as $attribute): ?>
+                    <?php
+                    $searchText = implode(
+                        ' ',
+                        [$attribute['label'], $attribute['code'], $attribute['scope'], $attribute['type']]
+                    );
+                    $isRequired = !empty($attribute['required']);
+                    $isActive = $isRequired || $isActiveAttribute($attribute);
+                    $isMapped = isset($mappedCodes['magento'][(string)$attribute['code']]);
+                    $tooltipId = $requirementTooltipId('magento', (string)$attribute['code']);
+                    $attributeCardClass = 'vea-attribute-card';
+                    $attributeCardClass .= $isMapped ? ' is-mapped' : '';
+                    $attributeCardClass .= $isActive ? '' : ' is-filter-hidden is-inactive';
+                    $addAttributeLabel = __('Dodaj atrybut do mapowania: %1', $attribute['label']);
+                    $attributeTypeClass = $typeClass((string)$attribute['type']);
+                    ?>
+                    <div class="<?= $escaper->escapeHtmlAttr($attributeCardClass) ?>"
+                             data-role="entity-card"
+                             data-search="<?= $escaper->escapeHtmlAttr($searchText) ?>"
+                             data-label="<?= $escaper->escapeHtmlAttr($attribute['label']) ?>"
+                             data-code="<?= $escaper->escapeHtmlAttr($attribute['code']) ?>"
+                             data-type="<?= $escaper->escapeHtmlAttr($attribute['type']) ?>"
+                             data-scope="<?= $escaper->escapeHtmlAttr($attribute['scope']) ?>"
+                             data-source="magento"
+                             data-mapped="<?= $isMapped ? '1' : '0' ?>"
+                             data-mapping-required="<?= $isRequired ? 'true' : 'false' ?>"
+                             <?= $isMapped || !$isActive ? 'hidden' : '' ?>
+                             role="group"
+                             tabindex="0"
+                             aria-label="<?= $escaper->escapeHtmlAttr($addAttributeLabel) ?>"
+                             draggable="true">
+                        <?= /* @noEscape */ $cardSelectionHtml ?>
+                        <span class="vea-drag-handle" aria-hidden="true"></span>
+                        <div class="vea-card-copy">
+                            <strong><?= $escaper->escapeHtml($attribute['label']) ?></strong>
+                            <span class="vea-card-subline">
+                                <code><?= $escaper->escapeHtml($attribute['code']) ?></code>
+                                <span class="vea-type-badge <?= $escaper->escapeHtmlAttr($attributeTypeClass) ?>">
+                                    <?= $escaper->escapeHtml($attribute['type']) ?>
+                                </span>
+                                <span class="vea-scope"><?= $escaper->escapeHtml($attribute['scope']) ?></span>
+                                <?php if ($isRequired): ?>
+                                    <span class="veui-required-badge">
+                                        <?= $escaper->escapeHtml(__('* Wymagane')) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                        <?php if ($isRequired): ?>
+                            <button type="button"
+                                    class="veui-mapping-requirement-control"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Wymagane mapowanie atrybutu')) ?>"
+                                    aria-describedby="<?= $escaper->escapeHtmlAttr($tooltipId) ?>">
+                                <span class="veui-mapping-requirement-icon" aria-hidden="true"></span>
+                                <span class="veui-mapping-requirement-tooltip"
+                                      id="<?= $escaper->escapeHtmlAttr($tooltipId) ?>"
+                                      role="tooltip">
+                                    <strong><?= $escaper->escapeHtml(__('Wymagane mapowanie atrybutu')) ?></strong>
+                                    <span><?= $escaper->escapeHtml($requiredAttributeMessage) ?></span>
+                                </span>
+                            </button>
+                        <?php else: ?>
+                            <button type="button"
+                                    class="vea-card-toggle"
+                                    data-role="attribute-active-toggle"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Atrybut aktywny do mapowania')) ?>"
+                                    aria-pressed="<?= $isActive ? 'true' : 'false' ?>"
+                                    title="<?= $escaper->escapeHtmlAttr(__('Włącz / wyłącz mapowanie')) ?>">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if ($sidebarHtml !== ''): ?>
+                    <?= /* @noEscape */ $sidebarHtml ?>
+                </div>
+            <?php endif; ?>
+            <?= /* @noEscape */ $disableDropZoneHtml ?>
+        </section>
+    </div>
+</div>
+
+<?= /* @noEscape */ $mappingInitHtml ?>

@@ -1,0 +1,471 @@
+.vepp-workspace {
+    display: flex;
+    flex-direction: column;
+}
+
+.vepp-workspace > .veui-toolbar {
+    flex: 0 0 68px;
+}
+
+.vepp-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+.vepp-view-icon {
+    background: currentColor;
+    display: block;
+    flex: 0 0 auto;
+    height: 14px;
+    -webkit-mask: var(--veui-visibility-on-icon) center / 14px 14px no-repeat;
+    mask: var(--veui-visibility-on-icon) center / 14px 14px no-repeat;
+    width: 14px;
+}
+.vepp-selection,
+.vepp-pagination {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--veui-surface);
+    color: var(--veui-text-muted-strong);
+    font-size: 11px;
+    line-height: 1.5;
+}
+.vepp-selection {
+    border-bottom: 1px solid var(--veui-border-soft);
+}
+.vepp-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 380px;
+    flex-wrap: wrap;
+    margin: 0;
+}
+.vepp-search-box {
+    flex: 1 1 180px;
+    max-width: 420px;
+}
+.vepp-selection > span {
+    margin-right: auto;
+}
+.vepp-grid-actions,
+.vepp-pagination-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.vepp-grid-actions {
+    flex: 1 1 600px;
+}
+.vepp-pagination-summary {
+    margin-left: auto;
+}
+.vepp-bulk-actions {
+    margin: 0;
+}
+.vepp-bulk-actions select {
+    min-width: 180px;
+}
+.vepp-table-scroll {
+    overflow: auto;
+}
+.vepp-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--veui-surface);
+    color: var(--veui-text);
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: left;
+}
+.vepp-table th {
+    background: var(--veui-surface);
+    color: var(--veui-text-muted-strong);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.vepp-table th,
+.vepp-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--veui-border);
+    vertical-align: middle;
+}
+.vepp-table tbody tr.is-selected {
+    background: var(--veui-warning-soft);
+}
+.vepp-table tbody td:nth-child(5) {
+    font-weight: 600;
+}
+.vepp-table tbody tr:hover {
+    background: var(--veui-surface-hover);
+}
+.vepp-table img {
+    object-fit: contain;
+    border-radius: 4px;
+    background: var(--veui-surface);
+}
+.vepp-table input[type='checkbox'] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--veui-magento-orange);
+    cursor: pointer;
+}
+.vepp-row-actions {
+    width: 145px;
+    white-space: nowrap;
+}
+.vepp-action-menu {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+}
+.vepp-action-menu:not(:popover-open) {
+    display: none;
+}
+.vepp-table .vepp-id-cell {
+    width: 90px;
+    min-width: 90px;
+    box-sizing: border-box;
+}
+.vepp-table .vepp-filters .vepp-id-cell input {
+    min-width: 0;
+    width: 66px;
+}
+.vepp-notice {
+    margin: 12px 18px;
+    padding: 12px;
+    border-left: 3px solid var(--veui-warning-text);
+    background: var(--veui-warning-soft);
+    color: var(--veui-warning-text);
+}
+.vepp-footnote {
+    margin: 0;
+    padding: 4px 18px 18px;
+    color: var(--veui-muted);
+    background: var(--veui-surface);
+    font-size: 10px;
+    line-height: 1.5;
+    padding-top: 12px;
+}
+.vepp-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+.vepp-sort:focus-visible,
+.vepp-selection-toggle:focus-visible,
+.vepp-selection-options button:focus-visible,
+.vepp-table-scroll:focus-visible,
+.vepp-table input[type='checkbox']:focus-visible {
+    outline: 2px solid var(--veui-c-98a2b3);
+    outline-offset: 3px;
+}
+@media (max-width: 800px) {
+    .vepp-search {
+        flex-wrap: wrap;
+    }
+    .vepp-search-box {
+        max-width: none;
+    }
+}
+.vepp-input {
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid var(--veui-border-strong);
+    border-radius: 8px;
+    background: var(--veui-surface);
+    color: var(--veui-text);
+    font-family: inherit;
+    font-size: 11px;
+    line-height: 1.4;
+    box-shadow: none;
+}
+.vepp-input:focus {
+    border-color: var(--veui-c-b9c4ff);
+    box-shadow: 0 0 0 3px rgba(91, 92, 226, .08);
+    outline: 0;
+}
+.vepp-input::placeholder {
+    color: var(--veui-muted);
+    opacity: 1;
+}
+.vepp-filters .vepp-input {
+    width: 100%;
+    min-width: 110px;
+    box-sizing: border-box;
+}
+.vepp-filters input[type='number'] {
+    min-width: 85px;
+}
+.vepp-filters td {
+    padding-top: 12px;
+    background: var(--veui-surface);
+}
+.vepp-filter-hint {
+    color: var(--veui-text-muted-strong);
+    font-size: 10px;
+}
+.vepp-sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    box-shadow: none;
+}
+.vepp-sort:hover,
+.vepp-sort:focus {
+    background: transparent;
+    color: var(--veui-text);
+}
+.vepp-table th[aria-sort='ascending'],
+.vepp-table th[aria-sort='descending'] {
+    color: var(--veui-magento-orange);
+    box-shadow: inset 0 -2px var(--veui-magento-orange);
+}
+.vepp-sort span {
+    font-size: 16px;
+}
+.vepp-check-cell {
+    width: 62px;
+}
+.vepp-multicheck {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.vepp-selection-toggle {
+    border: 0;
+    padding: 4px 7px;
+    color: var(--veui-text);
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+}
+.vepp-selection-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 225px;
+    z-index: 2;
+    padding: 5px;
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 8px;
+    background: var(--veui-surface);
+    box-shadow: var(--veui-entity-options-shadow);
+}
+.vepp-selection-options button {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 5px;
+    text-align: left;
+    white-space: nowrap;
+    border: 0;
+    background: var(--veui-surface);
+    color: var(--veui-text);
+    box-shadow: none;
+    cursor: pointer;
+}
+.vepp-selection-options button:hover,
+.vepp-selection-options button:focus {
+    background: var(--veui-surface-hover);
+}
+.vepp-page-controls,
+.vepp-page-jump,
+.vepp-page-jump label,
+.vepp-page-size {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.vepp-page-jump input {
+    width: 68px;
+}
+.vepp-page-controls .veui-button {
+    min-width: 34px;
+    font-size: 16px;
+}
+.vepp-page-jump .vepp-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+}
+.vepp-pagination {
+    border-bottom: 1px solid var(--veui-border-soft);
+}
+.vepp-selection > span:last-child {
+    margin-right: 0;
+}
+.vepp-table-region {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    background: var(--veui-surface);
+}
+
+.vepp-table-scroll {
+    height: 100%;
+}
+.vepp-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    padding: 24px 16px;
+    background: rgba(255, 255, 255, .76);
+    cursor: progress;
+}
+.vepp-loading:not([hidden]) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.vepp-loading-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 1px solid var(--veui-warning-border);
+    border-radius: 8px;
+    background: var(--veui-surface);
+    color: var(--veui-warning-text);
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, .08);
+}
+.vepp-spinner {
+    display: inline-block;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--veui-warning-border);
+    border-top-color: var(--veui-magento-orange);
+    border-radius: 50%;
+    animation: vepp-loading-spin .7s linear infinite;
+}
+@keyframes vepp-loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .vepp-spinner {
+        animation: none;
+    }
+}
+.modal-popup.vepp-progress-modal .modal-inner-wrap {
+    height: 1100px;
+    max-height: calc(100dvh - 64px);
+    max-width: 1440px;
+    margin: 32px auto;
+}
+.vepp-progress-modal .modal-content {
+    flex: 1 1 auto;
+}
+.vepp-progress-modal [data-role='publish-current-items'] {
+    max-height: 600px;
+}
+.vepp-progress-product summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    cursor: pointer;
+    color: var(--veui-text-muted-strong);
+}
+.vepp-progress-product summary::before {
+    content: '▸';
+}
+.vepp-progress-product details[open] > summary::before {
+    content: '▾';
+}
+.vepp-progress-product summary:focus-visible,
+.vepp-progress-history > details > summary:focus-visible {
+    outline: 2px solid var(--veui-magento-orange);
+    outline-offset: 2px;
+}
+.vepp-progress-product svg,
+.vepp-progress-product .vepp-spinner {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+}
+.vepp-progress-product-label {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--veui-text);
+}
+.vepp-progress-product-status {
+    font-size: 11px;
+    font-weight: 600;
+}
+.vepp-progress-product.is-success summary {
+    color: var(--veui-success-strong);
+}
+.vepp-progress-product.is-failed summary,
+.vepp-progress-product.is-warning summary,
+.vepp-progress-product.is-unconfirmed summary {
+    color: var(--veui-warning-text);
+}
+.vepp-progress-product-message {
+    padding: 10px;
+    margin: 4px 0 8px;
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 8px;
+    background: var(--veui-surface-hover);
+    color: var(--veui-text);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+}
+.vepp-progress-history {
+    display: grid;
+    gap: 8px;
+    max-height: 220px;
+    overflow: auto;
+    padding: 2px;
+}
+.vepp-progress-history[hidden] {
+    display: none;
+}
+.vepp-progress-history > details {
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 8px;
+    padding: 10px;
+    background: var(--veui-surface);
+}
+.vepp-progress-history > details > summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+.vepp-progress-history ol {
+    padding-left: 22px;
+    margin: 8px 0 0;
+}

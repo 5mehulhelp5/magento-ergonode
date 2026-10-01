@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\CategoryAttribute\Api\OptionAutoMatcherInterface" type="Ergonode\CategoryAttribute\Model\Sync\OptionAutoMatcher"/>
+    <preference for="Ergonode\CategoryAttribute\Api\MappingReaderInterface" type="Ergonode\CategoryAttribute\Model\ResourceModel\MappingReader"/>
+    <preference for="Ergonode\CategoryAttribute\Api\MappingStateBuilderInterface" type="Ergonode\CategoryAttribute\Model\Mapping\MappingStateBuilder"/>
+    <preference for="Ergonode\CategoryAttribute\Api\AttributeMappingWriterInterface" type="Ergonode\CategoryAttribute\Model\ResourceModel\AttributeMappingWriter"/>
+    <preference for="Ergonode\CategoryAttribute\Api\OptionMappingWriterInterface" type="Ergonode\CategoryAttribute\Model\ResourceModel\OptionMappingWriter"/>
+    <preference for="Ergonode\CategoryAttribute\Api\MappingPolicyInterface" type="Ergonode\CategoryAttribute\Model\Mapping\MappingPolicy"/>
+    <preference for="Ergonode\CategoryAttribute\Api\MagentoAttributeProviderInterface" type="Ergonode\CategoryAttribute\Model\Provider\MagentoCategoryAttributeProvider"/>
+    <preference for="Ergonode\CategoryAttribute\Api\MagentoOptionProviderInterface" type="Ergonode\CategoryAttribute\Model\Provider\MagentoCategoryOptionProvider"/>
+    <type name="Ergonode\CategoryAttribute\Model\Mapping\MappingPolicy">
+        <arguments>
+            <argument name="excludedAttributeCodes" xsi:type="array">
+                <item name="default_sort_by" xsi:type="string">default_sort_by</item>
+                <item name="is_anchor" xsi:type="string">is_anchor</item>
+                <item name="url_key" xsi:type="string">url_key</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

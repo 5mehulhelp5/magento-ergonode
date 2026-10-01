@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="Ergonode_TemplateConsumer::template_mapping"
+            title="Templates"
+            translate="title"
+            module="Ergonode_TemplateAdminUi"
+            sortOrder="40"
+            parent="Ergonode_Core::products"
+            action="ergonode/template/index"
+            resource="Ergonode_TemplateConsumer::template_mapping"
+        />
+    </menu>
+</config>

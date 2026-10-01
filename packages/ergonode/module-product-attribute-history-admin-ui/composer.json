@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-product-attribute-history-admin-ui",
+    "description": "Read-only Admin product attribute and option history viewer, shared-panel configuration, navigation and authenticated actor, including capture and retention configuration fields.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "ergonode/module-product-attribute-history": "*",
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-product-attribute-admin-ui": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductAttributeHistoryAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

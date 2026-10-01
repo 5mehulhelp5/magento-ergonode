@@ -1,0 +1,32 @@
+{
+    "name": "ergonode/module-product-consumer",
+    "description": "Inbound Ergonode product synchronization with source definition preparation and optional stream processing.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-product-attribute-consumer": "dev-main@dev",
+        "ergonode/module-template": "dev-main@dev",
+        "magento/module-message-queue": "*",
+        "packhauer/module-file-attribute": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductConsumer\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

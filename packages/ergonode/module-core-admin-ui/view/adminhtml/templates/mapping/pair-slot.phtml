@@ -1,0 +1,51 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$item = $block->getData('item');
+$item = is_array($item) ? $item : null;
+$side = (string)$block->getData('side');
+$type = (string)$block->getData('type');
+$scope = (string)$block->getData('scope');
+$extraClass = trim((string)$block->getData('extra_class'));
+$emptyTemplate = (string)$block->getData('empty_template');
+$afterTemplate = (string)$block->getData('after_template');
+$typeClass = 'vea-type-' . (preg_replace('/[^a-z0-9_-]+/', '-', strtolower(trim($type))) ?: 'unknown');
+$renderExtension = static function (Template $context, string $template): string {
+    if ($template === '') {
+        return '';
+    }
+
+    return $context->getLayout()
+        ->createBlock(Template::class)
+        ->setTemplate($template)
+        ->setData($context->getData())
+        ->toHtml();
+};
+?>
+<div class="vea-pair-card<?= $item ? '' : ' is-empty' ?><?= $extraClass !== ''
+    ? ' ' . $escaper->escapeHtmlAttr($extraClass)
+    : '' ?>"
+     data-role="pair-slot"
+     data-side="<?= $escaper->escapeHtmlAttr($side) ?>"
+     data-label="<?= $escaper->escapeHtmlAttr($item ? (string)($item['label'] ?? '') : '') ?>"
+     data-code="<?= $escaper->escapeHtmlAttr($item ? (string)($item['code'] ?? '') : '') ?>"
+     data-type="<?= $escaper->escapeHtmlAttr($type) ?>"
+     data-scope="<?= $escaper->escapeHtmlAttr($scope) ?>"
+     <?= $item ? 'draggable="true"' : '' ?>>
+    <?php if ($item): ?>
+        <strong><?= $escaper->escapeHtml((string)$item['label']) ?></strong>
+        <span class="vea-card-subline">
+            <code><?= $escaper->escapeHtml((string)$item['code']) ?></code>
+            <span class="vea-type-badge <?= $escaper->escapeHtmlAttr($typeClass) ?>">
+                <?= $escaper->escapeHtml($type) ?>
+            </span>
+            <span class="vea-scope"><?= $escaper->escapeHtml($scope) ?></span>
+        </span>
+    <?php else: ?>
+        <?= /* @noEscape */ $renderExtension($block, $emptyTemplate) ?>
+    <?php endif; ?>
+    <?= /* @noEscape */ $renderExtension($block, $afterTemplate) ?>
+</div>

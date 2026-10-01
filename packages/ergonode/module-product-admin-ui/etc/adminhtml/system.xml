@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_products" translate="label" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Products</label>
+            <tab>ergonode</tab>
+            <resource>Ergonode_Core::config</resource>
+            <group id="identity" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Identity</label>
+                <field id="sku_mode" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>SKU</label>
+                    <comment
+                    >For new products, mapped uses the selected Magento attribute as the native Ergonode SKU. Assigned lets Ergonode generate its native SKU and publishes Magento SKU as a separate unique Global Text attribute. Existing bindings keep their original mode and SKU.</comment>
+                    <source_model>Ergonode\ProductAdminUi\Model\Config\Source\SkuMode</source_model>
+                    <backend_model>Ergonode\ProductAdminUi\Model\Config\Backend\SkuMode</backend_model>
+                </field>
+                <field id="magento_attribute" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Magento attribute for Ergonode SKU</label>
+                    <comment>Choose a unique, global text product attribute with EAV or static storage. Each product needs a non-empty value of at most 64 bytes before its first publication.</comment>
+                    <source_model>Ergonode\ProductAdminUi\Model\Config\Source\MagentoIdentityAttribute</source_model>
+                    <backend_model>Ergonode\ProductAdminUi\Model\Config\Backend\MagentoAttribute</backend_model>
+                    <depends>
+                        <field id="sku_mode">mapped</field>
+                    </depends>
+                </field>
+                <field id="assigned_readiness" translate="label comment" type="note" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Assigned SKU readiness</label>
+                    <comment>Configure Magento sku to exactly one unique Global Text Ergonode attribute in Ergonode &gt; Products &gt; Attributes.</comment>
+                    <frontend_model>Ergonode\ProductAdminUi\Block\Adminhtml\System\Config\AssignedSkuReadiness</frontend_model>
+                    <depends>
+                        <field id="sku_mode">assigned</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

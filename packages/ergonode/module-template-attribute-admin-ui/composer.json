@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-template-attribute-admin-ui",
+    "description": "Read-only Admin presentation of template sections and Magento attribute-set structure.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-template-attribute": "*",
+        "ergonode/module-template-admin-ui": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\TemplateAttributeAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

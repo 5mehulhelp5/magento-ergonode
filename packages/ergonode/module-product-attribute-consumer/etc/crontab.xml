@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="ergonode">
+        <job name="ergonode_attribute_import" instance="Ergonode\ProductAttributeConsumer\Cron\ImportAttributes" method="execute">
+            <config_path>ergonode_attributes/cron/schedule</config_path>
+        </job>
+    </group>
+</config>

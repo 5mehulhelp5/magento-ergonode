@@ -1,0 +1,41 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$side = (string)$block->getData('side');
+$requiredType = (string)$block->getData('required_type');
+$requiredTypeClass = 'vea-type-'
+    . (preg_replace('/[^a-z0-9_-]+/', '-', strtolower(trim($requiredType))) ?: 'unknown');
+$canCreate = (bool)$block->getData('can_create');
+$magentoAttributeExists = (bool)$block->getData('magento_attribute_exists');
+$createTitle = (string)$block->getData('create_title');
+?>
+<?php if ($requiredType !== ''): ?>
+    <strong><?= $escaper->escapeHtml(__('Wymagany typ')) ?></strong>
+    <span class="vea-type-badge <?= $escaper->escapeHtmlAttr($requiredTypeClass) ?>" data-role="slot-hint">
+        <?= $escaper->escapeHtml($requiredType) ?>
+    </span>
+    <?php if ($side === 'magento' && $canCreate): ?>
+        <button type="button"
+                class="vea-create-option vea-create-attribute<?= $magentoAttributeExists
+                    ? ' is-existing-magento-attribute'
+                    : '' ?>"
+                data-role="create-magento-attribute"
+                data-completes-missing-side="1"
+                <?= $magentoAttributeExists ? 'disabled' : '' ?>
+                title="<?= $escaper->escapeHtmlAttr($createTitle) ?>"
+                aria-label="<?= $escaper->escapeHtmlAttr($createTitle) ?>">
+            <span class="<?= $magentoAttributeExists
+                ? 'vea-existing-magento-attribute-icon'
+                : 'vea-create-option-icon' ?>" aria-hidden="true"></span>
+            <span class="vea-visually-hidden"><?= $escaper->escapeHtml(__('Utwórz atrybut w Magento')) ?></span>
+        </button>
+    <?php endif; ?>
+<?php else: ?>
+    <strong><?= $escaper->escapeHtml(__('Upuść atrybut')) ?></strong>
+    <span data-role="slot-hint">
+        <?= $escaper->escapeHtml($side === 'ergo' ? __('brakuje źródła') : __('brakuje targetu')) ?>
+    </span>
+<?php endif; ?>

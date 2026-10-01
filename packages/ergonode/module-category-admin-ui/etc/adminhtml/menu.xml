@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="Ergonode_CategoryConsumer::category_tree_mapping"
+            title="Tree"
+            translate="title"
+            module="Ergonode_CategoryAdminUi"
+            sortOrder="20"
+            parent="Ergonode_Core::categories"
+            action="ergonode/category_tree_mapping/edit"
+            resource="Ergonode_CategoryConsumer::category_tree_mapping"
+        />
+    </menu>
+</config>

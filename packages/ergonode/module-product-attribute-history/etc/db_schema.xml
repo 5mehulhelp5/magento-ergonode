@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_product_attribute_history_operation" resource="default" engine="innodb" comment="Product Attribute History Operations">
+        <column xsi:type="int" name="operation_id" unsigned="true" nullable="false" identity="true" comment="Operation ID"/>
+        <column xsi:type="varchar" name="operation_code" length="32" nullable="false" comment="Operation Code"/>
+        <column xsi:type="varchar" name="status" length="16" nullable="false" comment="Status"/>
+        <column xsi:type="varchar" name="origin" length="16" nullable="false" comment="Origin"/>
+        <column xsi:type="int" name="actor_id" unsigned="true" nullable="true" comment="Admin Actor ID"/>
+        <column xsi:type="varchar" name="actor_name" length="255" nullable="true" comment="Admin Actor Name"/>
+        <column xsi:type="timestamp" name="started_at" nullable="false" on_update="false" comment="Started At UTC"/>
+        <column xsi:type="timestamp" name="finished_at" nullable="false" on_update="false" comment="Finished At UTC"/>
+        <column xsi:type="int" name="change_count" unsigned="true" nullable="false" default="0" comment="Changed Source and Target Attributes"/>
+        <column xsi:type="mediumtext" name="state_json" nullable="false" comment="Complete State After Operation"/>
+        <column xsi:type="mediumtext" name="changes_json" nullable="false" comment="Changes With Before and After States"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="operation_id"/>
+        </constraint>
+    </table>
+</schema>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\Language\Api\LanguageMappingStateProviderInterface" type="Ergonode\Language\Model\Mapping\MappingStateProvider"/>
+    <type name="Ergonode\Language\Model\Mapping\MappingCache">
+        <arguments>
+            <argument name="cacheLifetime" xsi:type="number">900</argument>
+            <argument name="localCacheLifetime" xsi:type="number">30</argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\Language\Api\LanguageCodeNormalizerInterface" type="Ergonode\Language\Model\LanguageCodeNormalizer"/>
+    <preference for="Ergonode\Language\Api\ErgonodeLanguageCodesProviderInterface" type="Ergonode\Language\Model\LanguageProvider"/>
+    <preference for="Ergonode\Language\Api\ErgonodeLanguageCodesRefresherInterface" type="Ergonode\Language\Model\LanguageProvider"/>
+    <preference for="Ergonode\Language\Api\LanguageSnapshotRemoverInterface" type="Ergonode\Language\Model\Storage\LanguageSnapshotRemover"/>
+    <preference for="Ergonode\Language\Api\LanguageStoreMappingProviderInterface" type="Ergonode\Language\Model\Mapping\LanguageStoreMappingProvider"/>
+    <preference for="Ergonode\Language\Api\LanguageStoreMappingRowsProviderInterface" type="Ergonode\Language\Model\Mapping\LanguageStoreMappingRowsProvider"/>
+    <preference for="Ergonode\Language\Api\LanguageStoreMappingSaverInterface" type="Ergonode\Language\Model\Mapping\LanguageStoreMappingSaver"/>
+    <preference for="Ergonode\Language\Api\StoreViewProviderInterface" type="Ergonode\Language\Model\StoreViewProvider"/>
+    <type name="Ergonode\Core\Model\Readiness\ReadinessService">
+        <arguments>
+            <argument name="checks" xsi:type="array">
+                <item name="ergonode_language_default_store_mapping" xsi:type="object">Ergonode\Language\Model\Readiness\DefaultStoreMappingCheck</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

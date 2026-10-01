@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\CategoryPublisher\Api\CategoryBatchSynchronizerInterface" type="Ergonode\CategoryPublisher\Model\Sync\CategorySynchronizer"/>
+    <preference for="Ergonode\CategoryPublisher\Api\CategoryDesiredStateFactoryInterface" type="Ergonode\CategoryPublisher\Model\Data\CategoryDesiredStateFactory"/>
+    <preference for="Ergonode\CategoryPublisher\Api\CategorySynchronizerInterface" type="Ergonode\CategoryPublisher\Model\Sync\CategorySynchronizer"/>
+</config>

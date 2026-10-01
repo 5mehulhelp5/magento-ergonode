@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_template_section" resource="default" engine="innodb" comment="Ergonode Template Section Cache">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="template_code" nullable="false" length="255" comment="Ergonode Template Code"/>
+        <column xsi:type="varchar" name="section_code" nullable="false" length="255" comment="Ergonode Section Code"/>
+        <column xsi:type="smallint" name="is_synthetic" unsigned="true" nullable="false" identity="false" default="0" comment="Synthetic Section Flag"/>
+        <column xsi:type="smallint" name="attribute_group_id" unsigned="true" nullable="true" identity="false" comment="Linked Magento Attribute Group ID"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="varchar" name="content_hash" nullable="false" length="64" comment="Normalized Content Hash"/>
+        <column xsi:type="mediumtext" name="raw_json" nullable="false" comment="Raw Ergonode Payload JSON"/>
+        <column xsi:type="timestamp" name="synced_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Synced At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_TEMPLATE_SECTION_TEMPLATE_FK"
+            table="ergonode_template_section"
+            column="template_code"
+            referenceTable="ergonode_template"
+            referenceColumn="code"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_TEMPLATE_SECTION_CODE">
+            <column name="template_code"/>
+            <column name="section_code"/>
+        </constraint>
+        <index referenceId="ERGONODE_TEMPLATE_SECTION_TEMPLATE" indexType="btree">
+            <column name="template_code"/>
+        </index>
+        <index referenceId="ERGONODE_TEMPLATE_SECTION_GROUP" indexType="btree">
+            <column name="attribute_group_id"/>
+        </index>
+    </table>
+    <table name="ergonode_template_attribute" resource="default" engine="innodb" comment="Ergonode Template Attribute Cache">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="template_code" nullable="false" length="255" comment="Ergonode Template Code"/>
+        <column xsi:type="varchar" name="section_code" nullable="false" length="255" comment="Ergonode Section Code"/>
+        <column xsi:type="varchar" name="attribute_code" nullable="false" length="255" comment="Ergonode Attribute Code"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" identity="false" default="0" comment="Sort Order"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_TEMPLATE_ATTRIBUTE_TEMPLATE_FK"
+            table="ergonode_template_attribute"
+            column="template_code"
+            referenceTable="ergonode_template"
+            referenceColumn="code"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_TEMPLATE_ATTRIBUTE_CODE">
+            <column name="template_code"/>
+            <column name="section_code"/>
+            <column name="attribute_code"/>
+        </constraint>
+        <index referenceId="ERGONODE_TEMPLATE_ATTRIBUTE_TEMPLATE" indexType="btree">
+            <column name="template_code"/>
+        </index>
+        <index referenceId="ERGONODE_TEMPLATE_ATTRIBUTE_ATTRIBUTE" indexType="btree">
+            <column name="attribute_code"/>
+        </index>
+    </table>
+</schema>

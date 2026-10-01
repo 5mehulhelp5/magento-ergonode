@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation">
+        <arguments>
+            <argument name="sections" xsi:type="array">
+                <item name="products" xsi:type="array">
+                    <item name="label" xsi:type="string">List</item>
+                    <item name="route" xsi:type="string">ergonode_product/product/index</item>
+                    <item name="resource" xsi:type="string">Ergonode_Product::products</item>
+                    <item name="sort_order" xsi:type="number">25</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

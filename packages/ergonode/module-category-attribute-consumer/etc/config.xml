@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_category_attributes>
+            <synchronization>
+                <name_mode>manual</name_mode>
+                <include_in_menu_mode>mapping</include_in_menu_mode>
+                <include_in_menu_default>1</include_in_menu_default>
+                <is_active_mode>mapping</is_active_mode>
+                <is_active_default>1</is_active_default>
+            </synchronization>
+        </ergonode_category_attributes>
+    </default>
+</config>

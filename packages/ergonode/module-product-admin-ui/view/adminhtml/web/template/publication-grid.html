@@ -1,0 +1,85 @@
+<section class="veui-panel vepp-panel" aria-label="<%- $t('Product workspace') %>">
+    <div class="vepp-notice" data-role="readiness" role="status" hidden></div>
+    <div class="vepp-selection">
+        <span data-role="selection-count" role="status" aria-live="polite"><%- $t('Selected: 0') %></span>
+        <span data-role="filter-info"><%- $t('All products') %></span>
+    </div>
+    <div class="vepp-pagination">
+        <div class="vepp-grid-actions">
+            <label class="vepp-bulk-actions">
+                <span class="vepp-sr-only" data-role="actions-label"></span>
+                <select class="vepp-input" data-role="publish-selection" disabled>
+                    <option value="" data-role="actions-placeholder"></option>
+                </select>
+            </label>
+            <form id="vepp-search-form" data-role="search-form" class="vepp-search" role="search">
+                <label class="veui-search vepp-search-box" for="vepp-search">
+                    <span class="veui-search-icon" aria-hidden="true"></span>
+                    <span class="vepp-sr-only"><%- $t('Search products') %></span>
+                    <input id="vepp-search" type="search" data-role="search" placeholder="<%- $t('Search by SKU, name or ID…') %>">
+                </label>
+                <button type="submit" class="veui-button veui-button-toolbar veui-button-primary"><%- $t('Apply filters') %></button>
+                <button type="button" class="veui-button veui-button-toolbar" data-role="clear-filters"><%- $t('Clear filters') %></button>
+            </form>
+        </div>
+        <div class="vepp-pagination-summary">
+            <span data-role="page-info" role="status"></span>
+            <label class="vepp-page-size"><%- $t('Per page') %> <select class="vepp-input" data-role="page-size"><option>20</option><option>50</option><option>100</option></select></label>
+            <nav class="vepp-page-controls" aria-label="<%- $t('Product pagination') %>">
+                <button type="button" class="veui-button veui-button-toolbar" data-role="first" aria-label="<%- $t('First page') %>">«</button>
+                <button type="button" class="veui-button veui-button-toolbar" data-role="previous" aria-label="<%- $t('Previous') %>">‹</button>
+                <form data-role="page-form" class="vepp-page-jump">
+                    <label><%- $t('Page') %> <input class="vepp-input" data-role="page-number" type="number" min="1" step="1" value="1" aria-label="<%- $t('Page number') %>"></label>
+                    <span data-role="page-total"><%- $t('of 1') %></span>
+                    <button type="submit" class="vepp-sr-only"><%- $t('Go to page') %></button>
+                </form>
+                <button type="button" class="veui-button veui-button-toolbar" data-role="next" aria-label="<%- $t('Next') %>">›</button>
+                <button type="button" class="veui-button veui-button-toolbar" data-role="last" aria-label="<%- $t('Last page') %>">»</button>
+            </nav>
+        </div>
+    </div>
+    <p class="vepp-notice" data-role="message" role="status" aria-live="polite" hidden></p>
+    <div class="vepp-table-region">
+        <div class="vepp-loading" data-role="loading" role="status" aria-live="polite" hidden>
+            <span class="vepp-loading-label"><span class="vepp-spinner" aria-hidden="true"></span><span data-role="loading-text"></span></span>
+        </div>
+    <div class="vepp-table-scroll" tabindex="0" role="region" aria-label="<%- $t('Product list') %>">
+        <table class="vepp-table">
+            <caption class="vepp-sr-only"><%- $t('Magento products. Click a heading to sort. Enter filters below the headings and press Enter or Apply filters.') %></caption>
+            <thead><tr>
+                <th scope="col" class="vepp-check-cell">
+                    <div class="vepp-multicheck">
+                        <input type="checkbox" data-role="page-checkbox" aria-label="<%- $t('Select products on this page') %>">
+                        <button type="button" class="vepp-selection-toggle" data-role="selection-toggle" aria-label="<%- $t('Selection options') %>" aria-expanded="false" aria-controls="vepp-selection-options">▾</button>
+                        <div class="vepp-selection-options" data-role="selection-options" id="vepp-selection-options" hidden>
+                            <button type="button" data-role="select-page"><%- $t('Select page') %></button>
+                            <button type="button" data-role="select-all"><%- $t('Select all results') %></button>
+                            <button type="button" data-role="clear-selection"><%- $t('Clear selection') %></button>
+                        </div>
+                    </div>
+                </th>
+                <th scope="col" class="vepp-id-cell" aria-sort="none"><button type="button" class="vepp-sort" data-sort="product_id" aria-label="<%- $t('Product ID') %>">ID<span aria-hidden="true" data-sort-indicator></span></button></th>
+                <th scope="col"><span class="vepp-sr-only"><%- $t('Thumbnail') %></span></th>
+                <th scope="col" aria-sort="none"><button type="button" class="vepp-sort" data-sort="name"><%- $t('Name') %><span aria-hidden="true" data-sort-indicator></span></button></th>
+                <th scope="col" aria-sort="none"><button type="button" class="vepp-sort" data-sort="sku">SKU<span aria-hidden="true" data-sort-indicator></span></button></th>
+                <th scope="col" aria-sort="none"><button type="button" class="vepp-sort" data-sort="ergonode_sku"> <%- $t('Ergonode SKU') %><span aria-hidden="true" data-sort-indicator></span></button></th>
+                <th scope="col" aria-sort="none"><button type="button" class="vepp-sort" data-sort="attribute_set_name"><%- $t('Attribute set') %><span aria-hidden="true" data-sort-indicator></span></button></th>
+                <th scope="col" aria-sort="none"><button type="button" class="vepp-sort" data-sort="type_id"><%- $t('Product type') %><span aria-hidden="true" data-sort-indicator></span></button></th>
+                <th scope="col"><%- $t('Actions') %></th>
+            </tr>
+            <tr class="vepp-filters"><td></td>
+                <td class="vepp-id-cell"><input class="vepp-input" type="number" min="1" step="1" data-filter="product_id" form="vepp-search-form" aria-label="<%- $t('Filter: Product ID') %>" placeholder="ID"></td>
+                <td></td>
+                <td><input class="vepp-input" type="search" data-filter="name" form="vepp-search-form" aria-label="<%- $t('Filter: Name') %>" placeholder="<%- $t('Name') %>"></td>
+                <td><input class="vepp-input" type="search" data-filter="sku" form="vepp-search-form" aria-label="<%- $t('Filter: SKU') %>" placeholder="SKU"></td>
+                <td><input class="vepp-input" type="search" data-filter="ergonode_sku" form="vepp-search-form" aria-label="<%- $t('Filter: Ergonode SKU') %>" placeholder="<%- $t('Ergonode SKU') %>"></td>
+                <td><select class="vepp-input" data-filter="attribute_set_id" form="vepp-search-form" aria-label="<%- $t('Filter: Attribute set') %>"><option value=""><%- $t('All attribute sets') %></option></select></td>
+                <td><select class="vepp-input" data-filter="type_id" form="vepp-search-form" aria-label="<%- $t('Filter: Product type') %>"><option value=""><%- $t('All product types') %></option></select></td>
+                <td><span class="vepp-filter-hint"><%- $t('Press Enter to filter') %></span></td>
+            </tr></thead>
+            <tbody data-role="rows"></tbody>
+        </table>
+    </div>
+    </div>
+    <p class="vepp-footnote"><%- $t('Operations run in batches of up to 50 products. Keep this tab open. Pause and stop finish the current batch.') %></p>
+</section>

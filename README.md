@@ -17,7 +17,8 @@ Sklep: <https://magento-ergonode.ddev.site/>. Panel administracyjny:
 <https://magento-ergonode.ddev.site:8026/>. OpenSearch Dashboards:
 <https://magento-ergonode.ddev.site:5602/>.
 
-Projekt zawiera czystą instalację Magento, bez danych przykładowych i bez modułu integracji Ergonode.
+Projekt zawiera Magento bez danych przykładowych oraz 62 moduły Ergonode
+i dwa wymagane moduły PackHauer, instalowane przez Composer z lokalnego `packages`.
 Ustawione `pl_PL` nie oznacza zainstalowania pełnego polskiego pakietu tłumaczeń.
 
 ## Wymagania i pierwsza instalacja
@@ -52,6 +53,37 @@ zapisano w ignorowanym pliku `.env.local`.
 W lokalnym środowisku wyłączone są `Magento_TwoFactorAuth` i
 `Magento_AdminAdobeImsTwoFactorAuth`, zgodnie z quickstartem DDEV. Tej konfiguracji
 nie należy przenosić na środowisko produkcyjne.
+
+## Pakiety Ergonode
+
+Źródła skopiowano z `vendivo-1/backend/packages` do tego repozytorium:
+
+- `packages/ergonode`: 62 aktywne moduły, obejmujące podstawę integracji,
+  mapowania, import, publikację, historię i panel administracyjny.
+- `packages/packhauer/module-unit-attribute`: wymagany przez moduły atrybutów
+  produktu po stronie importu i publikacji.
+- `packages/packhauer/module-file-attribute`: wymagany przez import produktów.
+
+Repozytorium Composer typu `path` wskazuje `packages/*/*` i ma ustawione
+`symlink: true`. Linki w `vendor` prowadzą do kopii w tym projekcie.
+Moduły wycofane do `backlog`, pozostałe pakiety Vendivo oraz konfiguracja,
+klucze API i dane bazy źródłowego projektu nie są importowane.
+
+Zwykłe zmiany kodu w `packages` są widoczne przez symlinki w `vendor`.
+Po zmianie manifestów pakietów wykonaj:
+
+```bash
+ddev mutagen sync
+ddev composer update 'ergonode/*' 'packhauer/*' --minimal-changes --no-interaction
+ddev magento setup:upgrade
+ddev magento setup:di:compile
+ddev magento cache:flush
+```
+
+Przy odtwarzaniu projektu z istniejącego `composer.lock` wystarczy
+`ddev composer install`. Połączenie z Ergonode należy skonfigurować w panelu
+administracyjnym dla własnego środowiska; instalacja pakietów nie uruchamia
+synchronizacji z instancją używaną w `vendivo-1`.
 
 ## Codzienna praca
 

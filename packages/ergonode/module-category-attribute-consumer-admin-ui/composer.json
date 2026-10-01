@@ -1,0 +1,31 @@
+{
+    "name": "ergonode/module-category-attribute-consumer-admin-ui",
+    "description": "Optional category attribute source metadata, synchronization actions and inbound settings for the neutral category attribute editor.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-category-consumer-admin-ui": "*",
+        "ergonode/module-category-attribute-consumer": "*",
+        "ergonode/module-category-attribute-admin-ui": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\CategoryAttributeConsumerAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

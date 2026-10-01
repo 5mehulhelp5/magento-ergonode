@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_connection>
+            <general>
+                <enabled>0</enabled>
+                <environment>test</environment>
+                <mode/>
+            </general>
+            <test>
+                <url/>
+                <requests_per_minute>0</requests_per_minute>
+            </test>
+            <production>
+                <url/>
+                <requests_per_minute>0</requests_per_minute>
+            </production>
+        </ergonode_connection>
+    </default>
+</config>

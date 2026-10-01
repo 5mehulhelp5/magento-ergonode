@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-attribute-publisher-admin-ui",
+    "description": "Shared optional attribute publication actions for mapping editors using Attribute compatibility contracts.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-attribute-publisher": "dev-main@dev",
+        "ergonode/module-publisher-admin-ui": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\AttributePublisherAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\ProductCategoryAttribute\Api\CategoryReferenceAttributeConfigInterface" type="Ergonode\ProductCategoryAttribute\Model\Config\CategoryReferenceAttributeConfig"/>
+    <type name="Ergonode\ProductAttribute\Api\ProductAttributePlacementPolicyInterface">
+        <plugin name="ergonode_product_category_attribute_placement" type="Ergonode\ProductCategoryAttribute\Plugin\ProductAttributePlacementPolicyPlugin"/>
+    </type>
+    <type name="Ergonode\ProductAttribute\Model\Config\ProductAttributePolicy">
+        <plugin name="ergonode_product_category_attribute_policy" type="Ergonode\ProductCategoryAttribute\Plugin\ProductAttributePolicyPlugin"/>
+    </type>
+    <type name="Ergonode\ProductAttribute\Model\Provider\MagentoAttributeMetadataContributorPool">
+        <arguments>
+            <argument name="contributors" xsi:type="array">
+                <item name="category_reference" xsi:type="object">Ergonode\ProductCategoryAttribute\Model\ProductAttribute\CategoryReferenceMetadataContributor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttribute\Model\Mapping\ValueAdapterRegistry">
+        <arguments>
+            <argument name="adapters" xsi:type="array">
+                <item name="category_reference" xsi:type="object">Ergonode\ProductCategoryAttribute\Model\CategoryReferenceValueAdapter</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

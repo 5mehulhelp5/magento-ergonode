@@ -1,0 +1,231 @@
+.vec-manual-auth-shell {
+    --vera-c-ffffff: #ffffff;
+    --vera-c-eef2f7: #eef2f7;
+    --vera-c-152033: #152033;
+    --vera-c-fbfcff: #fbfcff;
+    --vera-c-64748b: #64748b;
+    --vera-c-344054: #344054;
+    --vera-c-cbd5e1: #cbd5e1;
+    --vera-c-7c83ef: #7c83ef;
+    --vera-c-f8fafc: #f8fafc;
+    --vera-c-e2e8f0: #e2e8f0;
+    --vera-c-475467: #475467;
+    --vera-c-fff5f5: #fff5f5;
+    --vera-c-fecaca: #fecaca;
+    --vera-c-b42318: #b42318;
+    --vera-c-d6dce6: #d6dce6;
+    --vera-c-aeb8c7: #aeb8c7;
+    --vera-c-5b5ce2: #5b5ce2;
+    --vera-c-5152cf: #5152cf;
+    --vera-c-4f50d3: #4f50d3;
+    --vera-c-4546be: #4546be;
+}
+
+.vec-manual-auth-shell .modal-inner-wrap {
+    border: 0;
+    border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(15, 23, 42, .22);
+    max-width: 460px;
+    overflow: hidden;
+    width: calc(100% - 32px);
+}
+
+.vec-manual-auth-shell .modal-header {
+    background: var(--vera-c-ffffff);
+    border-bottom: 1px solid var(--vera-c-eef2f7);
+    padding: 22px 28px 18px;
+}
+
+.vec-manual-auth-shell .modal-title {
+    align-items: center;
+    color: var(--vera-c-152033);
+    display: flex;
+    font-size: 20px;
+    font-weight: 800;
+    gap: 12px;
+    line-height: 1.25;
+}
+
+.vec-manual-auth-shell .modal-content {
+    background: var(--vera-c-fbfcff);
+    padding: 26px 28px 28px;
+}
+
+.vec-manual-auth form {
+    display: grid;
+    gap: 18px;
+}
+
+.vec-manual-auth-brand {
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+}
+
+.vec-manual-auth-brand img {
+    display: block;
+    height: 30px;
+    width: auto;
+}
+
+.vec-manual-auth-brand img:not([src]) {
+    display: none;
+}
+
+.vec-manual-auth-intro {
+    color: var(--vera-c-64748b);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: -2px 0 2px;
+}
+
+.vec-manual-auth-field {
+    display: grid;
+    gap: 7px;
+    margin: 0;
+}
+
+.vec-manual-auth-field > span {
+    color: var(--vera-c-344054);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.vec-manual-auth-field input {
+    background: var(--vera-c-ffffff);
+    border: 1px solid var(--vera-c-cbd5e1);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .03);
+    color: var(--vera-c-152033);
+    font-size: 14px;
+    min-height: 42px;
+    padding: 8px 11px;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.vec-manual-auth-field input:focus {
+    border-color: var(--vera-c-7c83ef);
+    box-shadow: 0 0 0 3px rgba(91, 92, 226, .12);
+    outline: 0;
+}
+
+.vec-manual-auth-requirements {
+    background: var(--vera-c-f8fafc);
+    border: 1px solid var(--vera-c-e2e8f0);
+    border-left: 3px solid var(--vera-c-7c83ef);
+    border-radius: 8px;
+    color: var(--vera-c-344054);
+    display: grid;
+    gap: 5px;
+    margin: -2px 0 0;
+    padding: 11px 12px;
+}
+
+.vec-manual-auth-requirements strong {
+    font-size: 12px;
+}
+
+.vec-manual-auth-requirements span,
+.vec-manual-auth-requirements small {
+    color: var(--vera-c-64748b);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.vec-manual-auth-requirements small {
+    color: var(--vera-c-475467);
+    font-weight: 700;
+}
+
+.vec-manual-auth-error {
+    background: var(--vera-c-fff5f5);
+    border: 1px solid var(--vera-c-fecaca);
+    border-radius: 8px;
+    color: var(--vera-c-b42318);
+    font-size: 12px;
+    line-height: 1.45;
+    padding: 10px 12px;
+}
+
+.vec-manual-auth-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 2px;
+}
+
+.vec-manual-auth-button {
+    align-items: center;
+    appearance: none;
+    background: var(--vera-c-ffffff);
+    border: 1px solid var(--vera-c-d6dce6);
+    border-radius: 8px;
+    color: var(--vera-c-344054);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 800;
+    height: 38px;
+    justify-content: center;
+    line-height: 1;
+    min-width: 92px;
+    padding: 0 16px;
+    transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.vec-manual-auth-button:hover,
+.vec-manual-auth-button:focus {
+    background: var(--vera-c-f8fafc);
+    border-color: var(--vera-c-aeb8c7);
+    color: var(--vera-c-344054);
+}
+
+.vec-manual-auth-button:focus-visible {
+    box-shadow: 0 0 0 3px rgba(91, 92, 226, .14);
+    outline: 0;
+}
+
+.vec-manual-auth-button-primary {
+    background: var(--vera-c-5b5ce2);
+    border-color: var(--vera-c-5152cf);
+    color: var(--vera-c-ffffff);
+}
+
+.vec-manual-auth-button-primary:hover,
+.vec-manual-auth-button-primary:focus {
+    background: var(--vera-c-4f50d3);
+    border-color: var(--vera-c-4546be);
+    color: var(--vera-c-ffffff);
+}
+
+.vec-manual-auth-button:disabled {
+    cursor: wait;
+    opacity: .56;
+}
+
+@media (max-width: 520px) {
+    .vec-manual-auth-shell .modal-header,
+    .vec-manual-auth-shell .modal-content {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .vec-manual-auth-actions,
+    .vec-manual-auth-button {
+        width: 100%;
+    }
+
+    .vec-manual-auth-actions {
+        flex-direction: column-reverse;
+    }
+}
+
+.vec-manual-auth-remember {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+}

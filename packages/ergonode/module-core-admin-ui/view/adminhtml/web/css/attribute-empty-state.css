@@ -1,0 +1,26 @@
+.vea-attribute-empty-state {
+    color: var(--vea-muted);
+    font-size: 12px;
+    line-height: 1.5;
+    margin: auto;
+    max-width: 300px;
+    padding: 32px 16px;
+    text-align: center;
+}
+
+.vea-attribute-empty-state p {
+    margin: 0;
+}
+
+.vea-attribute-empty-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 14px;
+}
+
+.vea-attribute-empty-refresh {
+    gap: 7px;
+}

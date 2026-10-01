@@ -1,0 +1,56 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$pairClass = (string)$block->getData('pair_class');
+$statusTone = (string)$block->getData('status_tone');
+$leftSlot = (array)$block->getData('left_slot');
+$rightSlot = (array)$block->getData('right_slot');
+$unlinkTitle = (string)$block->getData('unlink_title');
+$unlinkLabel = (string)$block->getData('unlink_label');
+$message = (string)$block->getData('message');
+$messageHidden = (bool)$block->getData('message_hidden');
+$searchParts = [];
+
+foreach ([$leftSlot, $rightSlot] as $slot) {
+    $item = isset($slot['item']) && is_array($slot['item']) ? $slot['item'] : null;
+    $searchParts[] = $item ? (string)($item['label'] ?? '') : '';
+    $searchParts[] = $item ? (string)($item['code'] ?? '') : '';
+    $searchParts[] = (string)($slot['type'] ?? '');
+    $searchParts[] = (string)($slot['scope'] ?? '');
+}
+$searchParts[] = (string)$block->getData('search_extra');
+$searchText = implode(' ', array_filter($searchParts));
+$renderSlot = static function (Template $context, array $slot): string {
+    return $context->getLayout()
+        ->createBlock(Template::class)
+        ->setTemplate('Ergonode_CoreAdminUi::mapping/pair-slot.phtml')
+        ->setData($slot)
+        ->toHtml();
+};
+?>
+<article class="<?= $escaper->escapeHtmlAttr($pairClass) ?>"
+         data-role="mapping-row"
+         data-validation-message="<?= $escaper->escapeHtmlAttr((string)$block->getData('validation_message')) ?>"
+         data-validation-tone="<?= $escaper->escapeHtmlAttr((string)$block->getData('validation_tone')) ?>"
+         data-validation-code="<?= $escaper->escapeHtmlAttr((string)$block->getData('validation_code')) ?>"
+         data-status-tone="<?= $escaper->escapeHtmlAttr($statusTone) ?>"
+         data-search="<?= $escaper->escapeHtmlAttr($searchText) ?>">
+    <?= /* @noEscape */ $renderSlot($block, $leftSlot) ?>
+
+    <button type="button"
+            class="vea-link-indicator vea-unlink-mapping"
+            data-role="unlink-mapping"
+            title="<?= $escaper->escapeHtmlAttr($unlinkTitle) ?>"
+            aria-label="<?= $escaper->escapeHtmlAttr($unlinkLabel) ?>">
+        <span aria-hidden="true"></span>
+    </button>
+
+    <?= /* @noEscape */ $renderSlot($block, $rightSlot) ?>
+
+    <div class="vea-pair-message" data-role="pair-message" <?= $messageHidden ? 'hidden' : '' ?>>
+        <?= $escaper->escapeHtml($message) ?>
+    </div>
+</article>

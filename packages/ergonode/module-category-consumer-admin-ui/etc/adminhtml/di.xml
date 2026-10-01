@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Plugin\AutomaticSynchronizationVisibility">
+        <arguments>
+            <argument name="paths" xsi:type="array">
+                <item name="ergonode_categories_cron_status" xsi:type="string">ergonode_categories/cron/status</item>
+                <item name="ergonode_categories_cron_schedule" xsi:type="string">ergonode_categories/cron/schedule</item>
+                <item name="ergonode_categories_data_cron_status" xsi:type="string">ergonode_categories/data_cron/status</item>
+                <item name="ergonode_categories_data_cron_schedule" xsi:type="string">ergonode_categories/data_cron/schedule</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CategoryAdminUi\Model\CategoryTreeMappingUiProvider">
+        <plugin name="ergonode_category_consumer_configuration" type="Ergonode\CategoryConsumerAdminUi\Plugin\CategoryMappingConfiguration"/>
+    </type>
+</config>

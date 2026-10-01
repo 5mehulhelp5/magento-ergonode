@@ -1,0 +1,4 @@
+.veui-section-navigation-icon-template {
+    -webkit-mask: url('../images/template.svg') center / 14px 14px no-repeat;
+    mask: url('../images/template.svg') center / 14px 14px no-repeat;
+}

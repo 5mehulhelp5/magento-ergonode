@@ -1,0 +1,90 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$mapping = (array)$block->getData('mapping');
+$canCreateMagentoAttribute = (bool)$block->getData('can_create_magento_attribute');
+$magentoAttributeExists = (bool)$block->getData('magento_attribute_exists');
+$typeCompatible = (bool)$block->getData('type_compatible');
+$left = isset($mapping['left']) && is_array($mapping['left']) ? $mapping['left'] : null;
+$right = isset($mapping['right']) && is_array($mapping['right']) ? $mapping['right'] : null;
+$isDraft = !$left || !$right;
+$leftType = $left ? (string)($left['type'] ?? '') : '';
+$rightType = $right ? (string)($right['type'] ?? '') : '';
+$leftScope = $left ? (string)($left['scope'] ?? 'global') : '';
+$rightScope = $right ? (string)($right['scope'] ?? 'global') : '';
+$optionProgress = isset($mapping['option_progress']) && is_array($mapping['option_progress'])
+    ? $mapping['option_progress']
+    : null;
+$optionUrl = (string)($mapping['option_url'] ?? '');
+$optionModalUrl = (string)($mapping['option_modal_url'] ?? '');
+$hasOptionMappingAction = !$isDraft && $optionProgress !== null && $optionUrl !== '';
+$validationMessage = (string)($mapping['validation_message'] ?? '');
+$validationTone = (string)($mapping['validation_tone'] ?? '');
+$statusTone = !$typeCompatible || $validationTone === 'error' ? 'error' : ($isDraft ? 'warning' : 'ok');
+$unlinkMappingLabel = __('Usuń mapowanie atrybutów');
+$optionActionLabel = $hasOptionMappingAction
+    ? __('Przejdź do mapowania opcji: %1 → %2', (string)$left['label'], (string)$right['label'])
+    : '';
+$optionProgressLabel = $hasOptionMappingAction
+    ? __('Zmapowano %1 z %2 opcji', (int)$optionProgress['mapped'], (int)$optionProgress['total'])
+    : '';
+$pairClass = 'vea-pair-row vea-attribute-pair-row vea-status-tone-' . $statusTone;
+$pairClass .= $hasOptionMappingAction ? ' has-option-mapping' : '';
+$createMagentoAttributeLabel = __('Utwórz atrybut w Magento z atrybutu Ergonode');
+$existingMagentoAttributeMessage = $left
+    ? __('Atrybut Magento o kodzie „%1” już istnieje.', (string)($left['code'] ?? ''))
+    : '';
+$createMagentoAttributeTitle = $magentoAttributeExists
+    ? $existingMagentoAttributeMessage
+    : $createMagentoAttributeLabel;
+$leftSlot = [
+    'item' => $left,
+    'side' => 'ergo',
+    'type' => $leftType,
+    'scope' => $leftScope,
+    'required_type' => $rightType,
+    'empty_template' => 'Ergonode_CoreAdminUi::attribute/empty-slot.phtml',
+];
+$rightSlot = [
+    'item' => $right,
+    'side' => 'magento',
+    'type' => $rightType,
+    'scope' => $rightScope,
+    'required_type' => $leftType,
+    'empty_template' => 'Ergonode_CoreAdminUi::attribute/empty-slot.phtml',
+    'extra_class' => $hasOptionMappingAction ? 'has-option-mapping-action' : '',
+    'can_create' => $canCreateMagentoAttribute,
+    'magento_attribute_exists' => $magentoAttributeExists,
+    'create_title' => $createMagentoAttributeTitle,
+    'after_template' => $hasOptionMappingAction
+        ? 'Ergonode_CoreAdminUi::attribute/option-progress.phtml'
+        : '',
+    'option_progress' => $optionProgress,
+    'option_url' => $optionUrl,
+    'option_modal_url' => $optionModalUrl,
+    'option_action_label' => $optionActionLabel,
+    'option_progress_label' => $optionProgressLabel,
+    'left_code' => $left ? (string)($left['code'] ?? '') : '',
+    'right_code' => $right ? (string)($right['code'] ?? '') : '',
+];
+?>
+<?= /* @noEscape */ $block->getLayout()
+    ->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::mapping/pair.phtml')
+    ->setData([
+        'pair_class' => $pairClass,
+        'status_tone' => $statusTone,
+        'left_slot' => $leftSlot,
+        'right_slot' => $rightSlot,
+        'unlink_title' => $unlinkMappingLabel,
+        'unlink_label' => $unlinkMappingLabel,
+        'message' => $validationMessage,
+        'message_hidden' => $validationMessage === '',
+        'validation_message' => $validationMessage,
+        'validation_tone' => $validationTone,
+        'validation_code' => $right ? (string)($right['code'] ?? '') : '',
+    ])
+    ->toHtml() ?>

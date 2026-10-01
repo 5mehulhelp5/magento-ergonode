@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_templates" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Templates</label>
+            <tab>ergonode</tab>
+            <resource>Ergonode_Core::config</resource>
+            <group id="import" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Import</label>
+                <field id="create_attribute_sets" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Create Magento Attribute Sets</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Match an existing Magento attribute set by normalized template code or create one from the default product skeleton when no unique match exists.</comment>
+                </field>
+            </group>
+            <group id="cron" translate="label" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Cron</label>
+                <field id="status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="cron_expr" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Schedule</label>
+                    <comment>Schedule for reading the complete Ergonode template list and synchronizing Magento attribute sets.</comment>
+                    <backend_model>Ergonode\CoreAdminUi\Model\Config\Backend\CronSchedule</backend_model>
+                    <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\RequiredField</frontend_model>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

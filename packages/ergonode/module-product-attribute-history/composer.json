@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-product-attribute-history",
+    "description": "Direction-neutral product attribute and option mapping history with immutable states and grouped operation capture, with independently configurable capture and scheduled retention.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "ergonode/module-attribute-consumer": "*",
+        "ergonode/module-product-attribute": "*",
+        "php": "~8.3.0||~8.4.0||~8.5.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductAttributeHistory\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

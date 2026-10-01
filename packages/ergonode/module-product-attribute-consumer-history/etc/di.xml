@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\ProductAttributeConsumer\Model\Mapping\AttributeMappingSaver">
+        <plugin name="ergonode_product_attribute_history_inbound_save" type="Ergonode\ProductAttributeConsumerHistory\Plugin\MappingSaveHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\ProductAttributeConsumer\Api\AttributeSynchronizationProcessInterface">
+        <plugin name="ergonode_product_attribute_history_sync" type="Ergonode\ProductAttributeConsumerHistory\Plugin\SynchronizationHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\ProductAttributeConsumer\Api\AttributeSynchronizationBatchInterface">
+        <plugin name="ergonode_product_attribute_history_batch" type="Ergonode\ProductAttributeConsumerHistory\Plugin\BatchHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\ProductAttributeConsumer\Api\AttributeAutoMapperInterface">
+        <plugin name="ergonode_product_attribute_history_auto_map" type="Ergonode\ProductAttributeConsumerHistory\Plugin\AutoMappingHistoryPlugin" sortOrder="200"/>
+    </type>
+</config>

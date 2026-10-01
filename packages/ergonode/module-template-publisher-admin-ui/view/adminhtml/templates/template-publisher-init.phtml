@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+use Ergonode\TemplatePublisherAdminUi\Block\Adminhtml\TemplatePublisher;
+
+/** @var TemplatePublisher $block */
+?>
+<?php if ($block->canCreateTemplate()): ?>
+<script type="text/x-magento-init">
+{
+    "#ergonode-template-admin": {
+        "Ergonode_TemplatePublisherAdminUi/js/template-publisher":
+            <?= /* @noEscape */ $block->getConfigJson() ?>
+    }
+}
+</script>
+<?php endif; ?>

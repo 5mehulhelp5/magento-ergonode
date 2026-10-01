@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_attributes>
+            <mapping>
+                <map_identical_codes>0</map_identical_codes>
+            </mapping>
+            <options>
+                <synchronize_sort_order>1</synchronize_sort_order>
+                <delete_missing_magento_options>0</delete_missing_magento_options>
+            </options>
+            <cron>
+                <status>0</status>
+                <schedule>*/15 * * * *</schedule>
+            </cron>
+        </ergonode_attributes>
+        <ergonode_products>
+            <attributes>
+                <url_key>magento</url_key>
+                <price_mode>mapping</price_mode>
+                <price_default>0</price_default>
+                <status>mapping</status>
+                <status_default>2</status_default>
+                <visibility>mapping</visibility>
+                <visibility_default>4</visibility_default>
+            </attributes>
+        </ergonode_products>
+    </default>
+</config>

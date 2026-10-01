@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_categories">
+            <group id="tree_history" translate="label" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Tree history</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Record changes</label>
+                    <comment>Disabling recording preserves existing history. Changes made while disabled are not backfilled.</comment>
+                    <config_path>ergonode_categories/history/enabled</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="cleanup_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Automatic cleanup</label>
+                    <comment>Permanently remove expired history, including existing records. Cleanup also runs when recording is disabled.</comment>
+                    <config_path>ergonode_categories/history/cleanup_enabled</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="retention_days" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Keep for (days)</label>
+                    <comment>Keep history for this many days after an operation finishes. Enter a positive whole number; default: 30.</comment>
+                    <config_path>ergonode_categories/history/retention_days</config_path>
+                    <backend_model>Ergonode\CategoryConsumerHistoryAdminUi\Model\Config\Backend\RetentionDays</backend_model>
+                    <validate>required-entry validate-digits validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="cleanup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Schedule</label>
+                    <comment>Five-part cron expression in the Magento configuration timezone. Default: 30 2 * * *.</comment>
+                    <config_path>ergonode_categories/history/schedule</config_path>
+                    <backend_model>Ergonode\CoreAdminUi\Model\Config\Backend\CronSchedule</backend_model>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="cleanup_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

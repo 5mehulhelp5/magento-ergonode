@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="ergonode_connection_required"/>
+    <head>
+        <css src="Ergonode_CoreAdminUi::css/ergonode-workspace.css"/>
+        <css src="Ergonode_CoreAdminUi::css/ergonode-actions.css"/>
+        <css src="Ergonode_CategoryAdminUi::css/category-tree-mapping.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block
+                class="Ergonode\CategoryAdminUi\Block\Adminhtml\CategoryTreeMapping\Index"
+                name="ergonode.category_tree_mapping.index"
+                template="Ergonode_CategoryAdminUi::category-tree-mapping/index.phtml"
+            >
+                <container name="ergonode.category_tree_mapping.sidebar" as="sidebar"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

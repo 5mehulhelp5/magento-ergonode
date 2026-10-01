@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="Ergonode_Language::language_mapping"
+            title="Languages"
+            translate="title"
+            module="Ergonode_LanguageAdminUi"
+            sortOrder="20"
+            parent="Ergonode_Core::system"
+            action="ergonode/language/index"
+            resource="Ergonode_Language::language_mapping"
+        />
+    </menu>
+</config>

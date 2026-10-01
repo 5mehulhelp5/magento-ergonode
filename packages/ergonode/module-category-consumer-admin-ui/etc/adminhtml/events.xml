@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="admin_system_config_changed_section_ergonode_categories">
+        <observer name="ergonode_category_settings_saved" instance="Ergonode\CategoryConsumerAdminUi\Observer\CategorySettingsSaved"/>
+    </event>
+    <event name="admin_system_config_changed_section_ergonode_category_attributes">
+        <observer name="ergonode_category_attribute_settings_saved" instance="Ergonode\CategoryConsumerAdminUi\Observer\CategorySettingsSaved"/>
+    </event>
+</config>

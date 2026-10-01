@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ergonode_CategoryConsumerAdminUi::css/category-synchronization.css"/>
+    </head>
+    <body>
+        <referenceBlock name="ergonode.category_tree_mapping.index">
+            <block class="Ergonode\CategoryConsumerAdminUi\Block\Adminhtml\CategorySynchronizationActions" name="ergonode.category_tree_mapping.synchronization" as="actions"/>
+        </referenceBlock>
+    </body>
+</page>

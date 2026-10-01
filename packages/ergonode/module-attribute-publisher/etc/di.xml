@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\AttributePublisher\Api\AttributeBatchStateLoaderInterface" type="Ergonode\AttributePublisher\Model\Sync\AttributeStateLoader"/>
+    <preference for="Ergonode\AttributePublisher\Api\AttributeStateLoaderInterface" type="Ergonode\AttributePublisher\Model\Sync\AttributeStateLoader"/>
+    <preference for="Ergonode\AttributePublisher\Api\AttributeDesiredStateFactoryInterface" type="Ergonode\AttributePublisher\Model\Data\AttributeDesiredStateFactory"/>
+    <preference for="Ergonode\AttributePublisher\Api\AttributeCreateBatchSynchronizerInterface" type="Ergonode\AttributePublisher\Model\Sync\AttributeCreateBatchSynchronizer"/>
+    <preference for="Ergonode\AttributePublisher\Api\AttributeOptionBatchSynchronizerInterface" type="Ergonode\AttributePublisher\Model\Sync\AttributeOptionBatchSynchronizer"/>
+    <preference for="Ergonode\AttributePublisher\Api\AttributeSynchronizerInterface" type="Ergonode\AttributePublisher\Model\Sync\AttributeSynchronizer"/>
+    <preference for="Ergonode\AttributePublisher\Api\AttributeOptionSynchronizerInterface" type="Ergonode\AttributePublisher\Model\Sync\AttributeOptionSynchronizer"/>
+    <preference for="Ergonode\AttributePublisher\Api\AttributeTypeResolverInterface" type="Ergonode\AttributePublisher\Model\AttributeTypeResolver"/>
+</config>

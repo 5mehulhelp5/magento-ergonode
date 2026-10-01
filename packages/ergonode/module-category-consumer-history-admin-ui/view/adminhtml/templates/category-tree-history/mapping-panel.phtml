@@ -1,0 +1,25 @@
+<?php
+declare(strict_types=1);
+
+/** @var \Ergonode\CategoryConsumerHistoryAdminUi\Block\Adminhtml\CategoryTreeHistory\MappingPanel $block */
+?>
+<?php if ($block->canViewHistory()): ?>
+    <section id="ergonode-category-mapping-history" class="vech-mapping-history"
+             aria-labelledby="vech-mapping-history-title">
+        <header class="veui-panel-head">
+            <strong id="vech-mapping-history-title" class="veui-panel-title">
+                <?= $escaper->escapeHtml(__('Operations')) ?>
+            </strong>
+        </header>
+        <div class="veui-message" data-role="history-message" role="status" hidden></div>
+        <div class="vech-operation-list" data-role="operation-list"></div>
+    </section>
+    <script type="text/x-magento-init">
+    {
+        "#ergonode-category-mapping-history": {
+            "Ergonode_CategoryConsumerHistoryAdminUi/js/category-tree-mapping-history":
+                <?= /* @noEscape */ $block->getConfigJson() ?>
+        }
+    }
+    </script>
+<?php endif; ?>

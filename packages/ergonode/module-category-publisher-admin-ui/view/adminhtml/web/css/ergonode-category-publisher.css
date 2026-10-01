@@ -1,0 +1,286 @@
+:root {
+    --vecp-c-152033: #152033;
+    --vecp-c-344054: #344054;
+    --vecp-c-4546be: #4546be;
+    --vecp-c-475569: #475569;
+    --vecp-c-4f50d3: #4f50d3;
+    --vecp-c-5152cf: #5152cf;
+    --vecp-c-5b5ce2: #5b5ce2;
+    --vecp-c-64748b: #64748b;
+    --vecp-c-7c83ef: #7c83ef;
+    --vecp-c-aeb8c7: #aeb8c7;
+    --vecp-c-b42318: #b42318;
+    --vecp-c-b45309: #b45309;
+    --vecp-c-cbd5e1: #cbd5e1;
+    --vecp-c-d6dce6: #d6dce6;
+    --vecp-c-dfe5ee: #dfe5ee;
+    --vecp-c-eef2f7: #eef2f7;
+    --vecp-c-f8fafc: #f8fafc;
+    --vecp-c-fbfcff: #fbfcff;
+    --vecp-c-fecaca: #fecaca;
+    --vecp-c-fff: #fff;
+    --vecp-c-fff5f5: #fff5f5;
+    --vecp-c-ffffff: #ffffff;
+}
+
+.vec-magento-mapping.is-empty {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+}
+
+.vec-create-ergonode-category:disabled {
+    cursor: wait;
+}
+
+.vec-create-ergonode-category-icon {
+    background: url('../images/create-ergonode-category.svg') center / 16px 16px no-repeat;
+    display: block;
+    flex: 0 0 16px;
+    height: 16px;
+    width: 16px;
+}
+
+.vec-ergo-card.is-pending-create > .vec-source-mapping,
+.vec-magento-card.is-pending-create > .vec-magento-mapping {
+    display: none;
+}
+
+.vec-pending-ergonode-category {
+    appearance: none;
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--vecp-c-b45309);
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 24px;
+    height: 28px;
+    justify-content: center;
+    margin: 0;
+    min-width: 24px;
+    outline: 0;
+    padding: 0;
+    position: relative;
+    width: 24px;
+    z-index: 6;
+}
+
+.vec-pending-ergonode-category-icon {
+    background: currentColor;
+    display: block;
+    height: 18px;
+    -webkit-mask: url('../images/pending-category-info.svg') center / 18px 18px no-repeat;
+    mask: url('../images/pending-category-info.svg') center / 18px 18px no-repeat;
+    width: 18px;
+}
+
+.vec-pending-ergonode-category:focus-visible {
+    border-radius: 999px;
+    outline: 2px solid rgba(180, 83, 9, .24);
+    outline-offset: 1px;
+}
+
+.vec-pending-ergonode-category-tooltip {
+    background: var(--vecp-c-152033);
+    border-radius: 7px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .2);
+    color: var(--vecp-c-fff);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+    max-width: 250px;
+    min-width: 190px;
+    opacity: 0;
+    overflow-wrap: anywhere;
+    padding: 7px 9px;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: calc(100% + 6px);
+    transform: translateY(-3px);
+    transition: opacity 140ms ease, transform 140ms ease, visibility 140ms ease;
+    visibility: hidden;
+    width: max-content;
+    z-index: 300;
+}
+
+.vec-pending-ergonode-category-tooltip::before {
+    border-bottom: 5px solid var(--vecp-c-152033);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    bottom: 100%;
+    content: '';
+    position: absolute;
+    right: 7px;
+}
+
+.vec-pending-ergonode-category:hover,
+.vec-pending-ergonode-category:focus {
+    z-index: 300;
+}
+
+.vec-pending-ergonode-category:hover .vec-pending-ergonode-category-tooltip,
+.vec-pending-ergonode-category:focus .vec-pending-ergonode-category-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.vec-target-panel > .veui-tools {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+.vec-target-panel > .veui-tools > .veui-search {
+    flex: 1 1 auto;
+    min-width: 180px;
+}
+
+.vec-create-selected-ergonode {
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.vec-create-selected-ergonode .vec-selected-count {
+    align-items: center;
+    background: rgba(29, 78, 216, .1);
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 10px;
+    height: 18px;
+    justify-content: center;
+    margin-left: auto;
+    min-width: 18px;
+    padding: 0 5px;
+}
+
+.vec-create-selected-ergonode:disabled {
+    cursor: not-allowed;
+    opacity: .5;
+}
+
+@media (max-width: 1120px) {
+    .vec-target-panel > .veui-tools {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+}
+
+
+.vec-create-ergonode-tree-dialog {
+    background: var(--vecp-c-ffffff);
+    border: 1px solid var(--vecp-c-dfe5ee);
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: 0 18px 48px rgba(15, 23, 42, .22);
+    color: var(--vecp-c-152033);
+    max-width: calc(100vw - 32px);
+    padding: 16px;
+    position: fixed;
+    width: 360px;
+    z-index: 1100;
+}
+
+.vec-create-ergonode-tree-dialog * {
+    box-sizing: border-box;
+}
+
+.vec-create-ergonode-tree-dialog[hidden] {
+    display: none;
+}
+
+.vec-create-ergonode-tree-dialog form {
+    display: grid;
+    gap: 13px;
+}
+
+.vec-create-tree-title {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.vec-create-tree-field {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+}
+
+.vec-create-tree-field > span {
+    color: var(--vecp-c-475569);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.vec-create-tree-field input {
+    background: var(--vecp-c-ffffff);
+    border: 1px solid var(--vecp-c-cbd5e1);
+    border-radius: 7px;
+    color: var(--vecp-c-152033);
+    font-size: 13px;
+    min-height: 38px;
+    padding: 7px 10px;
+    width: 100%;
+}
+
+.vec-create-tree-field input:focus {
+    border-color: var(--vecp-c-7c83ef);
+    box-shadow: 0 0 0 3px rgba(91, 92, 226, .12);
+    outline: 0;
+}
+
+.vec-create-tree-error {
+    background: var(--vecp-c-fff5f5);
+    border: 1px solid var(--vecp-c-fecaca);
+    border-radius: 7px;
+    color: var(--vecp-c-b42318);
+    font-size: 11px;
+    line-height: 1.45;
+    padding: 8px 10px;
+}
+
+.vec-create-tree-error[hidden] {
+    display: none;
+}
+
+.vec-create-tree-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.vec-create-tree-actions .veui-button {
+    min-width: 84px;
+}
+
+@media (max-width: 520px) {
+    .vec-create-ergonode-tree-dialog {
+        width: calc(100vw - 32px);
+    }
+}
+
+.vec-publication-readiness {
+    align-items: center;
+    background: var(--veui-warning-soft);
+    border: 1px solid var(--veui-warning-border);
+    border-radius: 6px;
+    color: var(--veui-warning-text);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 13px;
+    gap: 12px;
+    margin: 12px 16px;
+    padding: 12px 16px;
+}
+
+.vec-publication-readiness[hidden] {
+    display: none;
+}
+
+.vec-publication-readiness [data-role='write-readiness-message'] {
+    flex: 1 1 320px;
+}

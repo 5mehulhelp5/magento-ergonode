@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_categories>
+            <tree>
+                <initial_page_size>700</initial_page_size>
+            </tree>
+        </ergonode_categories>
+    </default>
+</config>

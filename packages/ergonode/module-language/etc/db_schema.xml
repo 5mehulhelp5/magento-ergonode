@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_language" resource="default" engine="innodb" comment="Ergonode Languages">
+        <column xsi:type="varchar" name="language_code" nullable="false" length="64" comment="Ergonode Language Code"/>
+        <column xsi:type="timestamp" name="synchronized_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Synchronized At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="language_code"/>
+        </constraint>
+    </table>
+    <table name="ergonode_language_store_mapping" resource="default" engine="innodb" comment="Ergonode Language Store View Mapping">
+        <column xsi:type="int" name="mapping_id" unsigned="true" nullable="false" identity="true" comment="Mapping ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="true" comment="Magento Store View ID"/>
+        <column xsi:type="varchar" name="language_code" nullable="true" length="64" comment="Ergonode Language Code"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+        <column xsi:type="boolean" name="is_manual" nullable="false" default="false" comment="Manual Mapping Override"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="mapping_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_LANGUAGE_STORE_MAPPING_STORE_FK"
+            table="ergonode_language_store_mapping"
+            column="store_id"
+            referenceTable="store"
+            referenceColumn="store_id"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_LANGUAGE_STORE_MAPPING_STORE">
+            <column name="store_id"/>
+        </constraint>
+        <index referenceId="ERGONODE_LANGUAGE_STORE_MAPPING_LANGUAGE" indexType="btree">
+            <column name="language_code"/>
+        </index>
+    </table>
+</schema>

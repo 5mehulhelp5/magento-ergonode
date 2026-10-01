@@ -1,0 +1,473 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+use Ergonode\CoreAdminUi\Block\Adminhtml\SynchronizationActions;
+use Magento\Framework\View\Element\Template;
+
+/** @var \Ergonode\ProductAttributeAdminUi\Block\Adminhtml\Option\Mapping $block */
+$embedded = (bool)$block->getData('embedded');
+$attributeContext = $block->getAttributeContext();
+$attributeContexts = $block->getAttributeContexts();
+$ergonodeOptions = $block->getErgonodeOptions();
+$magentoOptions = $block->getMagentoOptions();
+$draftMappings = $block->getDraftMappings();
+$mappedOptions = $block->getMappedOptions();
+$snapshotAvailable = (bool)$block->getData('snapshot_available');
+$refreshAvailable = (bool)($block->getData('refresh_available') ?? $snapshotAvailable);
+$canSynchronizeOptions = $block->canSynchronizeOptions();
+$mappedCodes = ['ergo' => [], 'magento' => []];
+foreach (array_merge($draftMappings, $mappedOptions) as $mapping) {
+    foreach (['left' => 'ergo', 'right' => 'magento'] as $side => $source) {
+        $code = trim((string)($mapping[$side]['code'] ?? ''));
+        if ($code !== '') {
+            $mappedCodes[$source][$code] = true;
+        }
+    }
+}
+$selectedMappingId = (int)($attributeContext['mapping_id'] ?? 0);
+$ergonodeAttributeType = (string)($attributeContext['left']['type'] ?? '');
+$magentoAttributeType = (string)($attributeContext['right']['type'] ?? '');
+$magentoHasCustomSource = !empty($attributeContext['magento_has_custom_source']);
+$canCreateMagentoOption = (!method_exists($block, 'canCreateMagentoOptions') || $block->canCreateMagentoOptions())
+    && in_array($magentoAttributeType, ['select', 'multiselect'], true)
+    && $ergonodeAttributeType === $magentoAttributeType
+    && !$magentoHasCustomSource;
+$typeClass = static function (string $type): string {
+    return 'vea-type-' . (preg_replace('/[^a-z0-9_-]+/', '-', strtolower(trim($type))) ?: 'unknown');
+};
+$isActiveOption = static function (array $option): bool {
+    if (array_key_exists('active', $option)) {
+        return (bool)$option['active'];
+    }
+
+    return strtolower((string)($option['scope'] ?? '')) !== 'ignore';
+};
+$ergonodeIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/m2_configuration.svg');
+$magentoIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/magento-mark.svg');
+$saveIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/save.svg');
+$showExcludedHint = __('Pokaż opcje pominięte w mapowaniu');
+$hideExcludedHint = __('Ukryj opcje pominięte w mapowaniu');
+$refreshOptionTitle = __('Refresh option data from Ergonode');
+$renderPartial = static function (Template $context, string $template, array $data): string {
+    return $context->getLayout()
+        ->createBlock(Template::class)
+        ->setTemplate($template)
+        ->setData($data)
+        ->toHtml();
+};
+$sourceStateActionsHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::entity/source-state-actions.phtml',
+    [
+        'show_excluded_hint' => $showExcludedHint,
+        'hide_excluded_hint' => $hideExcludedHint,
+    ]
+);
+$mappingActionsHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/actions.phtml',
+    [
+        'search_placeholder' => __('Szukaj: etykieta, kod...'),
+        'save_title' => __('Zapisz mapowanie opcji'),
+        'save_icon_url' => $saveIconUrl,
+        'auto_match_title' => __('Automatically match option mappings without saving'),
+        'complete_title' => __('Complete missing option mappings without saving'),
+        'auto_match_disabled' => false,
+        'complete_disabled' => false,
+    ]
+);
+$disableDropZoneHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/drop-zone.phtml',
+    [
+        'kind' => 'disable',
+        'title' => __('Wyłącz z mapowania'),
+        'description' => __('Upuść tutaj, aby usunąć z mapowania'),
+    ]
+);
+$createDropZoneHtml = $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/drop-zone.phtml',
+    [
+        'kind' => 'create',
+        'title' => __('Nowe mapowanie opcji'),
+        'description' => __('Upuść tutaj, aby rozpocząć nowe mapowanie'),
+    ]
+);
+$workspaceId = $block->getWorkspaceId();
+$pairTemplate = $block->getPairTemplate();
+$mappingInitHtml = $embedded ? '' : $renderPartial(
+    $block,
+    'Ergonode_CoreAdminUi::mapping/init.phtml',
+    [
+        'workspace_id' => $workspaceId,
+        'module_name' => 'Ergonode_CoreAdminUi/js/option-mapping',
+        'config_json' => $block->getMappingConfigJson(),
+    ]
+);
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => $block->getCurrentNavigationSection()]]
+);
+$cardSelectionHtml = $block->getLayout()->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::entity/selection.phtml')
+    ->toHtml();
+$entityOptionsPlaceholderHtml = $block->getLayout()->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::entity/options-placeholder.phtml')
+    ->toHtml();
+?>
+<div id="<?= $escaper->escapeHtmlAttr($workspaceId) ?>"
+     class="veui-workspace vea-mapping vea-option-mapping<?= $embedded ? ' vea-option-mapping-embedded' : '' ?>"
+     data-can-create-magento-option="<?= $canCreateMagentoOption ? '1' : '0' ?>">
+    <?php if (!$embedded): ?>
+        <div class="veui-toolbar vea-viewbar">
+            <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+            <?php if ($canSynchronizeOptions): ?>
+                <?= /* @noEscape */ $block->getLayout()->createBlock(
+                    SynchronizationActions::class,
+                    '',
+                    ['data' => [
+                        'primary_role' => 'sync-ergonode',
+                        'primary_title' => (string)__('Synchronize options with Magento'),
+                        'primary_disabled' => $selectedMappingId <= 0,
+                    ]]
+                )->toHtml() ?>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="veui-message veui-global-message"
+         data-role="global-message"
+         aria-live="polite"
+         hidden>
+        <span class="veui-message-status-icon" aria-hidden="true"></span>
+        <span data-role="global-message-text"></span>
+    </div>
+
+    <div class="vea-context-loading"
+         data-role="option-context-loader"
+         aria-live="polite"
+         aria-hidden="true">
+        <span class="vea-context-loading-spinner" aria-hidden="true"></span>
+        <div>
+            <strong><?= $escaper->escapeHtml(__('Ładowanie opcji')) ?></strong>
+            <span><?= $escaper->escapeHtml(__('Przełączanie pary atrybutów')) ?></span>
+        </div>
+    </div>
+
+    <div class="veui-layout vea-shell">
+        <section class="veui-panel vea-panel vea-side-panel" data-role="attribute-side" data-source-panel="ergo">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head">
+                <div class="veui-panel-heading">
+                    <strong class="veui-panel-title">
+                        <span class="veui-brand-mark veui-brand-ergonode"
+                              aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($ergonodeIconUrl) ?>" alt=""/>
+                        </span>
+                        <span class="veui-panel-title-text">
+                            <?= $escaper->escapeHtml(__('Options')) ?>
+                        </span>
+                    </strong>
+                    <span class="veui-panel-subtitle vea-panel-subtitle">
+                        <?= $escaper->escapeHtml(__('Opcje: %1', $attributeContext['left']['label'])) ?>
+                    </span>
+                </div>
+                <div class="veui-panel-head-tools vea-side-tools">
+                    <label class="veui-search veui-search-expandable">
+                        <span class="veui-search-icon" aria-hidden="true"></span>
+                        <input type="search"
+                               data-role="attribute-search"
+                               aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj: etykieta, kod...')) ?>"
+                               placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj: etykieta, kod...')) ?>"/>
+                    </label>
+                    <details class="veui-entity-options veui-source-options"
+                             data-role="entity-options"
+                             data-source-options="ergo">
+                        <summary role="button"
+                                 title="<?= $escaper->escapeHtmlAttr(__('Option actions: Ergonode')) ?>"
+                                 aria-label="<?= $escaper->escapeHtmlAttr(__('Option actions: Ergonode')) ?>">
+                            <span class="veui-entity-options-icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="veui-entity-options-menu"
+                             role="group"
+                             aria-label="<?= $escaper->escapeHtmlAttr(__('Option actions: Ergonode')) ?>">
+                            <?php if ($refreshAvailable): ?>
+                                <button type="button"
+                                        class="veui-entity-options-action vea-refresh-ergonode"
+                                        data-role="refresh-ergonode"
+                                        title="<?= $escaper->escapeHtmlAttr($refreshOptionTitle) ?>"
+                                        aria-label="<?= $escaper->escapeHtmlAttr($refreshOptionTitle) ?>">
+                                    <span class="vea-refresh-ergonode-icon" aria-hidden="true"></span>
+                                    <span class="veui-entity-options-action-label">
+                                        <?= $escaper->escapeHtml(__('Odśwież')) ?>
+                                    </span>
+                                </button>
+                            <?php endif; ?>
+                            <?= /* @noEscape */ $sourceStateActionsHtml ?>
+                            <button type="button"
+                                    class="veui-entity-options-action"
+                                    data-role="attribute-sort-toggle"
+                                    data-sort-value="label"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Sortuj po etykiecie')) ?>"
+                                    title="<?= $escaper->escapeHtmlAttr(__('Sortuj po etykiecie')) ?>">
+                                <span class="veui-sort-field-icon" aria-hidden="true"></span>
+                                <span class="veui-entity-options-action-label" data-role="attribute-sort-label">
+                                    <?= $escaper->escapeHtml(__('Nazwa')) ?>
+                                </span>
+                            </button>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="vea-attribute-list" data-role="attribute-list">
+                <?php foreach ($ergonodeOptions as $option): ?>
+                    <?php
+                    $searchText = implode(' ', [$option['label'], $option['code'], $option['scope'], $option['type']]);
+                    $isActive = $isActiveOption($option);
+                    $isMapped = isset($mappedCodes['ergo'][(string)$option['code']]);
+                    $optionCardClass = 'vea-attribute-card';
+                    $optionCardClass .= $isMapped ? ' is-mapped' : '';
+                    $optionCardClass .= $isActive ? '' : ' is-filter-hidden is-inactive';
+                    $addOptionLabel = __('Dodaj opcję do mapowania: %1', $option['label']);
+                    $optionTypeClass = $typeClass((string)$option['type']);
+                    ?>
+                    <div class="<?= $escaper->escapeHtmlAttr($optionCardClass) ?>"
+                             data-role="entity-card"
+                             data-search="<?= $escaper->escapeHtmlAttr($searchText) ?>"
+                             data-label="<?= $escaper->escapeHtmlAttr($option['label']) ?>"
+                             data-code="<?= $escaper->escapeHtmlAttr($option['code']) ?>"
+                             data-type="<?= $escaper->escapeHtmlAttr($option['type']) ?>"
+                             data-scope="<?= $escaper->escapeHtmlAttr($option['scope']) ?>"
+                             data-source="ergo"
+                             data-mapped="<?= $isMapped ? '1' : '0' ?>"
+                             <?= $isMapped || !$isActive ? 'hidden' : '' ?>
+                             role="group"
+                             tabindex="0"
+                             aria-label="<?= $escaper->escapeHtmlAttr($addOptionLabel) ?>"
+                             draggable="true">
+                        <?= /* @noEscape */ $cardSelectionHtml ?>
+                        <span class="vea-drag-handle" aria-hidden="true"></span>
+                        <div class="vea-card-copy">
+                            <strong><?= $escaper->escapeHtml($option['label']) ?></strong>
+                            <span class="vea-card-subline">
+                                <code><?= $escaper->escapeHtml($option['code']) ?></code>
+                                <span class="vea-type-badge <?= $escaper->escapeHtmlAttr($optionTypeClass) ?>">
+                                    <?= $escaper->escapeHtml($option['type']) ?>
+                                </span>
+                                <span class="vea-scope"><?= $escaper->escapeHtml($option['scope']) ?></span>
+                            </span>
+                        </div>
+                        <button type="button"
+                                class="vea-card-toggle"
+                                data-role="attribute-active-toggle"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Opcja aktywna do mapowania')) ?>"
+                                aria-pressed="<?= $isActive ? 'true' : 'false' ?>"
+                                title="<?= $escaper->escapeHtmlAttr(__('Włącz / wyłącz opcję z mapowania')) ?>">
+                            <span aria-hidden="true"></span>
+                        </button>
+                        <?= /* @noEscape */ $entityOptionsPlaceholderHtml ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <?= /* @noEscape */ $disableDropZoneHtml ?>
+        </section>
+
+        <section class="veui-panel vea-panel vea-mapping-panel" data-role="mapping-panel">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head vea-mapping-head">
+                <?php if ($embedded): ?>
+                    <div class="vea-option-context"
+                         aria-label="<?= $escaper->escapeHtmlAttr(__('Wybrana para atrybutów')) ?>">
+                <?php else: ?>
+                    <label class="vea-option-context vea-option-context-select"
+                           title="<?= $escaper->escapeHtmlAttr(__('Wybierz zmapowaną parę atrybutów')) ?>">
+                <?php endif; ?>
+                    <span class="vea-option-context-side">
+                        <strong>
+                            <?= $escaper->escapeHtml($attributeContext['left']['label']) ?>
+                        </strong>
+                        <code>
+                            <?= $escaper->escapeHtml($attributeContext['left']['code']) ?>
+                        </code>
+                        <span class="vea-type-badge <?= $escaper->escapeHtmlAttr(
+                            $typeClass($attributeContext['left']['type'])
+                        ) ?>">
+                            <?= $escaper->escapeHtml($attributeContext['left']['type']) ?>
+                        </span>
+                    </span>
+                    <span class="vea-link-indicator" aria-hidden="true">
+                        <span aria-hidden="true"></span>
+                    </span>
+                    <span class="vea-option-context-side">
+                        <strong>
+                            <?= $escaper->escapeHtml($attributeContext['right']['label']) ?>
+                        </strong>
+                        <code>
+                            <?= $escaper->escapeHtml($attributeContext['right']['code']) ?>
+                        </code>
+                        <span class="vea-type-badge <?= $escaper->escapeHtmlAttr(
+                            $typeClass($attributeContext['right']['type'])
+                        ) ?>">
+                            <?= $escaper->escapeHtml($attributeContext['right']['type']) ?>
+                        </span>
+                    </span>
+                    <?php if (!$embedded): ?>
+                        <select class="vea-option-context-native"
+                                data-role="option-context-select"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Wybierz zmapowaną parę atrybutów')) ?>">
+                            <?php foreach ($attributeContexts as $context): ?>
+                                <option value="<?= $escaper->escapeHtmlAttr((string)$context['mapping_id']) ?>"
+                                    <?= (int)$context['mapping_id'] === $selectedMappingId ? 'selected' : '' ?>>
+                                    <?= $escaper->escapeHtml(__(
+                                        '%1 -> %2',
+                                        $context['left']['label'],
+                                        $context['right']['label']
+                                    )) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
+                <?php if ($embedded): ?>
+                    </div>
+                <?php else: ?>
+                    </label>
+                <?php endif; ?>
+                <?= /* @noEscape */ $mappingActionsHtml ?>
+            </div>
+
+            <div class="vea-pairs-scroll">
+                <div class="vea-pair-list" data-role="mapping-list">
+                    <?php foreach ($draftMappings as $mapping): ?>
+                        <?= /* @noEscape */ $block->getLayout()
+                            ->createBlock(Template::class)
+                            ->setTemplate($pairTemplate)
+                            ->setData('mapping', $mapping)
+                            ->setData('can_create_magento_option', $canCreateMagentoOption)
+                            ->toHtml() ?>
+                    <?php endforeach; ?>
+
+                    <?php foreach ($mappedOptions as $mapping): ?>
+                        <?= /* @noEscape */ $block->getLayout()
+                            ->createBlock(Template::class)
+                            ->setTemplate($pairTemplate)
+                            ->setData('mapping', $mapping)
+                            ->setData('can_create_magento_option', $canCreateMagentoOption)
+                            ->toHtml() ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <?= /* @noEscape */ $createDropZoneHtml ?>
+        </section>
+
+        <section class="veui-panel vea-panel vea-side-panel" data-role="attribute-side" data-source-panel="magento">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head">
+                <div class="veui-panel-heading">
+                    <strong class="veui-panel-title">
+                        <span class="veui-brand-mark veui-brand-magento"
+                              aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($magentoIconUrl) ?>" alt=""/>
+                        </span>
+                        <span class="veui-panel-title-text">
+                            <?= $escaper->escapeHtml(__('Options')) ?>
+                        </span>
+                    </strong>
+                    <span class="veui-panel-subtitle vea-panel-subtitle">
+                        <?= $escaper->escapeHtml(__('Opcje: %1', $attributeContext['right']['label'])) ?>
+                    </span>
+                </div>
+                <div class="veui-panel-head-tools vea-side-tools">
+                    <label class="veui-search veui-search-expandable">
+                        <span class="veui-search-icon" aria-hidden="true"></span>
+                        <input type="search"
+                               data-role="attribute-search"
+                               aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj: etykieta, kod...')) ?>"
+                               placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj: etykieta, kod...')) ?>"/>
+                    </label>
+                    <details class="veui-entity-options veui-source-options"
+                             data-role="entity-options"
+                             data-source-options="magento">
+                        <summary role="button"
+                                 title="<?= $escaper->escapeHtmlAttr(__('Option actions: Magento')) ?>"
+                                 aria-label="<?= $escaper->escapeHtmlAttr(__('Option actions: Magento')) ?>">
+                            <span class="veui-entity-options-icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="veui-entity-options-menu"
+                             role="group"
+                             aria-label="<?= $escaper->escapeHtmlAttr(__('Option actions: Magento')) ?>">
+                            <?= /* @noEscape */ $sourceStateActionsHtml ?>
+                            <button type="button"
+                                    class="veui-entity-options-action"
+                                    data-role="attribute-sort-toggle"
+                                    data-sort-value="label"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Sortuj po etykiecie')) ?>"
+                                    title="<?= $escaper->escapeHtmlAttr(__('Sortuj po etykiecie')) ?>">
+                                <span class="veui-sort-field-icon" aria-hidden="true"></span>
+                                <span class="veui-entity-options-action-label" data-role="attribute-sort-label">
+                                    <?= $escaper->escapeHtml(__('Nazwa')) ?>
+                                </span>
+                            </button>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="vea-attribute-list" data-role="attribute-list">
+                <?php foreach ($magentoOptions as $option): ?>
+                    <?php
+                    $searchText = implode(' ', [$option['label'], $option['code'], $option['scope'], $option['type']]);
+                    $isActive = $isActiveOption($option);
+                    $isMapped = isset($mappedCodes['magento'][(string)$option['code']]);
+                    $optionCardClass = 'vea-attribute-card';
+                    $optionCardClass .= $isMapped ? ' is-mapped' : '';
+                    $optionCardClass .= $isActive ? '' : ' is-filter-hidden is-inactive';
+                    $addOptionLabel = __('Dodaj opcję do mapowania: %1', $option['label']);
+                    $optionTypeClass = $typeClass((string)$option['type']);
+                    ?>
+                    <div class="<?= $escaper->escapeHtmlAttr($optionCardClass) ?>"
+                             data-role="entity-card"
+                             data-search="<?= $escaper->escapeHtmlAttr($searchText) ?>"
+                             data-label="<?= $escaper->escapeHtmlAttr($option['label']) ?>"
+                             data-code="<?= $escaper->escapeHtmlAttr($option['code']) ?>"
+                             data-type="<?= $escaper->escapeHtmlAttr($option['type']) ?>"
+                             data-scope="<?= $escaper->escapeHtmlAttr($option['scope']) ?>"
+                             data-source="magento"
+                             data-mapped="<?= $isMapped ? '1' : '0' ?>"
+                             <?= $isMapped || !$isActive ? 'hidden' : '' ?>
+                             role="group"
+                             tabindex="0"
+                             aria-label="<?= $escaper->escapeHtmlAttr($addOptionLabel) ?>"
+                             draggable="true">
+                        <?= /* @noEscape */ $cardSelectionHtml ?>
+                        <span class="vea-drag-handle" aria-hidden="true"></span>
+                        <div class="vea-card-copy">
+                            <strong><?= $escaper->escapeHtml($option['label']) ?></strong>
+                            <span class="vea-card-subline">
+                                <code><?= $escaper->escapeHtml($option['code']) ?></code>
+                                <span class="vea-type-badge <?= $escaper->escapeHtmlAttr($optionTypeClass) ?>">
+                                    <?= $escaper->escapeHtml($option['type']) ?>
+                                </span>
+                                <span class="vea-scope"><?= $escaper->escapeHtml($option['scope']) ?></span>
+                            </span>
+                        </div>
+                        <button type="button"
+                                class="vea-card-toggle"
+                                data-role="attribute-active-toggle"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Opcja aktywna do mapowania')) ?>"
+                                aria-pressed="<?= $isActive ? 'true' : 'false' ?>"
+                                title="<?= $escaper->escapeHtmlAttr(__('Włącz / wyłącz opcję z mapowania')) ?>">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <?= /* @noEscape */ $disableDropZoneHtml ?>
+        </section>
+    </div>
+</div>
+
+<?= /* @noEscape */ $mappingInitHtml ?>

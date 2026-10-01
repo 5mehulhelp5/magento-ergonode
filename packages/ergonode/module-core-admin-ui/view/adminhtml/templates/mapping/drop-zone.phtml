@@ -1,0 +1,19 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$kind = (string)$block->getData('kind');
+$kind = in_array($kind, ['create', 'disable'], true) ? $kind : 'disable';
+$title = (string)$block->getData('title');
+$description = (string)$block->getData('description');
+?>
+<div class="vea-<?= $escaper->escapeHtmlAttr($kind) ?>-zone"
+     data-role="<?= $escaper->escapeHtmlAttr($kind) ?>-drop-zone">
+    <span class="vea-<?= $escaper->escapeHtmlAttr($kind) ?>-icon" aria-hidden="true"></span>
+    <div>
+        <strong><?= $escaper->escapeHtml($title) ?></strong>
+        <span><?= $escaper->escapeHtml($description) ?></span>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_products>
+            <import>
+                <enabled>0</enabled>
+                <stream_page_size>25</stream_page_size>
+                <consumer_batch_size>25</consumer_batch_size>
+                <maximum_pending_items>10000</maximum_pending_items>
+                <maximum_attempts>8</maximum_attempts>
+                <lease_seconds>900</lease_seconds>
+                <type_attribute_code>magento_product_type</type_attribute_code>
+                <active_status_code>active</active_status_code>
+            </import>
+        </ergonode_products>
+    </default>
+</config>

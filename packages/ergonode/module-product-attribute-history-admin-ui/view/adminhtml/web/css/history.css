@@ -1,0 +1,442 @@
+body.ergonode-product_attribute_history-index {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+body.ergonode-product_attribute_history-index .page-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+body.ergonode-product_attribute_history-index #anchor-content.page-content {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding-bottom: 0;
+}
+
+body.ergonode-product_attribute_history-index .page-columns,
+body.ergonode-product_attribute_history-index .admin__old,
+body.ergonode-product_attribute_history-index .main-col {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+body.ergonode-product_attribute_history-index .page-footer {
+    display: block;
+    flex: 0 0 auto;
+}
+
+.veah-workspace {
+    display: flex;
+    flex-direction: column;
+    --veah-unmapped: #c2410c;
+    --veah-unmapped-soft: var(--veui-warning-soft);
+    --veah-mapped-border: #bbf7d0;
+    --veah-created-soft: #fffbeb;
+    --veah-created-border: #fde68a;
+    --veah-created: #92400e;
+    --veah-stripe: rgba(194, 65, 12, .07);
+    --veah-mapping-border: rgba(100, 116, 139, .12);
+    --veah-dialog-shadow: rgba(15, 23, 42, .2);
+    --veah-backdrop: rgba(15, 23, 42, .35);
+}
+.veah-workspace > .veui-viewbar {
+    flex-shrink: 0;
+}
+.veah-screen {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    width: 100%;
+}
+.veah-workspace .veah-layout {
+    flex: 1;
+    grid-template-columns: minmax(210px, 1fr) minmax(280px, 1.4fr) minmax(
+            250px,
+            1fr
+        );
+    grid-template-rows: minmax(0, 1fr);
+    height: auto;
+}
+.veah-view-title {
+    color: var(--veui-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+.veah-brand {
+    height: 24px;
+    object-fit: contain;
+    width: 24px;
+}
+.veah-attribute-list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 12px;
+}
+.veah-card {
+    align-items: center;
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border);
+    border-radius: 8px;
+    color: var(--veui-muted);
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    min-height: 62px;
+    padding: 10px 12px;
+}
+.veah-card-body {
+    flex: 1;
+    min-width: 0;
+}
+.veah-card-line {
+    align-items: baseline;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+.veah-label {
+    color: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+.veah-code {
+    font-size: 10px;
+    overflow-wrap: anywhere;
+}
+.veah-type {
+    background: var(--veui-line);
+    border-radius: 4px;
+    color: var(--veui-muted);
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 5px;
+}
+.veah-card-source {
+    background: var(--veui-surface-hover);
+}
+.veah-mapping {
+    border-top: 1px solid var(--veah-mapping-border);
+    font-size: 11px;
+    margin-top: 7px;
+    padding-top: 6px;
+}
+.veah-mapping-arrow {
+    color: var(--veui-muted);
+}
+.veah-card.is-connected {
+    background: var(--veui-success-soft);
+    border-color: var(--veah-mapped-border);
+    color: var(--veui-success-strong);
+}
+.veah-card.is-disconnected {
+    background:
+        repeating-linear-gradient(
+            135deg,
+            transparent 0 6px,
+            var(--veah-stripe) 6px 12px
+        ),
+        var(--veah-unmapped-soft);
+    border-color: var(--veui-warning-border);
+    color: var(--veah-unmapped);
+}
+.veah-card.is-excluded {
+    background: var(--veah-unmapped-soft);
+    border-color: var(--veui-warning-border);
+    color: var(--veah-unmapped);
+}
+.veah-card.is-inactive:not(.is-disconnected) .veah-label,
+.veah-card.is-inactive:not(.is-disconnected) .veah-code,
+.veah-card.is-inactive:not(.is-disconnected) .veah-mapping {
+    text-decoration: line-through;
+}
+.veah-card.is-changed {
+    background: var(--veui-blue-soft);
+    border-color: var(--veui-blue-border);
+    color: var(--veui-blue);
+}
+.veah-card.is-created {
+    background: var(--veah-created-soft);
+    border-color: var(--veah-created-border);
+    color: var(--veah-created);
+}
+.veah-card.is-deleted {
+    background: var(--veui-red-soft);
+    border-color: var(--veui-danger-border);
+    color: var(--veui-danger-strong);
+}
+.veah-card.is-focused {
+    outline: 2px solid var(--veui-blue);
+    outline-offset: 1px;
+}
+.veah-connected-icon {
+    background: currentColor;
+    display: block;
+    height: 18px;
+    width: 18px;
+}
+
+.veah-workspace .veah-change {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: inherit;
+    flex-shrink: 0;
+    font-size: 19px;
+    padding: 4px;
+}
+.veah-dialog {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border);
+    border-radius: 12px;
+    box-shadow: 0 25px 80px var(--veah-dialog-shadow);
+    color: var(--veui-text);
+    max-height: 85vh;
+    max-width: 1000px;
+    padding: 0;
+    width: 85vw;
+}
+.veah-dialog::backdrop {
+    background: var(--veah-backdrop);
+}
+.veah-details {
+    display: grid;
+    grid-template-columns: minmax(200px, 0.8fr) minmax(320px, 1.6fr);
+    min-height: 240px;
+}
+.veah-change-list {
+    border-right: 1px solid var(--veui-border);
+    max-height: 65vh;
+    overflow: auto;
+    padding: 12px;
+}
+.veah-workspace .veah-change-item {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border);
+    border-radius: 7px;
+    box-shadow: none;
+    color: var(--veui-text);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding: 10px;
+    text-align: left;
+    width: 100%;
+}
+.veah-change-item strong {
+    font-size: 12px;
+}
+.veah-change-item span {
+    color: var(--veui-muted);
+    font-size: 10px;
+    font-weight: 500;
+}
+.veah-workspace .veah-change-item.is-selected {
+    background: var(--veui-blue-softer);
+    border-color: var(--veui-blue-border);
+}
+.veah-change-item.is-selected span,
+.veah-type {
+    color: var(--veui-text-muted-strong);
+}
+.veah-change-detail {
+    padding: 20px;
+}
+.veah-change-detail h3 {
+    font-size: 14px;
+    margin: 0 0 10px;
+}
+.veah-change-detail > p {
+    color: var(--veui-muted);
+    font-size: 11px;
+}
+.veah-before-after {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    margin: 18px 0;
+}
+.veah-before-after h4 {
+    font-size: 12px;
+    margin: 0 0 10px;
+}
+.veah-before-after section {
+    background: var(--veui-surface-hover);
+    border: 1px solid var(--veui-border);
+    border-radius: 8px;
+    min-width: 0;
+    padding: 12px;
+}
+.veah-before-after dl {
+    display: grid;
+    font-size: 11px;
+    gap: 6px 12px;
+    grid-template-columns: auto 1fr;
+    margin: 0;
+}
+.veah-before-after dt {
+    color: var(--veui-muted);
+    font-weight: 500;
+}
+.veah-before-after dd {
+    color: var(--veah-control-text);
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+@media (max-width: 1000px) {
+    .veah-layout {
+        grid-template-columns: minmax(180px, 1fr) minmax(230px, 1.3fr) minmax(
+                220px,
+                1fr
+            );
+        gap: 10px;
+    }
+    .veah-attribute-list {
+        padding: 8px;
+    }
+}
+@media (max-width: 760px) {
+    .veah-workspace .veah-layout {
+        grid-auto-rows: minmax(250px, 1fr);
+        grid-template-rows: none;
+        grid-template-columns: 1fr;
+        overflow: auto;
+    }
+    .veah-attributes {
+        min-height: 250px;
+    }
+    .veah-details {
+        display: block;
+    }
+    .veah-change-list {
+        max-height: 180px;
+    }
+    .veah-before-after {
+        grid-template-columns: 1fr;
+    }
+}
+
+.veah-disconnected-text {
+    text-decoration: line-through;
+}
+.veah-disconnected-icon {
+    background: currentColor;
+    display: block;
+    height: 17px;
+    width: 17px;
+    -webkit-mask: url('../images/mapping-disconnected.svg') center / 15px 15px no-repeat;
+    mask: url('../images/mapping-disconnected.svg') center / 15px 15px no-repeat;
+}
+
+.veah-notice {
+    color: var(--veui-text-muted-strong);
+    font-size: 11px;
+    height: auto;
+    justify-content: flex-start;
+    padding: 8px 0;
+}
+.veah-notice[hidden] {
+    display: none;
+}
+.veah-attribute-group {
+    margin-bottom: 14px;
+}
+.veah-option-list {
+    border-left: 1px solid var(--veui-border-strong);
+    margin-left: 14px;
+    padding-left: 12px;
+}
+.veah-option-heading {
+    color: var(--veui-text-muted-strong);
+    font-size: 10px;
+    font-weight: 600;
+    margin: 2px 0 8px;
+}
+.veah-option-list .veah-card {
+    min-height: 48px;
+}
+
+.veah-option-list[hidden] {
+    display: none;
+}
+.veah-workspace .veah-expand {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    box-shadow: none;
+    color: inherit;
+    display: inline-flex;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 500;
+    gap: 6px;
+    line-height: 1;
+    min-height: 32px;
+    padding: 6px 8px;
+}
+.veah-workspace .veah-expand:hover,
+.veah-workspace .veah-expand[aria-expanded='true'] {
+    background: var(--veui-line);
+    color: var(--veui-text);
+}
+.veah-expand-count {
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+}
+.veah-expand-chevron {
+    flex-shrink: 0;
+    height: 14px;
+    transition: transform .15s ease;
+    width: 14px;
+}
+.veah-expand[aria-expanded='true'] .veah-expand-chevron {
+    transform: rotate(180deg);
+}
+.veah-expand:focus-visible {
+    outline: 2px solid var(--veui-blue);
+    outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+    .veah-expand-chevron {
+        transition: none;
+    }
+}
+
+.veah-attribute-list:focus-visible {
+    outline: 2px solid var(--veui-blue);
+    outline-offset: -2px;
+}
+
+.veah-changes-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.veah-changes-filter input {
+    margin: 0;
+}

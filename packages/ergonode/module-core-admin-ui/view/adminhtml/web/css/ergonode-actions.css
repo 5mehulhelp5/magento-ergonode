@@ -1,0 +1,66 @@
+.veui-refresh-ergonode-action {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.6rem;
+}
+
+.veui-refresh-ergonode-icon {
+    background: currentColor;
+    display: block;
+    flex: 0 0 auto;
+    height: 14px;
+    -webkit-mask: url('../images/refresh-ergonode.svg') center / 14px 14px no-repeat;
+    mask: url('../images/refresh-ergonode.svg') center / 14px 14px no-repeat;
+    width: 14px;
+}
+
+.veui-refresh-ergonode-action.is-refreshing .veui-refresh-ergonode-icon {
+    animation: veui-refresh-ergonode-spin 720ms linear infinite;
+}
+
+@keyframes veui-refresh-ergonode-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.veui-create-ergonode-icon {
+    background: currentColor;
+    display: block;
+    flex: 0 0 auto;
+    height: 14px;
+    -webkit-mask: url('../images/create-ergonode.svg') center / 14px 14px no-repeat;
+    mask: url('../images/create-ergonode.svg') center / 14px 14px no-repeat;
+    width: 14px;
+}
+
+.veui-sync-ergonode-icon {
+    background: currentColor;
+    display: block;
+    flex: 0 0 auto;
+    height: 14px;
+    -webkit-mask: url('../images/sync-ergonode.svg') center / 14px 14px no-repeat;
+    mask: url('../images/sync-ergonode.svg') center / 14px 14px no-repeat;
+    width: 14px;
+}
+
+.veui-button.is-busy .veui-sync-ergonode-icon,
+.veui-button.is-working .veui-sync-ergonode-icon,
+.veui-split-button-option.is-busy .veui-sync-ergonode-icon,
+.veui-split-button-option.is-working .veui-sync-ergonode-icon {
+    animation: veui-refresh-ergonode-spin 720ms linear infinite;
+}
+
+.veui-reset-cursor-icon {
+    background: currentColor;
+    display: block;
+    flex: 0 0 auto;
+    height: 14px;
+    -webkit-mask: url('../images/reset-cursor.svg') center / 14px 14px no-repeat;
+    mask: url('../images/reset-cursor.svg') center / 14px 14px no-repeat;
+    width: 14px;
+}
+
+.veui-button-primary .veui-create-ergonode-icon {
+    background: currentColor;
+}

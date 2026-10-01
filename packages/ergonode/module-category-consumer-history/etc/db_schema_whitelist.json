@@ -1,0 +1,72 @@
+{
+    "ergonode_category_history_operation": {
+        "column": {
+            "operation_id": true,
+            "operation_code": true,
+            "origin": true,
+            "status": true,
+            "actor_id": true,
+            "actor_name": true,
+            "summary_json": true,
+            "started_at": true,
+            "finished_at": true
+        },
+        "index": {
+            "ERGONODE_CATEGORY_HISTORY_OPERATION_ORIGIN_STARTED": true,
+            "ERGONODE_CATEGORY_HISTORY_OPERATION_STATUS_STARTED": true,
+            "ERGONODE_CATEGORY_HISTORY_OPERATION_ORIGIN_STARTED_AT": true,
+            "ERGONODE_CATEGORY_HISTORY_OPERATION_STATUS_STARTED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "ergonode_category_history_change_set": {
+        "column": {
+            "change_set_id": true,
+            "operation_id": true,
+            "category_tree_id": true,
+            "tree_code": true,
+            "root_category_id": true,
+            "root_label": true,
+            "before_hash": true,
+            "after_hash": true,
+            "summary_json": true,
+            "created_at": true
+        },
+        "index": {
+            "ERGONODE_CATEGORY_HISTORY_SET_TREE_OPERATION": true,
+            "ERGONODE_CTGR_HISTORY_CHANGE_SET_CTGR_TREE_ID_OPERATION_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_CATEGORY_HISTORY_SET_OPERATION_FK": true,
+            "ERGONODE_CATEGORY_HISTORY_SET_OPERATION_TREE": true,
+            "FK_2906831F358141F0E10717F87083D17D": true,
+            "ERGONODE_CTGR_HISTORY_CHANGE_SET_OPERATION_ID_CTGR_TREE_ID": true
+        }
+    },
+    "ergonode_category_history_change": {
+        "column": {
+            "change_id": true,
+            "change_set_id": true,
+            "entity_type": true,
+            "entity_identifier": true,
+            "category_code": true,
+            "actions_json": true,
+            "before_state": true,
+            "after_state": true,
+            "created_at": true
+        },
+        "index": {
+            "ERGONODE_CATEGORY_HISTORY_CHANGE_CATEGORY_CODE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_CATEGORY_HISTORY_CHANGE_SET_FK": true,
+            "ERGONODE_CATEGORY_HISTORY_CHANGE_SET_ENTITY": true,
+            "FK_3F0855AF075CF8EE9D7CA2FB4AADB7D0": true,
+            "UNQ_5024527A78A5782B4F759531BED35901": true
+        }
+    }
+}

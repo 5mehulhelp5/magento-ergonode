@@ -1,0 +1,30 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$progress = (array)$block->getData('option_progress');
+$url = (string)$block->getData('option_url');
+$modalUrl = (string)$block->getData('option_modal_url');
+$label = (string)$block->getData('option_action_label');
+$progressLabel = (string)$block->getData('option_progress_label');
+$leftCode = (string)$block->getData('left_code');
+$rightCode = (string)$block->getData('right_code');
+?>
+<div class="vea-option-map-entry" data-role="option-mapping-entry">
+    <span class="vea-option-map-progress" title="<?= $escaper->escapeHtmlAttr($progressLabel) ?>">
+        <?= $escaper->escapeHtml((int)($progress['mapped'] ?? 0) . '/' . (int)($progress['total'] ?? 0)) ?>
+    </span>
+    <button type="button"
+            class="vea-option-map-action"
+            data-role="option-mapping-action"
+            data-url="<?= $escaper->escapeUrl($url) ?>"
+            data-modal-url="<?= $escaper->escapeUrl($modalUrl) ?>"
+            data-saved-ergo-code="<?= $escaper->escapeHtmlAttr($leftCode) ?>"
+            data-saved-magento-code="<?= $escaper->escapeHtmlAttr($rightCode) ?>"
+            title="<?= $escaper->escapeHtmlAttr($label) ?>"
+            aria-label="<?= $escaper->escapeHtmlAttr($label) ?>">
+        <span aria-hidden="true"></span>
+    </button>
+</div>

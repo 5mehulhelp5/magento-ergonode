@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\CategoryAttributeHistory\Api\SourceSnapshotProviderInterface" type="Ergonode\CategoryAttributeConsumerHistory\Model\SourceSnapshotProvider"/>
+    <type name="Ergonode\CategoryAttributeConsumer\Api\MappingSynchronizationInterface">
+        <plugin name="ergonode_category_attribute_consumer_history_save" type="Ergonode\CategoryAttributeConsumerHistory\Plugin\MappingSaveHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeRegistryRefresherInterface">
+        <plugin name="ergonode_category_attribute_consumer_history_registry" type="Ergonode\CategoryAttributeConsumerHistory\Plugin\SnapshotHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\CategoryAttributeConsumer\Api\CategoryAttributeSnapshotRemoverInterface">
+        <plugin name="ergonode_category_attribute_consumer_history_remove" type="Ergonode\CategoryAttributeConsumerHistory\Plugin\SnapshotHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Api\AttributeSnapshotRefreshInterface">
+        <plugin name="ergonode_category_attribute_consumer_history_refresh" type="Ergonode\CategoryAttributeConsumerHistory\Plugin\SnapshotHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\AttributeConsumer\Api\AttributeSnapshotRemoverInterface">
+        <plugin name="ergonode_category_attribute_consumer_history_remove_shared" type="Ergonode\CategoryAttributeConsumerHistory\Plugin\SnapshotHistoryPlugin" sortOrder="200"/>
+    </type>
+</config>

@@ -1,0 +1,387 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+use Ergonode\TemplateAdminUi\Block\Adminhtml\Template\Index;
+use Magento\Framework\View\Element\Template;
+
+/** @var \Ergonode\TemplateAdminUi\Block\Adminhtml\Template\Index $block */
+$templates = $block->getTemplates();
+$attributeSets = $block->getAttributeSets();
+$attributeSetsById = [];
+$mappedAttributeSetIds = [];
+$mappedPairs = [];
+$unmappedTemplates = [];
+$unmappedAttributeSets = [];
+
+foreach ($attributeSets as $attributeSet) {
+    $attributeSetsById[(int)$attributeSet['id']] = $attributeSet;
+}
+
+foreach ($templates as $template) {
+    $attributeSetId = $template['attribute_set_id'] ?? null;
+
+    if ($attributeSetId !== null) {
+        $attributeSetId = (int)$attributeSetId;
+        $mappedAttributeSetIds[$attributeSetId] = true;
+        if (isset($attributeSetsById[$attributeSetId])) {
+            $mappedPairs[] = [
+                'template' => $template,
+                'attribute_set' => $attributeSetsById[$attributeSetId],
+            ];
+        }
+        continue;
+    }
+
+    $unmappedTemplates[] = $template;
+}
+
+foreach ($attributeSets as $attributeSet) {
+    $attributeSetId = (int)$attributeSet['id'];
+    if (!isset($mappedAttributeSetIds[$attributeSetId])) {
+        $unmappedAttributeSets[] = $attributeSet;
+    }
+}
+
+usort(
+    $mappedPairs,
+    static fn (array $left, array $right): int => strcmp(
+        (string)$left['template']['code'],
+        (string)$right['template']['code']
+    )
+);
+
+$visibleUnmappedTemplateCount = count(array_filter(
+    $unmappedTemplates,
+    static fn (array $template): bool => ($template['active'] ?? true) !== false
+));
+$visibleUnmappedAttributeSetCount = count(array_filter(
+    $unmappedAttributeSets,
+    static fn (array $attributeSet): bool => ($attributeSet['active'] ?? true) !== false
+));
+$ergonodeIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/m2_configuration.svg');
+$magentoIconUrl = $block->getViewFileUrl('Ergonode_CoreAdminUi::images/magento-mark.svg');
+$templateActionsLabel = __('Template actions: Ergonode');
+$attributeSetActionsLabel = __('Attribute set actions: Magento');
+$showExcludedHint = __('Show excluded templates and attribute sets');
+$hideExcludedHint = __('Hide excluded templates and attribute sets');
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => Index::NAVIGATION_SECTION]]
+);
+$cardSelectionHtml = $block->getLayout()->createBlock(Template::class)
+    ->setTemplate('Ergonode_CoreAdminUi::entity/selection.phtml')
+    ->toHtml();
+?>
+<div id="ergonode-template-admin" class="veui-workspace vet-admin">
+    <div class="veui-toolbar vea-viewbar vet-toolbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+        <?= /* @noEscape */ $block->getChildHtml('consumer_actions') ?>
+    </div>
+
+    <div class="veui-message veui-global-message" data-role="global-message" hidden>
+        <span class="veui-message-status-icon" aria-hidden="true"></span>
+        <span data-role="global-message-text"></span>
+    </div>
+
+    <div class="veui-layout vet-mapping-layout veui-autosave-region"
+         data-role="autosave-region"
+         data-autosave-state="saved"
+         aria-busy="false">
+        <div class="veui-autosave-error"
+             data-role="autosave-error"
+             role="alert"
+             hidden>
+            <span><?= $escaper->escapeHtml(__('Nie udało się zapisać mapowania szablonów')) ?></span>
+            <button type="button"
+                    class="veui-autosave-retry"
+                    data-role="retry-autosave">
+                <?= $escaper->escapeHtml(__('Spróbuj ponownie.')) ?>
+            </button>
+        </div>
+        <section class="veui-panel vet-panel vet-source-panel vea-panel vea-side-panel"
+                 data-role="template-drop-source"
+                 data-source-panel="ergo"
+                 data-drop-zone="template-source"
+                 data-source-options-label="<?= $escaper->escapeHtmlAttr($templateActionsLabel) ?>"
+                 data-show-excluded-hint="<?= $escaper->escapeHtmlAttr($showExcludedHint) ?>"
+                 data-hide-excluded-hint="<?= $escaper->escapeHtmlAttr($hideExcludedHint) ?>">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head vet-panel-head">
+                <div class="veui-panel-heading">
+                    <strong class="veui-panel-title">
+                        <span class="veui-brand-mark veui-brand-ergonode" aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($ergonodeIconUrl) ?>" alt=""/>
+                        </span>
+                        <span class="veui-panel-title-text">
+                            <?= $escaper->escapeHtml(__('Templates')) ?>
+                        </span>
+                    </strong>
+                </div>
+                <div class="veui-panel-head-tools vea-side-tools vet-side-tools">
+                    <label class="veui-search veui-search-expandable vet-search">
+                        <span class="veui-search-icon" aria-hidden="true"></span>
+                        <input type="search"
+                               data-role="template-search"
+                               aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj template...')) ?>"
+                               placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj template...')) ?>"/>
+                    </label>
+                    <span class="veui-entity-options veui-source-options vet-source-options vet-options-placeholder"
+                          data-role="entity-options-placeholder"
+                          aria-hidden="true">
+                        <span class="veui-entity-options-placeholder-trigger vet-options-placeholder-trigger">
+                            <span class="veui-entity-options-icon"></span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="vet-template-refresh-state"
+                 data-role="template-refresh-state"
+                 role="status"
+                 aria-live="polite"
+                 hidden>
+                <span class="vea-context-loading-spinner" aria-hidden="true"></span>
+                <div>
+                    <strong data-role="template-refresh-title">
+                        <?= $escaper->escapeHtml(__('Odświeżanie szablonów')) ?>
+                    </strong>
+                    <span data-role="template-refresh-text">
+                        <?= $escaper->escapeHtml(__('Łączę się z Ergonode i pobieram najnowsze dane.')) ?>
+                    </span>
+                </div>
+            </div>
+            <div class="vea-attribute-list vet-card-list vet-template-source-list">
+                <div data-role="unmapped-template-list">
+                    <?php foreach ($unmappedTemplates as $template): ?>
+                        <?php
+                        $templateCode = (string)$template['code'];
+                        $templateName = trim((string)($template['name'] ?? '')) ?: $templateCode;
+                        $templateActive = ($template['active'] ?? true) !== false;
+                        $templateCardClass = 'vea-attribute-card vet-map-card vet-template-card vet-status-';
+                        $templateCardClass .= (string)($template['status_tone'] ?? 'attention');
+                        $templateCardClass .= $templateActive ? '' : ' is-inactive';
+                        $templateAriaLabel = __('Dodaj template do mapowania: %1', $templateName);
+                        ?>
+                        <div class="<?= $escaper->escapeHtmlAttr($templateCardClass) ?>"
+                             data-role="entity-card"
+                             data-source="ergo"
+                             data-code="<?= $escaper->escapeHtmlAttr($templateCode) ?>"
+                             data-label="<?= $escaper->escapeHtmlAttr($templateName) ?>"
+                             data-search="<?= $escaper->escapeHtmlAttr($templateName . ' ' . $templateCode) ?>"
+                             data-drag-type="template"
+                             data-drag-value="<?= $escaper->escapeHtmlAttr($templateCode) ?>"
+                             data-template-code="<?= $escaper->escapeHtmlAttr($templateCode) ?>"
+                             draggable="<?= $templateActive ? 'true' : 'false' ?>"
+                             role="group"
+                             tabindex="0"
+                             <?= $templateActive ? '' : 'hidden' ?>
+                             aria-label="<?= $escaper->escapeHtmlAttr($templateAriaLabel) ?>">
+                            <?= /* @noEscape */ $cardSelectionHtml ?>
+                            <span class="vea-drag-handle vet-drag-handle" aria-hidden="true"></span>
+                            <div class="vea-card-copy vet-card-copy">
+                                <strong><?= $escaper->escapeHtml($templateName) ?></strong>
+                                <span class="vea-card-subline"><?= $escaper->escapeHtml($templateCode) ?></span>
+                            </div>
+                            <button type="button"
+                                    class="vea-card-toggle"
+                                    data-role="source-active-toggle"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Włączony szablon do mapowania')) ?>"
+                                    aria-pressed="<?= $templateActive ? 'true' : 'false' ?>"
+                                    title="<?= $escaper->escapeHtmlAttr(__('Włącz / wyłącz template w mapowaniu')) ?>">
+                                <span aria-hidden="true"></span>
+                            </button>
+                            <span class="veui-entity-options vet-options-placeholder"
+                                  data-role="entity-options-placeholder"
+                                  aria-hidden="true">
+                                <span class="veui-entity-options-placeholder-trigger vet-options-placeholder-trigger">
+                                    <span class="veui-entity-options-icon"></span>
+                                </span>
+                            </span>
+                        </div>
+                    <?php endforeach; ?>
+                    <?php if ($templates !== [] && $visibleUnmappedTemplateCount === 0): ?>
+                        <div class="vet-empty-row">
+                            <?= $escaper->escapeHtml(__('Brak niezmapowanych template.')) ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <?php if ($templates === []): ?>
+                    <div class="vea-attribute-empty-state vet-template-empty-state"
+                         data-role="template-empty-state">
+                        <p><?= $escaper->escapeHtml(__('Brak pobranych szablonów Ergonode.')) ?></p>
+                        <div class="vea-attribute-empty-actions" data-role="template-empty-actions">
+
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <section class="veui-panel vet-panel vet-pair-panel vea-panel vea-pairs-panel"
+                 data-role="mapping-panel"
+                 data-drop-zone="template-pair">
+            <div class="veui-panel-head vea-panel-head vet-panel-head">
+                <div>
+                    <strong class="veui-panel-title"><?= $escaper->escapeHtml(__('Mapowanie szablonów')) ?></strong>
+                    <span class="veui-panel-subtitle">
+                        <?= $escaper->escapeHtml(__('Kliknij dwukrotnie lub przeciągnij szablon i zestaw atrybutów')) ?>
+                    </span>
+                </div>
+            </div>
+            <div class="vet-pair-workspace">
+                <div class="vea-pair-list vet-pair-list" data-role="mapped-pair-list">
+                    <?php foreach ($mappedPairs as $pairIndex => $pair): ?>
+                        <?php
+                        $template = $pair['template'];
+                        $attributeSet = $pair['attribute_set'];
+                        $templateCode = (string)$template['code'];
+                        $templateName = trim((string)($template['name'] ?? '')) ?: $templateCode;
+                        $attributeSetId = (int)$attributeSet['id'];
+                        $attributeSetName = trim((string)($attributeSet['name'] ?? '')) ?: '#' . $attributeSetId;
+                        $pairClass = 'vea-pair-row vea-attribute-pair-row vet-pair-card';
+                        $pairClass .= $pairIndex === 0 ? ' is-active' : '';
+                        ?>
+                        <article class="<?= $escaper->escapeHtmlAttr($pairClass) ?>"
+                                 data-template-code="<?= $escaper->escapeHtmlAttr($templateCode) ?>">
+                            <div class="vea-pair-card vet-pair-side"
+                                 data-drag-type="mapped_template"
+                                 data-drag-value="<?= $escaper->escapeHtmlAttr($templateCode) ?>"
+                                 data-template-code="<?= $escaper->escapeHtmlAttr($templateCode) ?>"
+                                 draggable="true">
+                                <strong><?= $escaper->escapeHtml($templateName) ?></strong>
+                                <span class="vea-card-subline">
+                                    <code><?= $escaper->escapeHtml($templateCode) ?></code>
+                                </span>
+                            </div>
+                            <button type="button"
+                                    class="vea-link-indicator vet-link-action"
+                                    title="<?= $escaper->escapeHtmlAttr(__('Usuń mapowanie')) ?>"
+                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Usuń mapowanie')) ?>"
+                                    data-role="unlink-pair"
+                                    data-template-code="<?= $escaper->escapeHtmlAttr($templateCode) ?>">
+                                <span aria-hidden="true"></span>
+                            </button>
+                            <div class="vea-pair-card vet-pair-side"
+                                 data-drag-type="mapped_attribute_set"
+                                 data-drag-value="<?= $escaper->escapeHtmlAttr((string)$attributeSetId) ?>"
+                                 data-template-code="<?= $escaper->escapeHtmlAttr($templateCode) ?>"
+                                 data-attribute-set-id="<?= $escaper->escapeHtmlAttr((string)$attributeSetId) ?>"
+                                 draggable="true">
+                                <strong><?= $escaper->escapeHtml($attributeSetName) ?></strong>
+                                <span class="vea-card-subline">
+                                    <code>#<?= $escaper->escapeHtml((string)$attributeSetId) ?></code>
+                                </span>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                    <?php if ($mappedPairs === []): ?>
+                        <p class="vea-attribute-empty-state vet-mapping-empty">
+                            <?= $escaper->escapeHtml(
+                                __('Nie ma jeszcze mapowań. Wybierz element z lewej i z prawej strony.')
+                            ) ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+                <div class="vet-create-zone" data-drop-zone="draft">
+                    <span class="vet-create-icon" aria-hidden="true"></span>
+                    <div>
+                        <strong><?= $escaper->escapeHtml(__('Nowe mapowanie')) ?></strong>
+                        <span><?= $escaper->escapeHtml(__('Upuść tutaj, aby rozpocząć nowe mapowanie')) ?></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="veui-panel vet-panel vet-source-panel vea-panel vea-side-panel"
+                 data-role="attribute-set-drop-source"
+                 data-source-panel="magento"
+                 data-drop-zone="attribute-set-source"
+                 data-source-options-label="<?= $escaper->escapeHtmlAttr($attributeSetActionsLabel) ?>">
+            <div class="veui-panel-head veui-panel-head-with-tools vea-panel-head vet-panel-head">
+                <div class="veui-panel-heading">
+                    <strong class="veui-panel-title">
+                        <span class="veui-brand-mark veui-brand-magento" aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($magentoIconUrl) ?>" alt=""/>
+                        </span>
+                        <span class="veui-panel-title-text">
+                            <?= $escaper->escapeHtml(__('Attribute sets')) ?>
+                        </span>
+                    </strong>
+                </div>
+                <div class="veui-panel-head-tools vea-side-tools vet-side-tools">
+                    <label class="veui-search veui-search-expandable vet-search">
+                        <span class="veui-search-icon" aria-hidden="true"></span>
+                        <input type="search"
+                               data-role="attribute-set-search"
+                               aria-label="<?= $escaper->escapeHtmlAttr(__('Szukaj set...')) ?>"
+                               placeholder="<?= $escaper->escapeHtmlAttr(__('Szukaj set...')) ?>"/>
+                    </label>
+                    <span class="veui-entity-options veui-source-options vet-source-options vet-options-placeholder"
+                          data-role="entity-options-placeholder"
+                          aria-hidden="true">
+                        <span class="veui-entity-options-placeholder-trigger vet-options-placeholder-trigger">
+                            <span class="veui-entity-options-icon"></span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="vea-attribute-list vet-card-list" data-role="unmapped-set-list">
+                <?php foreach ($unmappedAttributeSets as $attributeSet): ?>
+                    <?php
+                    $attributeSetId = (int)$attributeSet['id'];
+                    $attributeSetName = trim((string)($attributeSet['name'] ?? '')) ?: '#' . $attributeSetId;
+                    $attributeSetActive = ($attributeSet['active'] ?? true) !== false;
+                    $attributeSetCardClass = 'vea-attribute-card vet-map-card vet-set-card';
+                    $attributeSetCardClass .= $attributeSetActive ? '' : ' is-inactive';
+                    $attributeSetAriaLabel = __('Dodaj attribute set do mapowania: %1', $attributeSetName);
+                    $attributeSetToggleLabel = __('Włączony zestaw atrybutów do mapowania');
+                    ?>
+                    <div class="<?= $escaper->escapeHtmlAttr($attributeSetCardClass) ?>"
+                         data-role="entity-card"
+                         data-source="magento"
+                         data-code="<?= $escaper->escapeHtmlAttr((string)$attributeSetId) ?>"
+                         data-label="<?= $escaper->escapeHtmlAttr($attributeSetName) ?>"
+                         data-search="<?= $escaper->escapeHtmlAttr($attributeSetName . ' ' . $attributeSetId) ?>"
+                         data-drag-type="attribute_set"
+                         data-drag-value="<?= $escaper->escapeHtmlAttr((string)$attributeSetId) ?>"
+                         data-attribute-set-id="<?= $escaper->escapeHtmlAttr((string)$attributeSetId) ?>"
+                         draggable="<?= $attributeSetActive ? 'true' : 'false' ?>"
+                         role="group"
+                         tabindex="0"
+                         <?= $attributeSetActive ? '' : 'hidden' ?>
+                         aria-label="<?= $escaper->escapeHtmlAttr($attributeSetAriaLabel) ?>">
+                        <?= /* @noEscape */ $cardSelectionHtml ?>
+                        <span class="vea-drag-handle vet-drag-handle" aria-hidden="true"></span>
+                        <div class="vea-card-copy vet-card-copy">
+                            <strong><?= $escaper->escapeHtml($attributeSetName) ?></strong>
+                            <span class="vea-card-subline">#<?= $escaper->escapeHtml((string)$attributeSetId) ?></span>
+                        </div>
+                        <button type="button"
+                                class="vea-card-toggle"
+                                data-role="source-active-toggle"
+                                aria-label="<?= $escaper->escapeHtmlAttr($attributeSetToggleLabel) ?>"
+                                aria-pressed="<?= $attributeSetActive ? 'true' : 'false' ?>"
+                                title="<?= $escaper->escapeHtmlAttr(__('Włącz / wyłącz attribute set w mapowaniu')) ?>">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                <?php endforeach; ?>
+                <?php if ($visibleUnmappedAttributeSetCount === 0): ?>
+                    <div class="vet-empty-row">
+                        <?= $escaper->escapeHtml(__('Brak niezmapowanych attribute setów.')) ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#ergonode-template-admin": {
+        "Ergonode_TemplateAdminUi/js/template-admin":
+            <?= /* @noEscape */ $block->getTemplateConfigJson() ?>
+    }
+}
+</script>

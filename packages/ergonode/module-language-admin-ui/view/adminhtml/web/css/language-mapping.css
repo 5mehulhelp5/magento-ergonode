@@ -1,0 +1,168 @@
+.vel-mapping {
+    position: relative;
+}
+
+#ergonode-language-mapping[data-language-busy='true']::after {
+    background: rgba(255, 255, 255, 0.68);
+    content: '';
+    cursor: wait;
+    inset: 0;
+    position: absolute;
+    z-index: 30;
+}
+
+.vel-language-loader {
+    align-items: center;
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-line);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(28, 40, 64, 0.16);
+    display: flex;
+    gap: 8px;
+    left: 50%;
+    padding: 10px 14px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 31;
+}
+
+.vel-language-loader[hidden] {
+    display: none;
+}
+
+.vel-language-loader-icon {
+    animation: vel-language-loader-spin 800ms linear infinite;
+    border: 2px solid var(--veui-line);
+    border-radius: 50%;
+    border-top-color: var(--veui-blue);
+    height: 16px;
+    width: 16px;
+}
+
+@keyframes vel-language-loader-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vel-language-loader-icon {
+        animation: none;
+    }
+}
+
+.vel-source-list {
+    padding: 12px;
+}
+
+.vel-source-card {
+    cursor: grab;
+}
+
+.vel-source-card.is-dragging {
+    opacity: 0;
+}
+
+.vel-source-drag-preview {
+    box-sizing: border-box;
+    margin: 0;
+    pointer-events: none;
+    position: fixed;
+    z-index: 10000;
+}
+
+.vel-source-card.is-mapped {
+    opacity: 0.48;
+}
+
+.vel-source-card.is-drop-ready {
+    background: var(--veui-blue-softer);
+    border-color: var(--veui-blue-border-strong);
+    box-shadow: inset 0 0 0 2px var(--veui-blue-border);
+}
+
+.vel-source-card[data-source='ergo'] > .vea-card-toggle {
+    display: none;
+}
+
+.vel-auto-match-count {
+    margin-left: auto;
+    min-height: 18px;
+    min-width: 22px;
+    padding: 0 6px;
+}
+
+.vel-auto-match-count[hidden] {
+    display: none;
+}
+
+.vel-source-options .vea-auto-match:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.vel-mapping.is-dragging-ergo [data-source-panel='ergo'] .vea-disable-zone {
+    display: flex;
+}
+
+.vel-pair-list {
+    overflow-y: auto;
+    padding: 12px;
+}
+
+.vel-pair-row::before {
+    display: none;
+}
+
+.vel-pair-row {
+    padding-right: 10px;
+}
+
+.vel-pair-row.vea-status-tone-ok {
+    border-color: var(--vea-line);
+}
+
+.vel-unlink-mapping {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.vel-unlink-mapping:hover,
+.vel-unlink-mapping:focus {
+    background: var(--vea-red-soft);
+    color: var(--vea-red);
+    outline: 0;
+}
+
+.vel-unlink-mapping:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--veui-danger-border);
+}
+
+.vel-empty-state {
+    color: var(--vea-muted);
+    font-size: 12px;
+    line-height: 1.5;
+    margin: auto;
+    max-width: 300px;
+    padding: 32px 16px;
+    text-align: center;
+}
+
+.vel-empty-state p {
+    margin: 0;
+}
+
+.vel-empty-state[hidden] {
+    display: none;
+}
+
+.vea-type-store-view {
+    background: var(--veui-warning-notice-soft);
+    color: var(--veui-warning-notice-text);
+}

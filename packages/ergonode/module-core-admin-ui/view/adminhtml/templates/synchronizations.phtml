@@ -1,0 +1,200 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+use Ergonode\CoreAdminUi\Block\Adminhtml\Synchronizations;
+
+/** @var Synchronizations $block */
+$synchronizations = $block->getSynchronizations();
+$emptyStateDescription = __('Enable an Ergonode consumer module to make its synchronization available.');
+$canRunSynchronizations = $block->canRunSynchronizations();
+$canResetCursors = $block->canResetSynchronizationCursors();
+$canSelectProcesses = $canRunSynchronizations || $canResetCursors;
+$selectAllLabel = __('Mark all synchronization processes');
+$hasActionableProcesses = false;
+foreach ($synchronizations as $synchronization) {
+    if ($canSelectProcesses && $block->isProcessActionable($synchronization['process_code'])) {
+        $hasActionableProcesses = true;
+        break;
+    }
+}
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => SectionNavigation::SECTION_SYNCHRONIZATIONS]]
+);
+?>
+<main id="ergonode-synchronizations"
+      class="veui-workspace veui-workspace-viewbar ves-synchronizations">
+    <div class="veui-toolbar veui-viewbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+    </div>
+
+    <div class="ves-synchronizations-content">
+        <section class="veui-panel ves-synchronizations-panel"
+                 aria-labelledby="ves-synchronizations-title">
+            <header class="veui-panel-head ves-synchronizations-panel-head">
+                <div class="ves-synchronizations-panel-heading">
+                    <span class="ves-synchronizations-summary-icon" aria-hidden="true"></span>
+                    <div>
+                        <h2 id="ves-synchronizations-title">
+                            <?= $escaper->escapeHtml(__('Synchronization processes')) ?>
+                        </h2>
+                        <p><?= $escaper->escapeHtml(
+                            __('Only processes registered by enabled Ergonode modules are displayed.')
+                        ) ?></p>
+                    </div>
+                </div>
+                <div class="ves-synchronizations-panel-actions">
+                    <span class="ves-synchronizations-count">
+                        <?= $escaper->escapeHtml(__('%1 available', count($synchronizations))) ?>
+                    </span>
+                    <?php if ($canResetCursors): ?>
+                        <button type="button"
+                                class="veui-button ves-synchronizations-action"
+                                data-role="reset-selected"
+                                disabled>
+                            <span class="veui-reset-cursor-icon" aria-hidden="true"></span>
+                            <?= $escaper->escapeHtml(__('Reset cursor')) ?>
+                        </button>
+                    <?php endif; ?>
+                    <?php if ($canRunSynchronizations): ?>
+                        <button type="button"
+                                class="veui-button veui-button-primary ves-synchronizations-action"
+                                data-role="run-selected"
+                                disabled>
+                            <span class="veui-sync-ergonode-icon" aria-hidden="true"></span>
+                            <?= $escaper->escapeHtml(__('Synchronize')) ?>
+                        </button>
+                    <?php endif; ?>
+                </div>
+            </header>
+
+            <div class="veui-message ves-synchronizations-message"
+                 data-role="synchronization-message"
+                 aria-live="polite"
+                 hidden>
+                <span class="ves-synchronizations-message-dot" aria-hidden="true"></span>
+                <span data-role="synchronization-message-text"></span>
+            </div>
+
+            <p class="ves-monitor-freshness" data-role="monitor-freshness" role="status">
+                <?= $escaper->escapeHtml(__('Loading live synchronization status…')) ?>
+            </p>
+            <?php if ($synchronizations === []): ?>
+                <div class="ves-synchronizations-empty" role="status">
+                    <span aria-hidden="true"></span>
+                    <h3><?= $escaper->escapeHtml(__('No synchronization processes are available.')) ?></h3>
+                    <p><?= $escaper->escapeHtml($emptyStateDescription) ?></p>
+                </div>
+            <?php else: ?>
+                <div class="ves-synchronizations-table-wrap">
+                    <table class="ves-synchronizations-table">
+                        <caption class="ves-visually-hidden">
+                            <?= $escaper->escapeHtml(__('Available Ergonode synchronizations')) ?>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th class="ves-synchronizations-select" scope="col">
+                                    <input type="checkbox"
+                                           data-role="select-all-processes"
+                                           aria-label="<?= $escaper->escapeHtmlAttr($selectAllLabel) ?>"
+                                           <?= $hasActionableProcesses ? '' : 'disabled' ?>/>
+                                </th>
+                                <th scope="col"><?= $escaper->escapeHtml(__('Synchronization')) ?></th>
+                                <th scope="col"><?= $escaper->escapeHtml(__('Last cursor update')) ?></th>
+                                <th scope="col"><?= $escaper->escapeHtml(__('Last cursor reset')) ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($synchronizations as $synchronization): ?>
+                                <?php
+                                $monitorOnly = !empty($synchronization['monitor_only']);
+                                $isActionable = !$monitorOnly
+                                    && $block->isProcessActionable($synchronization['process_code']);
+                                $selectProcessLabel = __(
+                                    'Mark synchronization: %1',
+                                    $synchronization['label']
+                                );
+                                ?>
+                                <tr data-process-code="<?=
+                                    $escaper->escapeHtmlAttr($synchronization['process_code'])
+                                ?>">
+                                    <td class="ves-synchronizations-select">
+                                        <input type="checkbox"
+                                               value="<?= $escaper->escapeHtmlAttr($synchronization['process_code']) ?>"
+                                               data-role="process-select"
+                                               aria-label="<?= $escaper->escapeHtmlAttr($selectProcessLabel) ?>"
+                                               <?= $isActionable && $canSelectProcesses ? '' : 'disabled' ?>/>
+                                    </td>
+                                    <th scope="row">
+                                        <strong><?= $escaper->escapeHtml(__($synchronization['label'])) ?></strong>
+                                        <code>
+                                            <?= $escaper->escapeHtml(
+                                                $block->formatProcessCode($synchronization['process_code'])
+                                            ) ?>
+                                        </code>
+                                        <span><?= $escaper->escapeHtml(__($synchronization['description'])) ?></span>
+                                        <?php if (!$monitorOnly): ?>
+                                        <details class="ves-monitor-cursor">
+                                            <summary><?= $escaper->escapeHtml(__('Cursor')) ?></summary>
+                                            <code data-role="process-cursor">
+                                                <?= $escaper->escapeHtml($synchronization['cursor'] ?? '') ?>
+                                            </code>
+                                            <span><?= $escaper->escapeHtml(__(
+                                                'An empty cursor does not determine synchronization success.'
+                                            )) ?></span>
+                                        </details>
+                                        <?php else: ?>
+                                            <span><?= $escaper->escapeHtml(__(
+                                                'Information only — runs with dependent imports.'
+                                            )) ?></span>
+                                        <?php endif; ?>
+                                    </th>
+                                    <?php if ($monitorOnly): ?>
+                                    <td colspan="2">
+                                        <dl class="ves-monitor-observation" data-role="observation">
+                                            <dt><?= $escaper->escapeHtml(__('Last check started')) ?></dt>
+                                            <dd><time data-role="check-started-at">
+                                                <?= $escaper->escapeHtml(__('Checking…')) ?>
+                                            </time></dd>
+                                            <dt><?= $escaper->escapeHtml(__('Result')) ?></dt>
+                                            <dd data-role="check-status">
+                                                <?= $escaper->escapeHtml(__('Checking…')) ?>
+                                            </dd>
+                                            <dt><?= $escaper->escapeHtml(__('Completed')) ?></dt>
+                                            <dd><time data-role="check-completed-at">
+                                                <?= $escaper->escapeHtml(__('Checking…')) ?>
+                                            </time></dd>
+                                            <dt><?= $escaper->escapeHtml(__('Last change detected')) ?></dt>
+                                            <dd><time data-role="check-changed-at">
+                                                <?= $escaper->escapeHtml(__('Checking…')) ?>
+                                            </time></dd>
+                                        </dl>
+                                    </td>
+                                    <?php else: ?>
+                                    <td><time data-role="synced-at">
+                                        <?= $escaper->escapeHtml(__('Checking…')) ?>
+                                    </time></td>
+                                    <td><time data-role="reset-at">
+                                        <?= $escaper->escapeHtml(__('Checking…')) ?>
+                                    </time></td>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </section>
+    </div>
+</main>
+
+<script type="text/x-magento-init">
+{
+    "#ergonode-synchronizations": {
+        "Ergonode_CoreAdminUi/js/synchronizations":
+            <?= /* @noEscape */ $block->getSynchronizationConfigJson() ?>
+    }
+}
+</script>

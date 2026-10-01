@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Ergonode_Core::main" title="Ergonode" sortOrder="50">
+                    <resource id="Ergonode_Core::readiness" title="Ergonode Synchronization Readiness" sortOrder="5"/>
+                    <resource id="Ergonode_Core::synchronizations" title="Ergonode Synchronization Status" sortOrder="10">
+                        <resource id="Ergonode_Core::synchronizations_run" title="Run Ergonode Synchronizations" sortOrder="10"/>
+                        <resource id="Ergonode_Core::synchronizations_reset" title="Reset Ergonode Synchronization Cursors" sortOrder="20"/>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Ergonode_Core::config" title="Ergonode Configuration" sortOrder="60"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,30 @@
+{
+    "ergonode_language_store_mapping": {
+        "column": {
+            "mapping_id": true,
+            "store_id": true,
+            "language_code": true,
+            "sort_order": true,
+            "created_at": true,
+            "updated_at": true,
+            "is_manual": true
+        },
+        "index": {
+            "ERGONODE_LANGUAGE_STORE_MAPPING_LANGUAGE_CODE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_LANGUAGE_STORE_MAPPING_STORE_ID_STORE_STORE_ID": true,
+            "ERGONODE_LANGUAGE_STORE_MAPPING_STORE_ID": true
+        }
+    },
+    "ergonode_language": {
+        "column": {
+            "language_code": true,
+            "synchronized_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

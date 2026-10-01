@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\PublisherAdminUi\Api\WriteReadinessProviderInterface" type="Ergonode\PublisherAdminUi\Model\WriteReadinessProvider"/>
+    <preference for="Ergonode\Publisher\Api\Rest\ConnectionStorageInterface" type="Ergonode\PublisherAdminUi\Model\Rest\ConnectionStorage"/>
+    <type name="Ergonode\PublisherAdminUi\Model\Rest\ConnectionStorage">
+        <arguments>
+            <argument name="persistentStorage" xsi:type="object">Ergonode\Publisher\Model\ResourceModel\Rest\ConnectionStorage</argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_categories>
+            <cron>
+                <status>0</status>
+                <schedule>*/20 * * * *</schedule>
+            </cron>
+            <synchronization>
+                <name_mode>manual</name_mode>
+            </synchronization>
+        </ergonode_categories>
+        <ergonode_category_attributes>
+            <synchronization>
+                <status>1</status>
+            </synchronization>
+            <cron>
+                <status>0</status>
+                <schedule>*/20 * * * *</schedule>
+            </cron>
+        </ergonode_category_attributes>
+    </default>
+</config>

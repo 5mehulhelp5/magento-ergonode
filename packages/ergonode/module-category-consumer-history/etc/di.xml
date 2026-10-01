@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CategoryConsumer\Api\CategoryEntitySynchronizerInterface">
+        <plugin name="ergonode_category_consumer_history_data" type="Ergonode\CategoryConsumerHistory\Plugin\CategoryEntitySynchronizationHistoryPlugin" sortOrder="200"/>
+    </type>
+    <preference for="Ergonode\CategoryConsumerHistory\Api\CategoryTreeHistoryQueryInterface" type="Ergonode\CategoryConsumerHistory\Model\CategoryTreeHistoryQuery"/>
+    <preference for="Ergonode\CategoryConsumerHistory\Api\HistoryActorProviderInterface" type="Ergonode\CategoryConsumerHistory\Model\Context\NullHistoryActorProvider"/>
+    <type name="Ergonode\Category\Api\CategorySnapshotRemoverInterface">
+        <plugin name="ergonode_category_consumer_history_snapshot_remove" type="Ergonode\CategoryConsumerHistory\Plugin\CategorySnapshotRemoverHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\Category\Api\CategoryLayoutSaverInterface">
+        <plugin name="ergonode_category_consumer_history_layout_save" type="Ergonode\CategoryConsumerHistory\Plugin\CategoryLayoutSaverHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\Category\Api\CategoryTreeRefreshServiceInterface">
+        <plugin name="ergonode_category_consumer_history_snapshot_refresh" type="Ergonode\CategoryConsumerHistory\Plugin\CategoryTreeRefreshHistoryPlugin" sortOrder="200"/>
+    </type>
+    <type name="Ergonode\CategoryConsumer\Api\CategoryStructureSynchronizationProcessInterface">
+        <plugin name="ergonode_category_consumer_history_synchronization" type="Ergonode\CategoryConsumerHistory\Plugin\CategoryStructureSynchronizationHistoryPlugin" sortOrder="200"/>
+    </type>
+    <preference for="Ergonode\CategoryConsumerHistory\Model\Persistence\HistoryPrunerInterface" type="Ergonode\CategoryConsumerHistory\Model\ResourceModel\HistoryPruner"/>
+    <type name="Ergonode\CategoryConsumer\Api\CategoryReconciliationServiceInterface">
+        <plugin name="ergonode_category_consumer_history_reconcile" type="Ergonode\CategoryConsumerHistory\Plugin\CategoryReconciliationHistoryPlugin" sortOrder="200"/>
+    </type>
+</config>

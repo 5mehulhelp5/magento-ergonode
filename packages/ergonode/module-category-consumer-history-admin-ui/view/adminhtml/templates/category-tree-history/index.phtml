@@ -1,0 +1,123 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+
+/** @var \Ergonode\CategoryConsumerHistoryAdminUi\Block\Adminhtml\CategoryTreeHistory\Index $block */
+$config = $block->getConfig();
+$trees = is_array($config['trees'] ?? null) ? $config['trees'] : [];
+$selectedTreeId = (int)($config['category_tree_id'] ?? 0);
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => 'category_history']]
+);
+?>
+<div id="ergonode-category-tree-history" class="veui-workspace veui-workspace-viewbar vec-admin vech-workspace">
+    <div class="veui-toolbar veui-viewbar vech-toolbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+        <?php if ($trees !== []): ?>
+            <label class="vech-tree-picker">
+                <span><?= $escaper->escapeHtml(__('Category tree')) ?></span>
+                <select data-role="tree-picker">
+                    <?php foreach ($trees as $tree): ?>
+                        <option value="<?= (int)$tree['category_tree_id'] ?>"
+                                data-url="<?= $escaper->escapeUrl((string)$tree['history_url']) ?>"
+                                <?= (int)$tree['category_tree_id'] === $selectedTreeId ? 'selected' : '' ?>>
+                            <?= $escaper->escapeHtml((string)$tree['tree_code']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+        <?php endif; ?>
+    </div>
+
+    <div class="veui-message vech-message" data-role="message" aria-live="polite" hidden></div>
+
+    <?php if ($selectedTreeId > 0): ?>
+        <div class="veui-layout vech-layout">
+            <?php foreach ([
+                'source' => ['label' => __('Ergonode'), 'icon' => 'm2_configuration.svg'],
+                'target' => ['label' => __('Magento'), 'icon' => 'magento-mark.svg'],
+            ] as $side => $treeSide): ?>
+                <section class="veui-panel vech-tree-panel"
+                         aria-labelledby="vech-title-<?= $escaper->escapeHtmlAttr($side) ?>">
+                    <header class="veui-panel-head veui-panel-head-with-tools vech-panel-head">
+                        <div class="vech-panel-heading">
+                            <strong id="vech-title-<?= $escaper->escapeHtmlAttr($side) ?>"
+                                    class="veui-panel-title vech-tree-title">
+                                <img src="<?= $escaper->escapeUrl($block->getViewFileUrl(
+                                    'Ergonode_CoreAdminUi::images/' . $treeSide['icon']
+                                )) ?>" alt=""/>
+                                <span class="veui-panel-title-text">
+                                    <?= $escaper->escapeHtml($treeSide['label']) ?>
+                                </span>
+                            </strong>
+                        </div>
+                        <div class="veui-panel-head-tools">
+                            <label class="veui-search veui-search-expandable">
+                                <span class="veui-search-icon" aria-hidden="true"></span>
+                                <input type="search" data-role="tree-search"
+                                       data-side="<?= $escaper->escapeHtmlAttr($side) ?>"
+                                       aria-label="<?=
+                                           $escaper->escapeHtmlAttr(__('Search %1 tree', $treeSide['label']))
+                                        ?>"
+                                       placeholder="<?= $escaper->escapeHtmlAttr(__('Search the tree...')) ?>"/>
+                            </label>
+                            <?php if ($side === 'source'): ?>
+                                <span data-role="source-options"></span>
+                            <?php endif; ?>
+                        </div>
+                    </header>
+                    <div id="vech-tree-<?= $escaper->escapeHtmlAttr($side) ?>"
+                         class="vec-side-tree vech-tree" data-role="tree"
+                         data-side="<?= $escaper->escapeHtmlAttr($side) ?>"
+                         role="group" aria-labelledby="vech-title-<?= $escaper->escapeHtmlAttr($side) ?>"
+                         tabindex="0" aria-live="polite"></div>
+                </section>
+            <?php endforeach; ?>
+
+            <aside class="veui-panel vech-operation-panel" aria-labelledby="vech-operation-title">
+                <header class="veui-panel-head vech-panel-head">
+                    <div class="vech-panel-heading">
+                        <strong id="vech-operation-title" class="veui-panel-title">
+                            <?= $escaper->escapeHtml(__('Operations')) ?>
+                        </strong>
+                    </div>
+                    <label class="vech-changes-filter">
+                        <input type="checkbox" data-role="changes-only" checked>
+                        <span><?= $escaper->escapeHtml(__('Only changes')) ?></span>
+                    </label>
+                </header>
+                <div class="vech-operation-list" data-role="operation-list"></div>
+            </aside>
+        </div>
+        <dialog class="vech-details-dialog" data-role="details-dialog" aria-labelledby="vech-details-title">
+            <header class="veui-panel-head vech-panel-head">
+                <strong id="vech-details-title" class="veui-panel-title">
+                    <?= $escaper->escapeHtml(__('Operation details')) ?>
+                </strong>
+                <button type="button" class="vech-details-close" data-role="close-details" autofocus>
+                    <?= $escaper->escapeHtml(__('Close')) ?>
+                </button>
+            </header>
+            <div class="vech-details" data-role="operation-details"></div>
+        </dialog>
+    <?php else: ?>
+        <div class="veui-panel vech-empty">
+            <strong><?= $escaper->escapeHtml(__('No configured category trees')) ?></strong>
+            <span>
+                <?= $escaper->escapeHtml(__('Configure a category tree before its changes can be recorded.')) ?>
+            </span>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#ergonode-category-tree-history": {
+        "Ergonode_CategoryConsumerHistoryAdminUi/js/category-tree-history":
+            <?= /* @noEscape */ $block->getConfigJson() ?>
+    }
+}
+</script>

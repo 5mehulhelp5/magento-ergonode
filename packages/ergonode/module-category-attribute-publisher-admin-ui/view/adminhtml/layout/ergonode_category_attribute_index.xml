@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ergonode_CoreAdminUi::css/ergonode-actions.css"/>
+        <css src="Ergonode_CoreAdminUi::css/bulk-publish-progress.css"/>
+        <css src="Ergonode_AttributePublisherAdminUi::css/pending-type-picker.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block
+                name="ergonode.category.attribute.publisher.init"
+                class="Ergonode\AttributePublisherAdminUi\Block\Adminhtml\AttributePublisherMapping"
+                template="Ergonode_AttributePublisherAdminUi::ergonode-attribute-publisher-init.phtml"
+                after="ergonode.category.attribute.mapping"
+            >
+                <arguments>
+                    <argument name="mode" xsi:type="string">attribute</argument>
+                    <argument name="entity_kind" xsi:type="string">category_attribute</argument>
+                    <argument name="batch_route" xsi:type="string">ergonode_manual/category_attribute_batch/create</argument>
+                    <argument name="target_selector" xsi:type="string">#ergonode-category-attribute-mapping</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

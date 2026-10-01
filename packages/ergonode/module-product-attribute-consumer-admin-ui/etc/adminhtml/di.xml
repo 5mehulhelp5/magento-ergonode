@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Plugin\AutomaticSynchronizationVisibility">
+        <arguments>
+            <argument name="paths" xsi:type="array">
+                <item name="ergonode_attributes_cron_status" xsi:type="string">ergonode_attributes/cron/status</item>
+                <item name="ergonode_attributes_cron_schedule" xsi:type="string">ergonode_attributes/cron/schedule</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

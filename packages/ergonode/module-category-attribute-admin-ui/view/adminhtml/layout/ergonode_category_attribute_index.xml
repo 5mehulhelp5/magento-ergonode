@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="ergonode_connection_required"/>
+    <head>
+        <css src="Ergonode_CoreAdminUi::css/ergonode-workspace.css"/>
+        <css src="Ergonode_CoreAdminUi::css/attribute-mapping.css"/>
+        <css src="Ergonode_CoreAdminUi::css/attribute-empty-state.css"/>
+        <css src="Ergonode_CoreAdminUi::css/option-mapping.css"/>
+        <css src="Ergonode_CoreAdminUi::css/option-mapping-modal.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block
+                class="Ergonode\CategoryAttributeAdminUi\Block\Adminhtml\CategoryAttribute\Mapping"
+                name="ergonode.category.attribute.mapping"
+                template="Ergonode_CoreAdminUi::attribute/mapping.phtml"
+            >
+                <container name="ergonode.category.attribute.mapping.sidebar" as="sidebar"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-product-attribute-consumer-history",
+    "description": "Optional inbound product attribute operation capture for direction-neutral mapping history.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "ergonode/module-product-attribute-consumer": "*",
+        "ergonode/module-product-attribute-history": "*",
+        "php": "~8.3.0||~8.4.0||~8.5.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductAttributeConsumerHistory\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+"Map at least one Ergonode template to a Magento attribute set.","Zmapuj co najmniej jeden template Ergonode z zestawem atrybutów Magento."
+"Template ""%1"" is not available in the local snapshot.","Template „%1” nie jest dostępny w lokalnym snapshocie."
+"Templates","Szablony"
+"Imports Ergonode templates and updates their Magento attribute-set mappings.","Importuje szablony Ergonode i aktualizuje ich mapowania z zestawami atrybutów Magento."
+"Ergonode returned incomplete template data for ""%1"".","Ergonode zwróciło niepełne dane szablonu „%1”."

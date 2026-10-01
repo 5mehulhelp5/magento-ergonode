@@ -1,0 +1,103 @@
+{
+    "ergonode_category_tree_option": {
+        "column": {
+            "entity_id": true,
+            "code": true,
+            "labels_json": true,
+            "raw_json": true,
+            "synced_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_CATEGORY_TREE_OPTION_CODE": true
+        }
+    },
+    "ergonode_category_tree": {
+        "column": {
+            "category_tree_id": true,
+            "name": true,
+            "is_active": true,
+            "tree_code": true,
+            "root_category_id": true,
+            "sync_after_import": true,
+            "remove_missing": true,
+            "created_at": true,
+            "updated_at": true,
+            "sort_order": true
+        },
+        "index": {
+            "ERGONODE_CATEGORY_TREE_ACTIVE": true,
+            "ERGONODE_CATEGORY_TREE_CODE": true,
+            "ERGONODE_CATEGORY_TREE_IS_ACTIVE": true,
+            "ERGONODE_CATEGORY_TREE_TREE_CODE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_CATEGORY_TREE_ROOT": true,
+            "ERGONODE_CATEGORY_TREE_ROOT_CATEGORY_ID": true
+        }
+    },
+    "ergonode_category_snapshot": {
+        "column": {
+            "snapshot_id": true,
+            "category_tree_id": true,
+            "category_code": true,
+            "parent_category_code": true,
+            "sort_order": true,
+            "labels_json": true,
+            "content_hash": true,
+            "raw_json": true,
+            "seen_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_CATEGORY_SNAPSHOT_PARENT": true,
+            "ERGONODE_CATEGORY_SNAPSHOT_SEEN": true,
+            "ERGONODE_CTGR_SNAPSHOT_CTGR_TREE_ID_PARENT_CTGR_CODE": true,
+            "ERGONODE_CATEGORY_SNAPSHOT_SEEN_AT": true,
+            "ERGONODE_CATEGORY_SNAPSHOT_CATEGORY_TREE_ID_PARENT_CATEGORY_CODE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_CATEGORY_SNAPSHOT_CATEGORY_TREE_FK": true,
+            "ERGONODE_CATEGORY_SNAPSHOT_CATEGORY_TREE_CODE": true,
+            "FK_B2A2728E7B99DB6DE45A7BD791A324CD": true,
+            "ERGONODE_CTGR_SNAPSHOT_CTGR_TREE_ID_CTGR_CODE": true,
+            "FK_815FC787290DEC60116EE813F191E1CA": true,
+            "ERGONODE_CATEGORY_SNAPSHOT_CATEGORY_TREE_ID_CATEGORY_CODE": true
+        }
+    },
+    "ergonode_category_mapping": {
+        "column": {
+            "mapping_id": true,
+            "category_tree_id": true,
+            "ergonode_category_code": true,
+            "magento_category_id": true,
+            "manual_parent_code": true,
+            "manual_sort_order": true,
+            "sync_status": true,
+            "sync_message": true,
+            "last_synced_at": true,
+            "created_at": true,
+            "updated_at": true,
+            "ergonode_category_id": true
+        },
+        "index": {
+            "ERGONODE_CATEGORY_MAPPING_MAGENTO": true,
+            "ERGONODE_CATEGORY_MAPPING_STATUS": true,
+            "ERGONODE_CATEGORY_MAPPING_MAGENTO_CATEGORY_ID": true,
+            "ERGONODE_CATEGORY_MAPPING_CATEGORY_TREE_ID_SYNC_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_CATEGORY_MAPPING_CATEGORY_TREE_FK": true,
+            "ERGONODE_CATEGORY_MAPPING_CATEGORY_TREE_CODE": true,
+            "FK_F4A367C3C251D1ACD6E1ED4919C4AA0C": true,
+            "ERGONODE_CTGR_MAPPING_CTGR_TREE_ID_ERGONODE_CTGR_CODE": true,
+            "FK_87DBDCC79B2A6019C4C8F33CA065799B": true
+        }
+    }
+}

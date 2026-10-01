@@ -1,0 +1,5 @@
+{
+    "id": "ERG-CONNECTION-RECOVERY",
+    "title": "Restore Ergonode connection configuration",
+    "stateFile": "var/test-state/ergonode-connection.json"
+}

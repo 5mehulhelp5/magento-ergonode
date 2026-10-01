@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="PackHauer\FileAttribute\Api\FileStorageInterface" type="PackHauer\FileAttribute\Model\FileStorage"/>
+    <preference for="PackHauer\FileAttribute\Api\FileUploadPolicyInterface" type="PackHauer\FileAttribute\Model\FileUploadPolicy"/>
+    <type name="Magento\Catalog\Model\ResourceModel\Eav\Attribute">
+        <plugin name="packhauer_file_attribute_input_type" type="PackHauer\FileAttribute\Model\Plugin\EavAttributeInputType"/>
+    </type>
+    <type name="Magento\Catalog\Helper\Product">
+        <plugin name="packhauer_file_attribute_backend" type="PackHauer\FileAttribute\Model\Plugin\ProductAttributeInputType"/>
+    </type>
+    <type name="Magento\Eav\Model\Entity\Setup\PropertyMapper\Composite">
+        <arguments>
+            <argument name="propertyMappers" xsi:type="array">
+                <item name="packhauer_file_attribute" xsi:type="string">PackHauer\FileAttribute\Model\Attribute\FilePropertyMapper</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

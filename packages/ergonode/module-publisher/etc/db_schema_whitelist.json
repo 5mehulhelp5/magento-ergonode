@@ -1,0 +1,19 @@
+{
+    "ergonode_publisher_rest_connection": {
+        "column": {
+            "connection_id": true,
+            "profile": true,
+            "origin": true,
+            "email": true,
+            "token": true,
+            "refresh_token": true,
+            "expires_at": true,
+            "generation": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_PUBLISHER_REST_CONNECTION_PROFILE": true
+        }
+    }
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\ProductPublisher\Api\ProductAttributePublicationSourceInterface" type="Ergonode\ProductPublisher\Model\Source\EmptyProductAttributePublicationSource"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductDesiredStateFactoryInterface" type="Ergonode\ProductPublisher\Model\Data\ProductDesiredStateFactory"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductSynchronizerInterface" type="Ergonode\ProductPublisher\Model\Sync\ProductSynchronizer"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductBatchSynchronizerInterface" type="Ergonode\ProductPublisher\Model\Sync\ProductSynchronizer"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductTypeMapperInterface" type="Ergonode\ProductPublisher\Model\ProductTypeMapper"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductRelationSourcePoolInterface" type="Ergonode\ProductPublisher\Model\Source\ProductRelationSourcePool"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductRelationSourceResultFactoryInterface" type="Ergonode\ProductPublisher\Model\Data\ProductRelationSourceResultFactory"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductIdentityRegistryInterface" type="Ergonode\ProductPublisher\Model\ResourceModel\ProductIdentityRegistry"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductPublicationSynchronizerInterface" type="Ergonode\ProductPublisher\Model\Sync\ProductPublicationSynchronizer"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductPublicationProductResolverInterface" type="Ergonode\ProductPublisher\Model\ResourceModel\ProductPublicationProductResolver"/>
+    <preference for="Ergonode\ProductPublisher\Api\ProductTemplateCodeProviderInterface" type="Ergonode\ProductPublisher\Model\Source\DefaultProductTemplateCodeProvider"/>
+    <type name="Ergonode\ProductPublisher\Model\ProductTypeMapper">
+        <arguments>
+            <argument name="types" xsi:type="array">
+                <item name="simple" xsi:type="string">simple</item>
+                <item name="virtual" xsi:type="string">simple</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Readiness\ReadinessService">
+        <arguments>
+            <argument name="checks" xsi:type="array">
+                <item name="ergonode_product_publisher_configuration" xsi:type="object">Ergonode\ProductPublisher\Model\Readiness\ProductPublicationConfigurationCheck</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\ProductPublisher\Api\ProductPublicationBatchInterface" type="Ergonode\ProductPublisher\Model\Sync\ProductPublicationBatch"/>
+    <type name="Ergonode\ProductPublisher\Model\Sync\NewProductMutationRecovery">
+        <arguments>
+            <argument name="maxIterations" xsi:type="number">5</argument>
+            <argument name="delaysMilliseconds" xsi:type="array">
+                <item name="0" xsi:type="number">100</item>
+                <item name="1" xsi:type="number">200</item>
+                <item name="2" xsi:type="number">300</item>
+                <item name="3" xsi:type="number">500</item>
+                <item name="4" xsi:type="number">800</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\ProductPublisher\Api\ProductPublicationResultWriterInterface" type="Ergonode\ProductPublisher\Model\ResourceModel\ProductPublicationResultWriter"/>
+</config>

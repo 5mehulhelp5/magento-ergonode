@@ -1,0 +1,5 @@
+"Read only","Tylko odczyt"
+"Use a read-only API key for this environment. Required when this environment and mode are active.","Użyj klucza API tylko do odczytu dla tego środowiska. Wymagany, gdy to środowisko i tryb są aktywne."
+"Checks connectivity with this environment's key. Does not verify write permissions or change the active environment.","Sprawdza połączenie kluczem tego środowiska. Nie potwierdza uprawnień zapisu ani nie zmienia aktywnego środowiska."
+"Use a read-only API key for this environment. Required when this environment is enabled and this profile is active.","Użyj klucza API tylko do odczytu dla tego środowiska. Wymagany, gdy połączenie jest włączone, a profil aktywny."
+"Use a read-only API key for this environment. Required when the connection is enabled and this profile is active.","Użyj klucza API tylko do odczytu dla tego środowiska. Wymagany, gdy połączenie jest włączone, a ten profil jest aktywny."

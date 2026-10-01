@@ -1,0 +1,5 @@
+"Schedule for reading the complete Ergonode template list and synchronizing Magento attribute sets.","Harmonogram pobierania pełnej listy szablonów Ergonode i synchronizacji zestawów atrybutów Magento."
+"Clear the saved template cursor and synchronize the complete template list?","Wyczyścić zapisany kursor i zsynchronizować pełną listę szablonów?"
+"Clear the saved template cursor? Each synchronization reads the complete list.","Wyczyścić zapisany kursor? Każda synchronizacja pobiera pełną listę."
+"The saved template cursor has been cleared.","Zapisany kursor szablonów został wyczyszczony."
+"Magento attribute set creation is disabled in Ergonode configuration.","Tworzenie zestawów atrybutów Magento jest wyłączone w konfiguracji Ergonode."

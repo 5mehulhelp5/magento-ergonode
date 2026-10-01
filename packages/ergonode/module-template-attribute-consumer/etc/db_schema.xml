@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_template_group_ownership" resource="default" engine="innodb" comment="Ergonode Template Group Ownership">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="template_code" nullable="false" length="255" comment="Ergonode Template Code"/>
+        <column xsi:type="smallint" name="attribute_set_id" unsigned="true" nullable="false" identity="false" comment="Magento Attribute Set ID"/>
+        <column xsi:type="varchar" name="section_code" nullable="false" length="255" comment="Ergonode Section Code"/>
+        <column xsi:type="smallint" name="attribute_group_id" unsigned="true" nullable="false" identity="false" comment="Magento Attribute Group ID"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_GRP_OWN_TEMPLATE"
+            table="ergonode_template_group_ownership"
+            column="template_code"
+            referenceTable="ergonode_template"
+            referenceColumn="code"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_GRP_OWN_SET"
+            table="ergonode_template_group_ownership"
+            column="attribute_set_id"
+            referenceTable="eav_attribute_set"
+            referenceColumn="attribute_set_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_GRP_OWN_GROUP"
+            table="ergonode_template_group_ownership"
+            column="attribute_group_id"
+            referenceTable="eav_attribute_group"
+            referenceColumn="attribute_group_id"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_ERGO_TMPL_GRP_OWN_SECTION">
+            <column name="template_code"/>
+            <column name="attribute_set_id"/>
+            <column name="section_code"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_ERGO_TMPL_GRP_OWN_GROUP_ID">
+            <column name="attribute_group_id"/>
+        </constraint>
+    </table>
+    <table name="ergonode_template_attribute_ownership" resource="default" engine="innodb" comment="Ergonode Template Attribute Ownership">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="template_code" nullable="false" length="255" comment="Ergonode Template Code"/>
+        <column xsi:type="smallint" name="attribute_set_id" unsigned="true" nullable="false" identity="false" comment="Magento Attribute Set ID"/>
+        <column xsi:type="varchar" name="ergonode_attribute_code" nullable="false" length="255" comment="Ergonode Attribute Code"/>
+        <column xsi:type="smallint" name="magento_attribute_id" unsigned="true" nullable="false" identity="false" comment="Magento Attribute ID"/>
+        <column xsi:type="smallint" name="attribute_group_id" unsigned="true" nullable="false" identity="false" comment="Magento Attribute Group ID"/>
+        <column xsi:type="int" name="entity_attribute_id" unsigned="true" nullable="false" identity="false" comment="Magento Entity Attribute ID"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_ATTR_OWN_TEMPLATE"
+            table="ergonode_template_attribute_ownership"
+            column="template_code"
+            referenceTable="ergonode_template"
+            referenceColumn="code"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_ATTR_OWN_SET"
+            table="ergonode_template_attribute_ownership"
+            column="attribute_set_id"
+            referenceTable="eav_attribute_set"
+            referenceColumn="attribute_set_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_ATTR_OWN_ATTRIBUTE"
+            table="ergonode_template_attribute_ownership"
+            column="magento_attribute_id"
+            referenceTable="eav_attribute"
+            referenceColumn="attribute_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_ATTR_OWN_GROUP"
+            table="ergonode_template_attribute_ownership"
+            column="attribute_group_id"
+            referenceTable="eav_attribute_group"
+            referenceColumn="attribute_group_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_ERGO_TMPL_ATTR_OWN_ENTITY_ATTR"
+            table="ergonode_template_attribute_ownership"
+            column="entity_attribute_id"
+            referenceTable="eav_entity_attribute"
+            referenceColumn="entity_attribute_id"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_ERGO_TMPL_ATTR_OWN_CODE">
+            <column name="template_code"/>
+            <column name="attribute_set_id"/>
+            <column name="ergonode_attribute_code"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_ERGO_TMPL_ATTR_OWN_ENTITY_ATTR_ID">
+            <column name="entity_attribute_id"/>
+        </constraint>
+    </table>
+    <table name="ergonode_template_manual_placement" resource="default" engine="innodb" comment="Manual Attribute Set Placement">
+        <column xsi:type="smallint" name="attribute_set_id" unsigned="true" nullable="false" comment="Magento Attribute Set ID"/>
+        <column xsi:type="smallint" name="attribute_id" unsigned="true" nullable="false" comment="Magento Attribute ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attribute_set_id"/>
+            <column name="attribute_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_MANUAL_PLACEMENT_SET"
+            table="ergonode_template_manual_placement"
+            column="attribute_set_id"
+            referenceTable="eav_attribute_set"
+            referenceColumn="attribute_set_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_MANUAL_PLACEMENT_ATTRIBUTE"
+            table="ergonode_template_manual_placement"
+            column="attribute_id"
+            referenceTable="eav_attribute"
+            referenceColumn="attribute_id"
+            onDelete="CASCADE"
+        />
+    </table>
+</schema>

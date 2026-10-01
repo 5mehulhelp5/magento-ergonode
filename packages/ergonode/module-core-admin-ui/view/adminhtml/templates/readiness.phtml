@@ -1,0 +1,131 @@
+<?php
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\Readiness;
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+use Ergonode\CoreAdminUi\ViewModel\ReadinessChecks;
+
+/** @var Readiness $block */
+/** @var ReadinessChecks $readinessChecks */
+$readinessChecks = $block->getData('readiness_checks');
+$report = $block->getReport();
+$status = $report->getStatus();
+$flows = $readinessChecks->getFlows($block->getIssuesByDomain());
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => SectionNavigation::SECTION_READINESS]]
+);
+?>
+<main class="veui-workspace veui-workspace-viewbar ver-readiness">
+    <div class="veui-toolbar veui-viewbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+    </div>
+
+    <div class="ver-readiness-content" tabindex="0">
+        <header class="ver-readiness-summary is-<?= $escaper->escapeHtmlAttr($status) ?>">
+            <span class="ver-readiness-summary-icon" aria-hidden="true"></span>
+            <div class="ver-readiness-summary-copy">
+                <span class="ver-readiness-eyebrow"><?= $escaper->escapeHtml(__('Synchronization Readiness')) ?></span>
+                <h1><?= $escaper->escapeHtml($block->getStatusLabel($status)) ?></h1>
+                <p><?= $escaper->escapeHtml($block->getSummaryMessage()) ?></p>
+            </div>
+            <span class="ver-readiness-status" role="status">
+                <?= $escaper->escapeHtml($block->getStatusLabel($status)) ?>
+            </span>
+        </header>
+
+        <div class="ver-readiness-flows">
+            <?php foreach ($flows as $flow): ?>
+                <section class="veui-panel ver-readiness-flow is-<?=
+                    $escaper->escapeHtmlAttr($flow['code'])
+                ?>"
+                         aria-labelledby="readiness-flow-<?= $escaper->escapeHtmlAttr($flow['code']) ?>">
+                    <header class="veui-panel-head ver-readiness-flow-header">
+                        <span class="ver-readiness-flow-icon" aria-hidden="true"></span>
+                        <div>
+                            <div class="ver-readiness-flow-title">
+                                <h2 id="readiness-flow-<?= $escaper->escapeHtmlAttr($flow['code']) ?>">
+                                    <?= $escaper->escapeHtml($flow['label']) ?>
+                                </h2>
+                                <span class="ver-readiness-flow-kind">
+                                    <?= $escaper->escapeHtml($flow['kind']) ?>
+                                </span>
+                            </div>
+                            <p><?= $escaper->escapeHtml($flow['description']) ?></p>
+                        </div>
+                    </header>
+
+                    <div class="ver-readiness-grid">
+                        <?php foreach ($flow['domains'] as $domain): ?>
+                            <section class="ver-readiness-domain"
+                                     aria-labelledby="readiness-domain-<?=
+                                        $escaper->escapeHtmlAttr($flow['code'])
+                                        ?>-<?= $escaper->escapeHtmlAttr($domain['code']) ?>">
+                                <header>
+                                    <h3 id="readiness-domain-<?= $escaper->escapeHtmlAttr($flow['code']) ?>-<?=
+                                        $escaper->escapeHtmlAttr($domain['code'])
+                                    ?>">
+                                        <?= $escaper->escapeHtml($block->getDomainLabel($domain['code'])) ?>
+                                    </h3>
+                                </header>
+
+                                <ul class="ver-readiness-checks">
+                                    <?php foreach ($domain['checks'] as $check): ?>
+                                        <li class="ver-readiness-check is-<?=
+                                            $escaper->escapeHtmlAttr($check['status'])
+                                        ?>">
+                                            <div class="ver-readiness-check-summary">
+                                                <p class="ver-readiness-check-label">
+                                                    <?= $escaper->escapeHtml($check['label']) ?>
+                                                </p>
+                                                <span class="ver-readiness-check-status">
+                                                    <?= $escaper->escapeHtml(
+                                                        $readinessChecks->getStatusLabel($check['status'])
+                                                    ) ?>
+                                                </span>
+                                            </div>
+
+                                            <?php if ($check['issues'] !== []): ?>
+                                                <ul class="ver-readiness-issues">
+                                                    <?php foreach ($check['issues'] as $issue): ?>
+                                                        <li class="is-<?=
+                                                            $escaper->escapeHtmlAttr($issue->getSeverity())
+                                                        ?>">
+                                                            <div class="ver-readiness-issue-copy">
+                                                                <p><?= $escaper->escapeHtml($issue->getMessage()) ?></p>
+                                                                <?php $details = $issue->getDetails(); ?>
+                                                                <?php if ($details !== []): ?>
+                                                                    <ul class="ver-readiness-details">
+                                                                        <?php foreach ($details as $detail): ?>
+                                                                            <li><?=
+                                                                                $escaper->escapeHtml($detail)
+                                                                            ?></li>
+                                                                        <?php endforeach; ?>
+                                                                    </ul>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <?php $url = $block->getRemediationUrl($issue); ?>
+                                                            <?php if ($url !== null): ?>
+                                                                <a class="veui-button ver-readiness-action"
+                                                                   href="<?= $escaper->escapeUrl($url) ?>">
+                                                                    <?=
+                                                                        $escaper->escapeHtml(__('Resolve issue'))
+                                                                    ?>
+                                                                </a>
+                                                            <?php endif; ?>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            <?php endif; ?>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </section>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</main>

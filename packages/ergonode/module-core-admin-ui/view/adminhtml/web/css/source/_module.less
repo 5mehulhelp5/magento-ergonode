@@ -1,0 +1,35 @@
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+    .admin__menu {
+        [id='menu-ergonode-core-main'] {
+            a:before {
+                background-image: url('Ergonode_CoreAdminUi::images/m2_menu_inactive.svg');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 18px auto;
+                content: '';
+            }
+
+            a:hover,
+            &._active a {
+                &:before {
+                    background-image: url('Ergonode_CoreAdminUi::images/m2_menu_active.svg');
+                }
+            }
+        }
+    }
+
+    .ergonode-tab {
+        .admin__page-nav-title strong:before {
+            background-image: url('Ergonode_CoreAdminUi::images/m2_configuration.svg');
+            background-position: 0;
+            background-repeat: no-repeat;
+            background-size: 16px auto;
+            content: '';
+            padding-left: 25px;
+        }
+    }
+}

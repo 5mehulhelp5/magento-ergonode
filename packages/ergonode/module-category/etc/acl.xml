@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Ergonode_Core::main">
+                    <resource id="Ergonode_CategoryConsumer::category_tree_manage" title="Category Trees" sortOrder="20">
+                        <resource id="Ergonode_CategoryConsumer::category_tree_save" title="Save Category Trees" sortOrder="10"/>
+                    </resource>
+                    <resource id="Ergonode_CategoryConsumer::category_tree_mapping" title="Category Tree Mapping" sortOrder="25">
+                        <resource id="Ergonode_CategoryConsumer::category_tree_mapping_refresh" title="Refresh Category Tree Mapping" sortOrder="10"/>
+                        <resource id="Ergonode_CategoryConsumer::category_tree_mapping_auto_map" title="Auto-map Category Tree Mapping" sortOrder="20"/>
+                        <resource id="Ergonode_CategoryConsumer::category_tree_mapping_save" title="Save Category Tree Mapping" sortOrder="30"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

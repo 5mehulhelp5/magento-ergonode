@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="ergonode" sortOrder="90">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Ergonode</label>
+        </settings>
+        <field name="ergonode_category_code" sortOrder="10" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <dataScope>ergonode_category_code</dataScope>
+                <disabled>true</disabled>
+                <label translate="true">Category Code</label>
+                <notice translate="true">The code is shown only for a category correctly mapped with Ergonode.</notice>
+            </settings>
+        </field>
+        <field name="ergonode_refresh_from_ergonode" component="Ergonode_CategoryAttributeConsumerAdminUi/js/form/element/category-refresh" sortOrder="20" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="elementTmpl" xsi:type="string">Ergonode_CategoryAttributeConsumerAdminUi/form/element/category-refresh</item>
+                    <item name="labelVisible" xsi:type="boolean">false</item>
+                    <item name="urls" xsi:type="array">
+                        <item name="refresh" xsi:type="url" path="ergonode/category/refresh"/>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <dataScope>ergonode_refresh_from_ergonode</dataScope>
+                <imports>
+                    <link name="categoryId">${ $.provider }:data.id</link>
+                    <link name="categoryCode">${ $.provider }:data.ergonode_category_code</link>
+                </imports>
+            </settings>
+        </field>
+    </fieldset>
+</form>

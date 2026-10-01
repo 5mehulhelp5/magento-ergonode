@@ -1,0 +1,1510 @@
+:root {
+    --vec-c-1e293b: #1e293b;
+    --vec-c-5b5ce2: #5b5ce2;
+    --vec-c-667085: #667085;
+    --vec-c-818cf8: #818cf8;
+    --vec-c-a7f3d0: #a7f3d0;
+    --vec-c-b42318: #b42318;
+    --vec-c-be123c: #be123c;
+    --vec-c-d8e0ec: #d8e0ec;
+    --vec-c-dbe3ee: #dbe3ee;
+    --vec-c-e2e8f0: #e2e8f0;
+    --vec-c-e5eaf0: #e5eaf0;
+    --vec-c-e6ebf2: #e6ebf2;
+    --vec-c-fda4af: #fda4af;
+    --vec-c-fecdd3: #fecdd3;
+    --vec-c-fff1f2: #fff1f2;
+}
+
+.vec-admin {
+    position: relative;
+    --vec-line: var(--veui-border);
+    --vec-soft: var(--veui-panel-soft);
+    --vec-text: var(--veui-text);
+    --vec-muted: var(--veui-text-muted-strong);
+    --vec-blue: var(--veui-blue);
+    --vec-green: var(--veui-green);
+    --vec-amber: var(--veui-amber);
+    --vec-red: var(--veui-red);
+}
+
+.vec-button.is-working .vec-icon-refresh,
+.vec-refresh-categories.is-working .vec-icon-refresh {
+    animation: vecSpin .8s linear infinite;
+}
+
+@keyframes vecSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.vec-operation-status {
+    align-items: center;
+    background: var(--veui-panel-soft);
+    border: 1px solid var(--vec-line);
+    border-radius: 8px;
+    color: var(--vec-text);
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+}
+
+.vec-operation-card {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+.vec-operation-status.is-saving {
+    align-items: flex-start;
+    background: rgba(255, 255, 255, .72);
+    border: 0;
+    inset: 0;
+    justify-content: center;
+    margin: 0;
+    padding: clamp(64px, 18vh, 160px) 24px 24px;
+    position: absolute;
+    z-index: 20;
+}
+
+.vec-operation-status.is-saving .vec-operation-card {
+    background: var(--veui-panel-soft);
+    border: 1px solid var(--vec-line);
+    border-radius: 10px;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, .12);
+    font-weight: 600;
+    padding: 20px 28px;
+    position: sticky;
+    top: 24px;
+}
+
+.vec-operation-status[hidden] {
+    display: none;
+}
+
+.vec-operation-spinner {
+    animation: vecSpin .8s linear infinite;
+    border: 2px solid var(--vec-line);
+    border-radius: 50%;
+    border-top-color: var(--vec-blue);
+    height: 18px;
+    flex-shrink: 0;
+    width: 18px;
+}
+
+.vec-layout[inert] {
+    opacity: .56;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vec-operation-spinner {
+        animation: none;
+    }
+}
+
+.vec-icon {
+    display: inline-block;
+    height: 13px;
+    position: relative;
+    width: 13px;
+}
+
+.vec-icon-refresh {
+    height: 14px;
+    width: 14px;
+}
+
+.vec-icon-save {
+    height: 14px;
+    width: 14px;
+}
+
+.vec-auto-map-icon {
+    display: block;
+    height: 14px;
+    width: 14px;
+}
+
+.vec-message[hidden] {
+    display: none;
+}
+
+.vec-message-dot {
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+}
+
+.vec-message-success {
+    background: var(--veui-success-soft);
+    color: var(--veui-success-strong);
+}
+
+.vec-message-success .vec-message-dot {
+    background: var(--vec-green);
+}
+
+.vec-message-error {
+    background: var(--vec-c-fff1f2);
+    color: var(--vec-c-be123c);
+}
+
+.vec-message-error .vec-message-dot {
+    background: var(--vec-red);
+}
+
+.vec-configuration-link {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.vec-side-tree {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: 7px 9px;
+}
+
+.vec-bulk-options > summary {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border);
+    border-radius: 8px;
+    height: 34px;
+    position: relative;
+    width: 34px;
+}
+
+.vec-bulk-options[open] > summary,
+.vec-bulk-options > summary:hover,
+.vec-bulk-options > summary:focus {
+    border-color: var(--veui-border-strong);
+}
+
+.vec-bulk-selected-count {
+    align-items: center;
+    background: var(--veui-magento-orange);
+    border: 2px solid var(--veui-surface);
+    border-radius: 999px;
+    color: var(--veui-surface);
+    display: inline-flex;
+    font-size: 8px;
+    font-weight: 800;
+    height: 17px;
+    justify-content: center;
+    line-height: 1;
+    min-width: 17px;
+    padding: 0 4px;
+    position: absolute;
+    right: -6px;
+    top: -7px;
+}
+
+.vec-bulk-selected-count[hidden] {
+    display: none;
+}
+
+.vec-bulk-category-select {
+    align-items: center;
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 18px;
+    height: 24px;
+    justify-content: center;
+    margin: 0;
+    width: 18px;
+}
+
+.vec-bulk-category-select input {
+    accent-color: var(--veui-magento-orange);
+    height: 15px;
+    margin: 0;
+    width: 15px;
+}
+
+.vec-bulk-category-select > span {
+    display: none;
+}
+
+.vec-settings-panel {
+    min-width: 0;
+}
+
+.vec-new-mapping-secondary {
+    align-items: center;
+    background: transparent;
+    border: 1px dashed var(--veui-border-strong);
+    border-radius: 6px;
+    color: var(--veui-text-muted-strong);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 700;
+    gap: 6px;
+    justify-content: center;
+    min-height: 34px;
+    width: 100%;
+}
+
+.vec-new-mapping-secondary:hover,
+.vec-new-mapping-secondary:focus {
+    background: var(--veui-surface-hover);
+    border-color: var(--veui-slate-400);
+    color: var(--vec-c-1e293b);
+}
+
+.vec-add-icon {
+    display: block;
+    flex: 0 0 12px;
+    height: 12px;
+    position: relative;
+    width: 12px;
+}
+
+.vec-add-icon:before,
+.vec-add-icon:after {
+    background: currentColor;
+    border-radius: 999px;
+    content: '';
+    left: 1px;
+    position: absolute;
+    top: 5px;
+}
+
+.vec-add-icon:before {
+    height: 2px;
+    width: 10px;
+}
+
+.vec-add-icon:after {
+    height: 10px;
+    left: 5px;
+    top: 1px;
+    width: 2px;
+}
+
+.vec-tree-options-status {
+    background: var(--veui-surface-hover);
+    border-bottom: 1px solid var(--vec-line);
+    color: var(--vec-muted);
+    display: block;
+    flex: 0 0 auto;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.4;
+    padding: 8px 14px;
+}
+
+.vec-tree-options-status[hidden] {
+    display: none;
+}
+
+.vec-tree-options-status.is-success {
+    background: var(--veui-success-soft);
+    color: var(--veui-success-strong);
+}
+
+.vec-tree-options-status.is-error {
+    background: var(--vec-c-fff1f2);
+    color: var(--vec-c-be123c);
+}
+
+.vec-panel-head > div:first-child {
+    min-width: 0;
+}
+
+.vec-panel-head .veui-panel-subtitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vec-settings-body {
+    align-content: start;
+    display: grid;
+    flex: 1 1 auto;
+    gap: 8px;
+    min-height: 0;
+    overflow: auto;
+    padding: 10px 12px;
+}
+
+.vec-configuration-list {
+    display: grid;
+    gap: 8px;
+}
+
+.vec-configuration-list.is-saving {
+    opacity: .65;
+    pointer-events: none;
+}
+
+.vec-admin.is-configuration-loading .vec-source-panel,
+.vec-admin.is-configuration-loading .vec-target-panel,
+.vec-admin.is-configuration-loading .vec-settings-panel {
+    opacity: .56;
+    pointer-events: none;
+}
+
+.vec-admin.is-configuration-loading .vec-configuration-list {
+    cursor: progress;
+}
+
+.vec-configuration-card {
+    align-items: center;
+    background: var(--veui-surface);
+    border: 1px solid var(--vec-line);
+    border-radius: 8px;
+    display: grid;
+    gap: 6px;
+    grid-template-columns: 7px minmax(0, 1fr) auto;
+    min-height: 48px;
+    line-height: 1.45;
+    padding: 11px 12px;
+}
+
+.vec-configuration-card[draggable='true'] {
+    cursor: grab;
+}
+
+.vec-configuration-card:hover {
+    background: var(--veui-surface-hover);
+    border-color: var(--veui-border-strong);
+}
+
+.vec-configuration-card.is-selected {
+    background: var(--veui-blue-softer);
+    border-color: var(--veui-blue-border);
+    position: relative;
+}
+
+/* Match the exposed lower accent of the history operation card. */
+.vec-configuration-card.is-selected:not(.is-disabled)::after {
+    --vec-mask-color: #000;
+    border-radius: 0 0 0 7px;
+    bottom: 0;
+    box-shadow: inset 3px 0 0 var(--veui-blue);
+    content: '';
+    height: 42px;
+    left: 0;
+    mask-image: radial-gradient(circle at 8px 0, transparent 8px, var(--vec-mask-color) 8.5px);
+    pointer-events: none;
+    position: absolute;
+    width: 8px;
+}
+
+.vec-configuration-card.is-disabled,
+.vec-configuration-card.is-disabled.is-selected {
+    background: var(--veui-line);
+    border-color: var(--veui-subtle);
+    box-shadow: none;
+}
+
+.vec-configuration-card:focus-within {
+    outline: 2px solid var(--veui-blue);
+    outline-offset: 2px;
+}
+
+.vec-configuration-card.is-dragging {
+    cursor: grabbing;
+    opacity: .55;
+}
+
+.vec-configuration-card.is-drop-target {
+    border-color: var(--veui-magento-orange);
+    box-shadow: 0 0 0 2px rgba(235, 82, 2, .1);
+}
+
+.vec-configuration-drag {
+    background: var(--veui-blue);
+    border-radius: 50%;
+    height: 7px;
+    width: 7px;
+}
+
+.vec-configuration-card.is-disabled .vec-configuration-drag {
+    background: var(--veui-subtle);
+}
+
+.vec-configuration-link {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+    text-decoration: none;
+}
+
+.vec-configuration-link strong,
+.vec-configuration-link code,
+.vec-configuration-link span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vec-configuration-link strong {
+    color: var(--vec-text);
+    font-size: 12px;
+}
+
+.vec-configuration-link code {
+    color: var(--vec-c-667085);
+    font-size: 10px;
+}
+
+.vec-configuration-link span {
+    color: var(--vec-muted);
+    font-size: 10px;
+}
+
+.vec-configuration-card.is-disabled .vec-configuration-link strong {
+    color: var(--veui-text-muted-strong);
+}
+
+.vec-configuration-card.is-disabled .vec-configuration-link code,
+.vec-configuration-card.is-disabled .vec-configuration-link span {
+    color: var(--veui-text-muted-strong);
+}
+
+.vec-configuration-actions {
+    align-items: center;
+    display: flex;
+    gap: 2px;
+}
+
+.vec-configuration-disabled-info {
+    align-items: center;
+    background: var(--veui-panel);
+    border: 0;
+    border-radius: 5px;
+    color: var(--veui-muted);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 12px;
+    height: 26px;
+    justify-content: center;
+    padding: 0;
+    width: 22px;
+}
+
+.vec-configuration-disabled-info {
+    color: var(--veui-muted);
+    cursor: default;
+    position: relative;
+}
+
+.vec-configuration-disabled-info:focus-visible {
+    outline: 2px solid var(--veui-border);
+    outline-offset: 1px;
+}
+
+.vec-information-icon {
+    align-items: center;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    display: inline-flex;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 700;
+    height: 14px;
+    justify-content: center;
+    line-height: 1;
+    width: 14px;
+}
+
+.vec-configuration-options > summary {
+    background: var(--veui-panel);
+    border-radius: 5px;
+    height: 26px;
+    width: 22px;
+}
+
+.vec-settings-empty {
+    color: var(--vec-muted);
+    font-size: 12px;
+    padding: 18px 12px;
+}
+
+.vec-settings-empty p {
+    margin: 0 0 12px;
+}
+
+/* The popup is moved outside the workspace by Magento. Use global veui tokens. */
+.vec-new-mapping-modal-shell {
+    --veui-magento-orange: var(--veui-c-c24100);
+    --veui-magento-orange-hover: var(--veui-c-9a3412);
+}
+
+.vec-new-mapping-modal-shell .modal-inner-wrap {
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, .2);
+    max-width: 680px;
+    overflow: hidden;
+}
+
+.vec-new-mapping-modal-shell .modal-header {
+    border-bottom: 1px solid var(--veui-border-soft);
+    padding: 24px 26px 20px;
+}
+
+.vec-new-mapping-modal-shell .modal-title {
+    color: var(--veui-text);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.vec-new-mapping-modal-shell .modal-content {
+    background: var(--veui-surface-soft);
+    padding: 22px 26px 26px;
+}
+
+.vec-new-mapping-form {
+    display: grid;
+    gap: 16px;
+}
+
+.vec-new-mapping-form [hidden] {
+    display: none;
+}
+
+.vec-new-mapping-intro {
+    color: var(--veui-text-muted-strong);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0 0 2px;
+}
+
+.vec-new-mapping-field,
+.vec-new-mapping-toggle {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border-soft);
+    border-radius: 9px;
+    margin: 0;
+    padding: 16px;
+}
+
+.vec-new-mapping-field {
+    display: grid;
+    gap: 9px;
+}
+
+.vec-new-mapping-field > label,
+.vec-new-mapping-field-heading > label,
+.vec-new-mapping-toggle strong {
+    color: var(--veui-text);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.vec-new-mapping-field-heading {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.vec-new-mapping-tree-actions {
+    align-items: center;
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.vec-new-mapping-field-heading .vec-tree-options-refresh[hidden] {
+    display: none;
+}
+
+.vec-new-mapping-field select {
+    background-color: var(--veui-surface);
+    border: 1px solid var(--veui-border-strong);
+    border-radius: 7px;
+    color: var(--veui-text);
+    font-size: 14px;
+    min-height: 40px;
+    padding: 0 36px 0 11px;
+    width: 100%;
+}
+
+.vec-new-mapping-field select:focus {
+    border-color: var(--veui-blue);
+    box-shadow: 0 0 0 3px var(--veui-blue-soft);
+    outline: 0;
+}
+
+.vec-new-mapping-field select:disabled {
+    background: var(--veui-surface-muted);
+    color: var(--veui-text-muted-strong);
+    cursor: not-allowed;
+}
+
+.vec-new-mapping-summary {
+    color: var(--veui-text);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.vec-new-mapping-notice {
+    background: var(--veui-warning-soft);
+    border: 1px solid var(--veui-warning-border);
+    border-radius: 9px;
+    color: var(--veui-warning-text);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 14px 16px;
+}
+
+@media (max-width: 600px) {
+    .vec-new-mapping-modal-shell .modal-header,
+    .vec-new-mapping-modal-shell .modal-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .vec-new-mapping-actions {
+        flex-wrap: wrap;
+    }
+}
+
+.vec-root-picker {
+    position: relative;
+}
+
+.vec-root-picker.is-enhanced > select {
+    display: none;
+}
+
+.vec-root-picker-trigger {
+    align-items: center;
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border-strong);
+    border-radius: 7px;
+    color: var(--veui-muted);
+    cursor: pointer;
+    display: flex;
+    font-size: 13px;
+    justify-content: space-between;
+    min-height: 38px;
+    padding: 0 11px;
+    text-align: left;
+    width: 100%;
+}
+
+.vec-root-picker-trigger[hidden] {
+    display: none;
+}
+
+.vec-root-picker-trigger.has-value {
+    color: var(--veui-text);
+}
+
+.vec-root-picker-trigger:hover,
+.vec-root-picker-trigger:focus,
+.vec-root-picker-trigger[aria-expanded='true'] {
+    border-color: var(--vec-c-818cf8);
+    box-shadow: 0 0 0 3px rgba(91, 92, 226, .1);
+    outline: 0;
+}
+
+.vec-root-picker-trigger[aria-invalid='true'] {
+    border-color: var(--veui-red);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, .1);
+}
+
+.vec-root-picker-trigger:disabled {
+    background: var(--veui-surface-muted);
+    color: var(--veui-muted);
+    cursor: not-allowed;
+}
+
+.vec-root-picker-chevron {
+    border-bottom: 1.5px solid currentColor;
+    border-right: 1.5px solid currentColor;
+    display: block;
+    flex: 0 0 7px;
+    height: 7px;
+    margin: -4px 3px 0 12px;
+    transform: rotate(45deg);
+    width: 7px;
+}
+
+.vec-root-picker-options {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border-strong);
+    border-radius: 7px;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, .16);
+    display: grid;
+    left: 0;
+    margin-top: 4px;
+    max-height: 240px;
+    overflow: auto;
+    padding: 4px;
+    position: absolute;
+    right: 0;
+    z-index: 60;
+}
+
+.vec-root-picker-options[hidden] {
+    display: none;
+}
+
+.vec-root-picker-option {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    color: var(--veui-text);
+    cursor: pointer;
+    display: flex;
+    font-size: 12px;
+    gap: 8px;
+    justify-content: space-between;
+    min-height: 34px;
+    padding: 7px 9px;
+    position: relative;
+    text-align: left;
+    width: 100%;
+}
+
+.vec-root-picker-option:hover,
+.vec-root-picker-option:focus,
+.vec-root-picker-option[aria-selected='true'] {
+    background: var(--veui-surface-muted);
+    outline: 0;
+}
+
+.vec-root-picker-option:focus-visible {
+    box-shadow: inset 0 0 0 2px rgba(91, 92, 226, .22);
+}
+
+.vec-root-picker-option[aria-disabled='true'] {
+    color: var(--veui-slate-400);
+    cursor: not-allowed;
+}
+
+.vec-root-picker-option[aria-disabled='true']:hover,
+.vec-root-picker-option[aria-disabled='true']:focus {
+    background: var(--veui-surface-hover);
+}
+
+.vec-root-picker-option-status {
+    color: var(--veui-success);
+    display: inline-flex;
+    flex: 0 0 18px;
+}
+
+.vec-root-picker-error {
+    color: var(--veui-danger-strong);
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.vec-root-picker-error[hidden] {
+    display: none;
+}
+
+.vec-new-mapping-field small,
+.vec-new-mapping-toggle small {
+    color: var(--veui-text-muted-strong);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.vec-new-mapping-field .vec-tree-options-status {
+    border: 0;
+    border-radius: 6px;
+    padding: 7px 9px;
+}
+
+.vec-new-mapping-toggle {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 14px;
+    justify-content: space-between;
+}
+
+.vec-new-mapping-toggle > span {
+    display: grid;
+    gap: 4px;
+}
+
+.vec-new-mapping-toggle input {
+    accent-color: var(--vec-c-5b5ce2);
+    flex: 0 0 auto;
+    height: 20px;
+    width: 20px;
+}
+
+.vec-new-mapping-actions {
+    align-items: center;
+    border-top: 1px solid var(--vec-c-e6ebf2);
+    display: flex;
+    gap: 9px;
+    justify-content: flex-end;
+    margin-top: 4px;
+    padding-top: 16px;
+}
+
+.vec-new-mapping-actions .veui-button {
+    min-width: 96px;
+    justify-content: center;
+}
+
+.vec-new-mapping-actions .vec-new-mapping-delete {
+    color: var(--veui-danger-strong);
+    margin-right: auto;
+}
+
+.vec-new-mapping-actions .vec-new-mapping-delete[hidden] {
+    display: none;
+}
+
+.vec-card,
+.vec-node-card {
+    align-items: center;
+    background: var(--veui-surface);
+    border: 1px solid transparent;
+    border-radius: 5px;
+    display: flex;
+    gap: 7px;
+    margin-bottom: 2px;
+    min-height: 38px;
+    padding: 4px 6px;
+}
+
+.vec-card:hover,
+.vec-node-card:hover,
+.vec-card.is-dragging,
+.vec-node-card.is-dragging {
+    background: var(--veui-surface-hover);
+    border-color: var(--vec-line);
+    box-shadow: none;
+}
+
+.vec-ergo-card[draggable='true'] {
+    cursor: grab;
+}
+
+.vec-ergo-card.is-dragging {
+    cursor: grabbing;
+}
+
+.vec-card-copy {
+    display: grid;
+    flex: 1 1 auto;
+    gap: 1px;
+    min-width: 0;
+}
+
+.vec-card-copy strong {
+    color: var(--vec-text);
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vec-card-copy .vec-card-label {
+    color: var(--vec-text);
+    font-size: 11px;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vec-card-copy span {
+    color: var(--vec-muted);
+    font-size: 9.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vec-card-copy .vec-card-path-current {
+    color: inherit;
+    display: inline;
+    font-size: inherit;
+    font-weight: 700;
+    overflow: visible;
+    white-space: inherit;
+}
+
+.vec-card-copy code {
+    color: var(--veui-muted);
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vec-node-card.is-over {
+    background: var(--veui-blue-soft);
+    border-color: var(--veui-blue-border-strong);
+}
+
+.vec-tree-children,
+.vec-node-children {
+    display: grid;
+    gap: 0;
+}
+
+.vec-tree-node {
+    margin: 0 0 1px;
+}
+
+.vec-node-row {
+    align-items: center;
+    display: flex;
+    gap: 2px;
+}
+
+.vec-node-row > .vec-node-card {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.vec-tree-toggle,
+.vec-tree-toggle-spacer {
+    flex: 0 0 22px;
+    height: 34px;
+    width: 22px;
+}
+
+.vec-tree-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--veui-muted);
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.vec-tree-toggle:hover,
+.vec-tree-toggle:focus {
+    color: var(--veui-magento-orange);
+}
+
+.vec-tree-toggle-icon {
+    border-bottom: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    display: block;
+    height: 7px;
+    transform: rotate(-45deg);
+    transition: transform .15s ease;
+    width: 7px;
+}
+
+.vec-tree-toggle[aria-expanded='true'] .vec-tree-toggle-icon {
+    transform: rotate(45deg);
+}
+
+.vec-node-children[hidden] {
+    display: none;
+}
+
+.vec-side-tree .vec-tree-node {
+    margin-bottom: 1px;
+}
+
+.vec-side-tree .vec-node-card {
+    border: 0;
+    min-height: 38px;
+    padding: 4px 6px;
+}
+
+.vec-side-tree .vec-node-children {
+    margin-left: 13px;
+    padding-left: 9px;
+}
+
+.vec-side-tree .vec-card-copy strong {
+    font-size: 11px;
+}
+
+.vec-side-tree .vec-card-copy span {
+    font-size: 9.5px;
+}
+
+.vec-node-children {
+    border-left: 1px solid var(--vec-c-e5eaf0);
+    margin-left: 11px;
+    min-height: 6px;
+    padding-left: 8px;
+}
+
+.vec-ergo-card.is-mapped {
+    border-color: var(--vec-c-a7f3d0);
+}
+
+.vec-configured-root-card {
+    background: var(--veui-surface-hover);
+    font-weight: 700;
+}
+
+.vec-magento-card.is-configured-root .vec-magento-mapping {
+    border-style: solid;
+}
+
+.vec-magento-card.is-configured-root {
+    font-weight: 700;
+}
+
+.vec-node-card.is-blocked,
+.vec-node-card.is-mapped-parent {
+    background: var(--veui-surface-hover);
+    border-color: var(--veui-border-strong);
+    opacity: .68;
+}
+
+.vec-delete-snapshot-category {
+    color: var(--vec-c-b42318);
+}
+
+.vec-delete-snapshot-icon {
+    border: 1.5px solid currentColor;
+    border-radius: 0 0 2px 2px;
+    border-top: 0;
+    display: block;
+    flex: 0 0 10px;
+    height: 9px;
+    margin: 3px 1px 0;
+    position: relative;
+    width: 10px;
+}
+
+.vec-delete-snapshot-icon:before {
+    border-bottom: 1.5px solid currentColor;
+    content: '';
+    left: -2px;
+    position: absolute;
+    top: -4px;
+    width: 11px;
+}
+
+.vec-delete-snapshot-icon:after {
+    border: 1.5px solid currentColor;
+    border-bottom: 0;
+    border-radius: 2px 2px 0 0;
+    content: '';
+    height: 2px;
+    left: 2px;
+    position: absolute;
+    top: -7px;
+    width: 4px;
+}
+
+.vec-magento-card {
+    align-items: center;
+    display: grid;
+    gap: 7px;
+    grid-template-columns: minmax(140px, 1fr) auto 28px;
+    min-height: 38px;
+}
+
+.vec-magento-card.has-bulk-selection {
+    grid-template-columns: 18px minmax(140px, 1fr) auto 28px;
+}
+
+.vec-magento-card.is-over {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+}
+
+.vec-magento-mapping {
+    align-items: center;
+    border: 0;
+    border-radius: 5px;
+    display: flex;
+    font-size: 9.5px;
+    justify-content: center;
+    min-height: 28px;
+    min-width: 0;
+    padding: 0 5px;
+}
+
+.vec-magento-mapping.is-empty {
+    background: transparent;
+    color: var(--vec-muted);
+    gap: 2px;
+    padding: 0;
+}
+
+.vec-magento-mapping.is-mapped {
+    background: transparent;
+    border: 0;
+    color: var(--veui-success);
+    gap: 0;
+    justify-content: center;
+    padding: 0;
+}
+
+.vec-mapping-indicator {
+    appearance: none;
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--veui-success);
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 24px;
+    height: 28px;
+    justify-content: center;
+    margin: 0;
+    min-width: 24px;
+    outline: 0;
+    padding: 0;
+    position: relative;
+    width: 24px;
+    z-index: 6;
+}
+
+.vec-mapping-indicator:focus-visible {
+    border-radius: 999px;
+    outline: 2px solid rgba(5, 150, 105, .24);
+    outline-offset: 1px;
+}
+
+.vec-mapping-indicator:hover,
+.vec-mapping-indicator:focus {
+    z-index: 300;
+}
+
+.vec-mapping-status-icon {
+    background: currentColor;
+    display: block;
+    height: 18px;
+    width: 18px;
+}
+
+.vec-connected-icon {
+    background: currentColor;
+    display: inline-block;
+    flex: 0 0 18px;
+    height: 18px;
+    width: 18px;
+}
+
+.vec-mapping-hint {
+    background: var(--veui-text);
+    border-radius: 7px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .2);
+    color: var(--veui-surface);
+    display: grid;
+    font-size: 10px;
+    gap: 2px;
+    line-height: 1.35;
+    max-width: 210px;
+    min-width: 120px;
+    opacity: 0;
+    overflow-wrap: anywhere;
+    padding: 7px 9px;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: calc(100% + 6px);
+    transform: translateY(-3px);
+    transition: opacity 140ms ease, transform 140ms ease, visibility 140ms ease;
+    visibility: hidden;
+    width: max-content;
+    z-index: 40;
+}
+
+.vec-mapping-hint::before {
+    border-bottom: 5px solid var(--veui-text);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    bottom: 100%;
+    content: '';
+    position: absolute;
+    right: 7px;
+}
+
+.vec-mapping-hint strong {
+    color: var(--veui-surface);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.vec-mapping-hint > span {
+    color: var(--veui-border-strong);
+    font-size: 9.5px;
+}
+
+.vec-mapping-hint .vec-mapping-state-copy {
+    color: var(--vec-c-e2e8f0);
+    font-weight: 800;
+}
+
+.vec-mapping-hint .vec-mapping-error-copy {
+    color: var(--vec-c-fecdd3);
+}
+
+.vec-mapping-indicator:hover .vec-mapping-hint,
+.vec-mapping-indicator:focus .vec-mapping-hint {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.vec-pending-save {
+    appearance: none;
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--veui-amber);
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 24px;
+    height: 28px;
+    justify-content: center;
+    margin: 0;
+    min-width: 24px;
+    outline: 0;
+    padding: 0;
+    position: relative;
+    width: 24px;
+    z-index: 6;
+}
+
+.vec-pending-save-icon {
+    background: currentColor;
+    display: block;
+    height: 18px;
+    -webkit-mask: url('../images/pending-save-info.svg') center / 18px 18px no-repeat;
+    mask: url('../images/pending-save-info.svg') center / 18px 18px no-repeat;
+    width: 18px;
+}
+
+.vec-pending-save:focus-visible {
+    border-radius: 999px;
+    outline: 2px solid rgba(180, 83, 9, .24);
+    outline-offset: 1px;
+}
+
+.vec-pending-save-tooltip {
+    background: var(--veui-text);
+    border-radius: 7px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .2);
+    color: var(--veui-surface);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+    max-width: 250px;
+    min-width: 190px;
+    opacity: 0;
+    overflow-wrap: anywhere;
+    padding: 7px 9px;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    top: calc(100% + 6px);
+    transform: translateY(-3px);
+    transition: opacity 140ms ease, transform 140ms ease, visibility 140ms ease;
+    visibility: hidden;
+    width: max-content;
+    z-index: 300;
+}
+
+.vec-pending-save-tooltip::before {
+    border-bottom: 5px solid var(--veui-text);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    bottom: 100%;
+    content: '';
+    position: absolute;
+    right: 7px;
+}
+
+.vec-pending-save:hover,
+.vec-pending-save:focus {
+    z-index: 300;
+}
+
+.vec-pending-save:hover .vec-pending-save-tooltip,
+.vec-pending-save:focus .vec-pending-save-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.vec-configuration-disabled-tooltip {
+    right: calc(100% + 7px);
+    top: 50%;
+    transform: translate(3px, -50%);
+}
+
+.vec-configuration-disabled-tooltip::before {
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid var(--vec-text);
+    border-right: 0;
+    border-top: 5px solid transparent;
+    bottom: auto;
+    left: 100%;
+    right: auto;
+    top: calc(50% - 5px);
+}
+
+.vec-configuration-disabled-info:hover .vec-configuration-disabled-tooltip,
+.vec-configuration-disabled-info:focus .vec-configuration-disabled-tooltip {
+    opacity: 1;
+    transform: translate(0, -50%);
+    visibility: visible;
+}
+
+.vec-root-picker-option .vec-mapping-hint {
+    right: 5px;
+    top: calc(100% + 4px);
+}
+
+.vec-root-picker-option:hover .vec-mapping-hint,
+.vec-root-picker-option:focus .vec-mapping-hint {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.vec-side-tree .vec-magento-card.is-mapped {
+    background: var(--veui-surface-hover);
+    border: 0;
+}
+
+.vec-side-tree .vec-magento-card.is-mapped:not(.has-mapping-error) .vec-card-copy {
+    color: var(--veui-muted);
+}
+
+.vec-side-tree .vec-magento-card.is-mapped.is-mapping-disabled {
+    background: var(--veui-surface-muted);
+    border-color: var(--veui-border-strong);
+    opacity: .72;
+}
+
+.vec-magento-card.is-mapping-disabled .vec-mapping-indicator {
+    color: var(--veui-muted);
+}
+
+.vec-side-tree .vec-magento-card.is-mapped.has-mapping-error {
+    background: var(--vec-c-fff1f2);
+    border-color: var(--vec-c-fda4af);
+    opacity: 1;
+}
+
+.vec-magento-card.has-mapping-error .vec-mapping-indicator {
+    color: var(--veui-red);
+}
+
+.vec-side-tree .vec-node-card:not(.has-change):not(.has-mapping-error):not(.is-over):not(.is-dragging),
+.vec-side-tree .vec-node-card:not(.has-change):not(.has-mapping-error):not(.is-over):not(.is-dragging):hover,
+.vec-side-tree .vec-magento-card.is-disabled,
+.vec-side-tree .vec-magento-card.is-disabled:hover {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    opacity: 1;
+}
+
+.vec-side-tree .vec-node-card:not(.has-change):not(.has-mapping-error) .vec-card-copy strong,
+.vec-magento-card.is-disabled .vec-card-copy strong {
+    color: var(--veui-muted);
+}
+
+.vec-side-tree .vec-node-card:not(.has-change):not(.has-mapping-error) .vec-card-copy span,
+.vec-magento-card.is-disabled .vec-card-copy span {
+    color: var(--veui-text-muted-strong);
+}
+
+.vec-unmap {
+    color: var(--vec-c-b42318);
+}
+
+.vec-visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.vec-unmap:hover,
+.vec-unmap:focus {
+    color: var(--vec-red);
+}
+
+.vec-unmap-icon {
+    background: currentColor;
+    display: block;
+    flex: 0 0 16px;
+    height: 16px;
+    -webkit-mask: url('../images/category-unmap.svg') center / 16px 16px no-repeat;
+    mask: url('../images/category-unmap.svg') center / 16px 16px no-repeat;
+    width: 16px;
+}
+
+.vec-empty-row {
+    align-items: center;
+    background: var(--vec-soft);
+    border: 1px dashed var(--vec-c-d8e0ec);
+    border-radius: 7px;
+    color: var(--vec-muted);
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    gap: 8px;
+    justify-content: center;
+    min-height: 46px;
+    padding: 12px;
+}
+
+.vec-empty-mapped-toggle {
+    flex: 0 0 auto;
+}
+
+.vec-source-issues {
+    margin: 0;
+    overflow: auto;
+    padding: 16px;
+}
+
+.vec-source-issues details {
+    margin-bottom: 12px;
+}
+
+.vec-source-issues ul {
+    max-height: 260px;
+    overflow: auto;
+}
+
+.vec-source-issue-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.vec-configuration-card.has-source-issue,
+.vec-configuration-card.has-source-issue.is-selected {
+    background: var(--veui-red-soft);
+    border-color: var(--veui-red);
+}
+
+.vec-source-status {
+    background: transparent;
+    color: var(--veui-red);
+}
+
+.vec-source-status[hidden],
+.vec-source-panel > [hidden],
+.vec-target-panel > [hidden] {
+    display: none;
+}

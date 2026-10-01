@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+use Ergonode\CategoryConsumerAdminUi\Block\Adminhtml\CategorySynchronizationActions;
+
+/** @var CategorySynchronizationActions $block */
+$mainReason = $block->getBlockingReason('all');
+$actions = [
+    'sync' => ['sync-category-trees', __('Sync'), 'veui-sync-ergonode-icon'],
+    'reset-cursor-and-sync' => ['reset-sync-cursor-and-sync', __('Sync (force)'), 'veui-sync-ergonode-icon'],
+    'reset-cursor' => ['reset-sync-cursor', __('Cursor reset'), 'veui-reset-cursor-icon'],
+];
+?>
+<div class="veui-split-button veui-split-button-align-end"
+     data-role="synchronization-actions" role="group"
+     aria-label="<?= $escaper->escapeHtmlAttr(__('Updates')) ?>">
+    <button type="button" class="veui-button veui-button-toolbar veui-split-button-main vec-sync-action"
+            data-role="sync-category-trees" data-synchronization-action="sync" data-synchronization-scope="all"
+            aria-label="<?= $escaper->escapeHtmlAttr(__('Sync')) ?>"
+            aria-disabled="<?= $mainReason !== '' ? 'true' : 'false' ?>"
+            <?= $mainReason !== '' ? 'aria-describedby="category-sync-all-sync-hint"' : '' ?>>
+        <span class="veui-sync-ergonode-icon" aria-hidden="true"></span>
+        <span class="vec-sync-action-label"><?= $escaper->escapeHtml(__('Sync')) ?></span>
+        <span class="vec-mapping-hint vec-sync-hint" role="tooltip" data-role="sync-blocking-hint"
+              id="category-sync-all-sync-hint"><?= $escaper->escapeHtml($mainReason) ?></span>
+    </button>
+    <details class="veui-split-button-options" data-role="synchronization-action-options">
+        <summary class="veui-split-button-toggle" role="button"
+                 aria-label="<?= $escaper->escapeHtmlAttr(__('Refresh options')) ?>">
+            <span class="veui-split-button-toggle-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="veui-split-button-menu" role="menu"
+             aria-label="<?= $escaper->escapeHtmlAttr(__('Refresh options')) ?>">
+            <?php foreach ($block->getGroups() as $scope => $label): ?>
+                <div class="vec-sync-group" role="group" aria-label="<?= $escaper->escapeHtmlAttr($label) ?>">
+                    <strong class="vec-sync-group-label" aria-hidden="true"><?= $escaper->escapeHtml($label) ?></strong>
+                    <?php foreach ($actions as $action => [$role, $actionLabel, $icon]): ?>
+                        <?php
+                        $reason = $action === 'reset-cursor' ? '' : $block->getBlockingReason($scope);
+                        $hintId = 'category-sync-' . $scope . '-' . $action . '-hint';
+                        ?>
+                        <button type="button" class="veui-split-button-option vec-sync-action" role="menuitem"
+                                data-role="<?= $escaper->escapeHtmlAttr($role) ?>"
+                                data-synchronization-action="<?= $escaper->escapeHtmlAttr($action) ?>"
+                                data-synchronization-scope="<?= $escaper->escapeHtmlAttr($scope) ?>"
+                                aria-label="<?= $escaper->escapeHtmlAttr($actionLabel) ?>"
+                                aria-disabled="<?= $reason !== '' ? 'true' : 'false' ?>"
+                                <?php if ($reason !== ''): ?>
+                                    aria-describedby="<?= $escaper->escapeHtmlAttr($hintId) ?>"
+                                <?php endif; ?>>
+                            <span class="<?= $escaper->escapeHtmlAttr($icon) ?>"
+                                  aria-hidden="true"></span>
+                            <span class="vec-sync-action-label"><?= $escaper->escapeHtml($actionLabel) ?></span>
+                            <span class="vec-mapping-hint vec-sync-hint" role="tooltip"
+                                  data-role="sync-blocking-hint" id="<?= $escaper->escapeHtmlAttr($hintId) ?>"
+                            ><?= $escaper->escapeHtml($reason) ?></span>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </details>
+</div>

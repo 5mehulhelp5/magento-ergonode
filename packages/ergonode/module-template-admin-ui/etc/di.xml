@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation">
+        <arguments>
+            <argument name="sections" xsi:type="array">
+                <item name="templates" xsi:type="array">
+                    <item name="label" xsi:type="string">Templates</item>
+                    <item name="icon" xsi:type="string">template</item>
+                    <item name="route" xsi:type="string">ergonode/template/index</item>
+                    <item name="resource" xsi:type="string">Ergonode_TemplateConsumer::template_mapping</item>
+                    <item name="sort_order" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\Readiness">
+        <arguments>
+            <argument name="domainLabels" xsi:type="array">
+                <item name="templates" xsi:type="string">Templates</item>
+            </argument>
+            <argument name="remediationRoutes" xsi:type="array">
+                <item name="templates" xsi:type="string">ergonode/template/index</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\ViewModel\ReadinessChecks">
+        <arguments>
+            <argument name="definitions" xsi:type="array">
+                <item name="templates" xsi:type="array">
+                    <item name="attribute_set_mapping" xsi:type="array">
+                        <item name="label" xsi:type="string">Used Magento attribute sets have an Ergonode template mapping.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="mapping_missing" xsi:type="string">templates.mapping_missing</item>
+                            <item name="product_attribute_set_mapping_missing" xsi:type="string">templates.product_attribute_set_mapping_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">write</item>
+                    </item>
+                </item>
+            </argument>
+            <argument name="domainSortOrders" xsi:type="array">
+                <item name="templates" xsi:type="number">30</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

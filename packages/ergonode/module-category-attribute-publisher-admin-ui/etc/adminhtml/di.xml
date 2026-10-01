@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CategoryAttributeAdminUi\Model\Mapping\AttributeMappingSaver">
+        <plugin name="ergonode_category_publisher_create_attribute" type="Ergonode\CategoryAttributePublisherAdminUi\Plugin\CategoryAttributeMappingSaverPlugin"/>
+    </type>
+    <type name="Ergonode\CategoryAttributeAdminUi\Model\Mapping\SourceMetadata">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="publisher" xsi:type="object">Ergonode\CategoryAttributePublisherAdminUi\Model\Mapping\SourceMetadata</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

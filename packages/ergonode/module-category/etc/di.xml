@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\Category\Api\CategoryAutoMapperInterface" type="Ergonode\Category\Model\Reconciliation\CategoryAutoMapper"/>
+    <preference for="Ergonode\Category\Api\CategoryMappingProviderInterface" type="Ergonode\Category\Model\Provider\CategoryMappingProvider"/>
+    <preference for="Ergonode\Category\Api\CategoryRemoteIdentityProviderInterface" type="Ergonode\Category\Model\Provider\CategoryRemoteIdentityProvider"/>
+    <preference for="Ergonode\Category\Api\CategoryRemoteIdentityWriterInterface" type="Ergonode\Category\Model\Mapping\CategoryMappingWriter"/>
+    <preference for="Ergonode\Category\Api\CategorySnapshotRemoverInterface" type="Ergonode\Category\Model\Snapshot\CategorySnapshotRemover"/>
+    <preference for="Ergonode\Category\Api\CategoryTreeSnapshotUpdaterInterface" type="Ergonode\Category\Model\Snapshot\CategoryTreeSnapshotUpdater"/>
+    <preference for="Ergonode\Category\Api\CategoryFormContextProviderInterface" type="Ergonode\Category\Model\Provider\CategoryFormContextProvider"/>
+    <preference for="Ergonode\Category\Api\CategoryCreationContextProviderInterface" type="Ergonode\Category\Model\Provider\CategoryCreationContextProvider"/>
+    <preference for="Ergonode\Category\Api\CategoryLayoutSaverInterface" type="Ergonode\Category\Model\Mapping\LockedCategoryLayoutSaver"/>
+    <preference for="Ergonode\Category\Api\CategoryTreeRefreshServiceInterface" type="Ergonode\Category\Model\Import\CategoryTreeRefreshService"/>
+    <preference for="Ergonode\Category\Api\CategoryMappingSaveHandlerInterface" type="Ergonode\Category\Model\ResourceModel\CategoryMappingSaveHandler"/>
+    <preference for="Ergonode\Category\Api\CategoryLayoutValidatorInterface" type="Ergonode\Category\Model\Mapping\CategoryLayoutValidator"/>
+</config>

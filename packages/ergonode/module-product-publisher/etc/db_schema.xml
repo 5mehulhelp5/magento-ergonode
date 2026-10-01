@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_product_publication_result" resource="default" engine="innodb" comment="Last Ergonode Product Publication Result">
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Magento Product ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="24" comment="Last Publication Status"/>
+        <column xsi:type="mediumtext" name="message" nullable="false" comment="Publication Result Details"/>
+        <column xsi:type="timestamp" name="recorded_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Result Recorded At UTC"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="product_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_PRODUCT_PUBLICATION_RESULT_PRODUCT_ID_CPE_ENTITY_ID"
+            table="ergonode_product_publication_result"
+            column="product_id"
+            referenceTable="catalog_product_entity"
+            referenceColumn="entity_id"
+            onDelete="CASCADE"
+        />
+    </table>
+</schema>

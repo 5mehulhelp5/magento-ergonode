@@ -1,0 +1,28 @@
+<div class="vec-category-form-create">
+    <!-- ko if: canCreate() -->
+    <button
+        type="button"
+        class="action-default scalable vec-category-form-create-button"
+        data-role="create-ergonode-category-from-form"
+        data-bind="click: create, disable: busy() || !writeReady(), attr: {'aria-busy': busy() ? 'true' : 'false'}"
+    >
+        <span data-bind="i18n: 'Publish'"></span>
+    </button>
+    <!-- ko ifnot: writeReady -->
+    <div class="vec-category-form-create-status is-error" role="status">
+        <span data-bind="text: readinessMessage"></span>
+        <!-- ko if: configurationUrl -->
+        <a target="_blank" rel="noopener noreferrer" data-bind="attr: {href: configurationUrl}, i18n: 'Open configuration'"></a>
+        <!-- /ko -->
+        <button type="button" data-bind="click: checkConfiguration, i18n: 'Check again'"></button>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: message -->
+    <div
+        class="vec-category-form-create-status"
+        role="status"
+        data-bind="text: message, css: {'is-success': messageType() === 'success', 'is-error': messageType() === 'error'}"
+    ></div>
+    <!-- /ko -->
+</div>

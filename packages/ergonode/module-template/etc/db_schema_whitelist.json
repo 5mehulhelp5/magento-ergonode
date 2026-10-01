@@ -1,0 +1,23 @@
+{
+    "ergonode_template": {
+        "column": {
+            "entity_id": true,
+            "code": true,
+            "attribute_set_id": true,
+            "is_deleted": true,
+            "content_hash": true,
+            "raw_json": true,
+            "synced_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_TEMPLATE_IS_DELETED": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_TEMPLATE_CODE": true,
+            "ERGONODE_TEMPLATE_ATTRIBUTE_SET_ID": true
+        }
+    }
+}

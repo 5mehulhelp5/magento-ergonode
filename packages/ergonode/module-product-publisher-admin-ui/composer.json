@@ -1,0 +1,31 @@
+{
+    "name": "ergonode/module-product-publisher-admin-ui",
+    "description": "Magento Admin outbound product publication action for the product workspace.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-product-admin-ui": "dev-main@dev",
+        "ergonode/module-product-publisher": "dev-main@dev",
+        "ergonode/module-publisher-admin-ui": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductPublisherAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

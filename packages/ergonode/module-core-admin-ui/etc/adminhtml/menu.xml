@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Ergonode_Core::main" title="Ergonode" translate="title" module="Ergonode_CoreAdminUi" sortOrder="100" resource="Ergonode_Core::main"/>
+        <add
+            id="Ergonode_Core::readiness"
+            title="Readiness"
+            translate="title"
+            module="Ergonode_CoreAdminUi"
+            sortOrder="30"
+            parent="Ergonode_Core::system"
+            action="ergonode/readiness/index"
+            resource="Ergonode_Core::readiness"
+        />
+        <add
+            id="Ergonode_Core::synchronizations"
+            title="Synchronizations"
+            translate="title"
+            module="Ergonode_CoreAdminUi"
+            sortOrder="40"
+            parent="Ergonode_Core::system"
+            action="ergonode/synchronization/index"
+            resource="Ergonode_Core::synchronizations"
+        />
+        <add id="Ergonode_Core::categories" title="Categories" translate="title" module="Ergonode_CoreAdminUi" sortOrder="10" parent="Ergonode_Core::main" resource="Ergonode_Core::main"/>
+        <add id="Ergonode_Core::export" title="Export" translate="title" module="Ergonode_CoreAdminUi" sortOrder="20" parent="Ergonode_Core::main" resource="Ergonode_Core::main"/>
+        <add id="Ergonode_Core::products" title="Products" translate="title" module="Ergonode_CoreAdminUi" sortOrder="30" parent="Ergonode_Core::main" resource="Ergonode_Core::main"/>
+        <add id="Ergonode_Core::system" title="System" translate="title" module="Ergonode_CoreAdminUi" sortOrder="50" parent="Ergonode_Core::main" resource="Ergonode_Core::main"/>
+        <add
+            id="Ergonode_Core::config"
+            title="Config"
+            translate="title"
+            module="Ergonode_CoreAdminUi"
+            sortOrder="10"
+            parent="Ergonode_Core::system"
+            action="adminhtml/system_config/edit/section/ergonode_connection"
+            resource="Ergonode_Core::config"
+        />
+    </menu>
+</config>

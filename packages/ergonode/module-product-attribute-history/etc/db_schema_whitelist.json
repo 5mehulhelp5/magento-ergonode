@@ -1,0 +1,20 @@
+{
+    "ergonode_product_attribute_history_operation": {
+        "column": {
+            "operation_id": true,
+            "operation_code": true,
+            "status": true,
+            "origin": true,
+            "actor_id": true,
+            "actor_name": true,
+            "started_at": true,
+            "finished_at": true,
+            "change_count": true,
+            "state_json": true,
+            "changes_json": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

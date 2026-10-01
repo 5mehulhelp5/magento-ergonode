@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\ProductAdminUi\Model\GridActionPool">
+        <arguments>
+            <argument name="actions" xsi:type="array">
+                <item name="publish" xsi:type="array">
+                    <item name="modules" xsi:type="array">
+                        <item name="0" xsi:type="string">Ergonode_ProductPublisher</item>
+                        <item name="1" xsi:type="string">Ergonode_Publisher</item>
+                        <item name="2" xsi:type="string">Ergonode_PublisherAdminUi</item>
+                        <item name="3" xsi:type="string">Ergonode_ProductPublisherAdminUi</item>
+                    </item>
+                    <item name="provider" xsi:type="object">Ergonode\ProductPublisherAdminUi\Model\PublishGridAction\Proxy</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

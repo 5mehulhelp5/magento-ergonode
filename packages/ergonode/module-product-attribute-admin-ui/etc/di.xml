@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\ProductAttributeAdminUi\Api\ErgonodeMetadataProviderInterface" type="Ergonode\ProductAttributeAdminUi\Model\Mapping\ErgonodeMetadataCatalog"/>
+    <preference for="Ergonode\ProductAttributeAdminUi\Api\VerifiedErgonodeMetadataRecorderInterface" type="Ergonode\ProductAttributeAdminUi\Model\Mapping\ErgonodeMetadataCatalog"/>
+    <type name="Ergonode\ProductAttributeAdminUi\Model\Mapping\ErgonodeMetadataCatalog">
+        <arguments>
+            <argument name="sources" xsi:type="array">
+                <item name="remote_catalog" xsi:type="object">Ergonode\ProductAttributeAdminUi\Model\Mapping\RemoteAttributeMetadataSource</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttributeAdminUi\Block\Adminhtml\Attribute\Mapping">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="snapshot_available" xsi:type="boolean">false</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttributeAdminUi\Block\Adminhtml\Option\Mapping">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="snapshot_available" xsi:type="boolean">false</item>
+                <item name="refresh_available" xsi:type="boolean">true</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation">
+        <arguments>
+            <argument name="sections" xsi:type="array">
+                <item name="attributes" xsi:type="array">
+                    <item name="label" xsi:type="string">Product</item>
+                    <item name="icon" xsi:type="string">attribution-pen</item>
+                    <item name="route" xsi:type="string">ergonode/attribute/index</item>
+                    <item name="resource" xsi:type="string">Ergonode_AttributeConsumer::attribute_mapping</item>
+                    <item name="sort_order" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

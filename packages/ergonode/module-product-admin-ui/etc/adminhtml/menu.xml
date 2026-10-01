@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="Ergonode_Product::products"
+            title="List"
+            translate="title"
+            module="Ergonode_ProductAdminUi"
+            sortOrder="25"
+            parent="Ergonode_Core::products"
+            action="ergonode_product/product/index"
+            resource="Ergonode_Product::products"
+        />
+    </menu>
+</config>

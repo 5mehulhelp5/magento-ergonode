@@ -1,0 +1,36 @@
+{
+    "ergonode_mapping_visibility": {
+        "column": {
+            "entity_id": true,
+            "entity_type": true,
+            "source": true,
+            "parent_identifier": true,
+            "identifier": true,
+            "is_active": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "UNQ_7F6851CA4F8C737BEFAB9647426256F8": true
+        }
+    },
+    "ergonode_import_cursor": {
+        "column": {
+            "process_code": true,
+            "cursor": true,
+            "page_size": true,
+            "has_more": true,
+            "synced_at": true,
+            "created_at": true,
+            "updated_at": true,
+            "lock_token": true,
+            "started_at": true,
+            "completed_at": true,
+            "reset_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

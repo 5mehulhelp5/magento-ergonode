@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\TestConnection $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<button
+    class="action-default scalable"
+    type="button"
+    id="<?= $escaper->escapeHtmlAttr($block->getHtmlId()) ?>"
+    data-mage-init="<?= $escaper->escapeHtmlAttr($block->getMageInitJson()) ?>"
+>
+    <span><?= $escaper->escapeHtml($block->getButtonLabel()) ?></span>
+</button>
+<span
+    class="ergonode-connection-test-result"
+    id="<?= $escaper->escapeHtmlAttr($block->getHtmlId()) ?>_result"
+    role="status"
+></span>

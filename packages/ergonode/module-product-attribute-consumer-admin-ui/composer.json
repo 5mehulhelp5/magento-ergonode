@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-product-attribute-consumer-admin-ui",
+    "description": "Optional inbound attribute synchronization, snapshot metadata and Magento creation actions for the neutral mapping editor.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-product-attribute-consumer": "*",
+        "ergonode/module-product-attribute-admin-ui": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductAttributeConsumerAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

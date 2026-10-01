@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Ergonode_Core::main">
+                    <resource id="Ergonode_AttributeConsumer::attribute_mapping" title="Ergonode Attribute Mapping" sortOrder="10">
+                        <resource id="Ergonode_AttributeConsumer::attribute_save" title="Save Ergonode Attribute Mapping" sortOrder="20"/>
+                    </resource>
+                    <resource id="Ergonode_AttributeConsumer::option_mapping" title="Ergonode Option Mapping" sortOrder="20">
+                        <resource id="Ergonode_AttributeConsumer::option_save" title="Save Ergonode Option Mapping" sortOrder="20"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,43 @@
+{
+    "ergonode_attribute": {
+        "column": {
+            "entity_id": true,
+            "code": true,
+            "type": true,
+            "scope": true,
+            "labels_json": true,
+            "parameters_json": true,
+            "content_hash": true,
+            "synced_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_ATTRIBUTE_TYPE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_ATTRIBUTE_CODE": true
+        }
+    },
+    "ergonode_attribute_option": {
+        "column": {
+            "entity_id": true,
+            "attribute_code": true,
+            "option_code": true,
+            "sort_order": true,
+            "labels_json": true,
+            "content_hash": true,
+            "synced_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_ATTRIBUTE_OPTION_ATTRIBUTE_CODE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_ATTRIBUTE_OPTION_ATTRIBUTE_CODE_OPTION_CODE": true
+        }
+    }
+}

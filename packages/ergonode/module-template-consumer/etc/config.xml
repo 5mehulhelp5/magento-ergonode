@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_templates>
+            <import>
+                <create_attribute_sets>0</create_attribute_sets>
+            </import>
+            <cron>
+                <status>0</status>
+                <cron_expr>*/15 * * * *</cron_expr>
+            </cron>
+        </ergonode_templates>
+    </default>
+</config>

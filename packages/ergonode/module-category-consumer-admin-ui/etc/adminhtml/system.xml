@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_categories" translate="label" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Categories</label>
+            <tab>ergonode</tab>
+            <resource>Ergonode_Core::config</resource>
+            <group id="synchronization" translate="label" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Settings</label>
+                <field id="status" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Synchronize names</label>
+                    <comment>Enable category data updates. After enabling or changing mappings, use Sync (force) to update existing categories.</comment>
+                    <config_path>ergonode_category_attributes/synchronization/status</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Name</label>
+                    <comment
+                    >Keep: do not copy the Ergonode category name to existing categories. Update: copy it to the Magento name. New categories always receive an initial name. A separate attribute-to-name mapping can still update the name in Keep mode.</comment>
+                    <source_model>Ergonode\CategoryConsumerAdminUi\Model\Config\Source\CategoryNameMode</source_model>
+                </field>
+            </group>
+            <group id="data_cron" translate="label" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Names</label>
+                <field id="status" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Automatic updates</label>
+                    <config_path>ergonode_category_attributes/cron/status</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="schedule" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Schedule</label>
+                    <config_path>ergonode_category_attributes/cron/schedule</config_path>
+                    <comment>Five-part cron expression, for example */20 * * * *.</comment>
+                    <backend_model>Ergonode\CoreAdminUi\Model\Config\Backend\CronSchedule</backend_model>
+                    <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\RequiredField</frontend_model>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="cron" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Tree</label>
+                <field id="status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Automatic updates</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Schedule</label>
+                    <comment>Five-part cron expression in the Magento configuration timezone, for example */20 * * * *.</comment>
+                    <backend_model>Ergonode\CoreAdminUi\Model\Config\Backend\CronSchedule</backend_model>
+                    <frontend_model>Ergonode\CoreAdminUi\Block\Adminhtml\System\Config\RequiredField</frontend_model>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

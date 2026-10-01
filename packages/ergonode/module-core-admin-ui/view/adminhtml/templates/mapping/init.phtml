@@ -1,0 +1,17 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$workspaceId = (string)$block->getData('workspace_id');
+$moduleName = (string)$block->getData('module_name');
+$configJson = (string)$block->getData('config_json');
+?>
+<script type="text/x-magento-init">
+{
+    "#<?= $escaper->escapeJs($workspaceId) ?>": {
+        "<?= $escaper->escapeJs($moduleName) ?>": <?= /* @noEscape */ $configJson ?>
+    }
+}
+</script>

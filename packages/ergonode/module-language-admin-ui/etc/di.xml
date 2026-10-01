@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation">
+        <arguments>
+            <argument name="sections" xsi:type="array">
+                <item name="languages" xsi:type="array">
+                    <item name="label" xsi:type="string">Languages</item>
+                    <item name="icon" xsi:type="string">english</item>
+                    <item name="route" xsi:type="string">ergonode/language/index</item>
+                    <item name="resource" xsi:type="string">Ergonode_Language::language_mapping</item>
+                    <item name="sort_order" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\Readiness">
+        <arguments>
+            <argument name="domainLabels" xsi:type="array">
+                <item name="languages" xsi:type="string">Languages</item>
+            </argument>
+            <argument name="remediationRoutes" xsi:type="array">
+                <item name="languages" xsi:type="string">ergonode/language/index</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\ViewModel\ReadinessChecks">
+        <arguments>
+            <argument name="definitions" xsi:type="array">
+                <item name="languages" xsi:type="array">
+                    <item name="default_store_mapping" xsi:type="array">
+                        <item name="label" xsi:type="string">Magento Default Values (store ID 0) is mapped to an active Ergonode language.</item>
+                        <item name="issue_codes" xsi:type="array">
+                            <item name="default_store_mapping_missing" xsi:type="string">language.default_store_mapping_missing</item>
+                        </item>
+                        <item name="group" xsi:type="string">read</item>
+                    </item>
+                </item>
+            </argument>
+            <argument name="domainSortOrders" xsi:type="array">
+                <item name="languages" xsi:type="number">20</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

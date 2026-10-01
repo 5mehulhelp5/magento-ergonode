@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\ProductConsumer\Model\Magento\ProductAttributeValueResolverPool">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="category_reference" xsi:type="object">Ergonode\ProductCategoryAttributeConsumer\Model\Consumer\CategoryReferenceConsumerValueResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Magento\ProductAttributeValueMapper">
+        <plugin name="ergonode_product_category_attribute_required_value" type="Ergonode\ProductCategoryAttributeConsumer\Plugin\ProductAttributeValueMapperPlugin"/>
+    </type>
+    <type name="Ergonode\ProductCategoryAttribute\Model\CategoryReferenceValueAdapter">
+        <arguments>
+            <argument name="importAvailable" xsi:type="boolean">true</argument>
+        </arguments>
+    </type>
+</config>

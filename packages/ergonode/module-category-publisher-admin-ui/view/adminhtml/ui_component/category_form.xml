@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="ergonode">
+        <field name="ergonode_create_in_ergonode" component="Ergonode_CategoryPublisherAdminUi/js/form/element/category-create" sortOrder="30" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="elementTmpl" xsi:type="string">Ergonode_CategoryPublisherAdminUi/form/element/category-create</item>
+                    <item name="labelVisible" xsi:type="boolean">false</item>
+                    <item name="urls" xsi:type="array">
+                        <item name="create" xsi:type="url" path="ergonode_manual/category/create"/>
+                        <item name="login" xsi:type="url" path="ergonode/rest/login"/>
+                        <item name="status" xsi:type="url" path="ergonode_manual/session/status"/>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <dataScope>ergonode_create_in_ergonode</dataScope>
+                <imports>
+                    <link name="categoryId">${ $.provider }:data.id</link>
+                    <link name="categoryCode">${ $.provider }:data.ergonode_category_code</link>
+                    <link name="categoryTreeId">${ $.provider }:data.ergonode_category_tree_id</link>
+                </imports>
+            </settings>
+        </field>
+    </fieldset>
+</form>

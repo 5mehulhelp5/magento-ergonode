@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-template-publisher-admin-ui",
+    "description": "Admin UI integration for template creation from Magento product attribute sets.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-template-admin-ui": "*",
+        "ergonode/module-template-publisher": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\TemplatePublisherAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

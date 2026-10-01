@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\ProductAttributeAdminUi\Model\Mapping\AttributeMappingSaver">
+        <plugin name="ergonode_product_attribute_publisher_create_attribute" type="Ergonode\ProductAttributePublisherAdminUi\Plugin\AttributeMappingSaverPlugin"/>
+    </type>
+    <type name="Ergonode\ProductAttributeAdminUi\Model\Mapping\OptionMappingSaver">
+        <plugin name="ergonode_product_attribute_publisher_create_option" type="Ergonode\ProductAttributePublisherAdminUi\Plugin\OptionMappingSaverPlugin"/>
+    </type>
+</config>

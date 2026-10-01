@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="Ergonode_AttributeConsumer::attribute_mapping"
+            title="Attributes"
+            translate="title"
+            module="Ergonode_ProductAttributeAdminUi"
+            sortOrder="10"
+            parent="Ergonode_Core::products"
+            action="ergonode/attribute/index"
+            resource="Ergonode_AttributeConsumer::attribute_mapping"
+        />
+    </menu>
+</config>

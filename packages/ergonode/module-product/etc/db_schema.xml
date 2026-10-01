@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_product_mapping" resource="default" engine="innodb" comment="Ergonode Product Identity Mapping">
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Magento Product ID"/>
+        <column xsi:type="varchar" name="ergonode_sku" nullable="false" length="64" comment="Immutable Ergonode SKU"/>
+        <column xsi:type="varchar" name="identity_mode" nullable="false" length="16" default="shared" comment="Product Identity Mode"/>
+        <column xsi:type="varchar" name="import_hash" nullable="true" length="64" comment="Last Imported Product Hash"/>
+        <column xsi:type="timestamp" name="published_at" nullable="true" on_update="false" comment="Last Successful Publication Time"/>
+        <column xsi:type="timestamp" name="imported_at" nullable="true" on_update="false" comment="Last Successful Import Time"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Mapping Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="product_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_PRODUCT_MAPPING_PRODUCT_ID_CPE_ENTITY_ID"
+            table="ergonode_product_mapping"
+            column="product_id"
+            referenceTable="catalog_product_entity"
+            referenceColumn="entity_id"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_PRODUCT_MAPPING_ERGONODE_SKU">
+            <column name="ergonode_sku"/>
+        </constraint>
+        <index referenceId="ERGONODE_PRODUCT_MAPPING_IMPORT_HASH" indexType="btree">
+            <column name="import_hash"/>
+        </index>
+    </table>
+</schema>

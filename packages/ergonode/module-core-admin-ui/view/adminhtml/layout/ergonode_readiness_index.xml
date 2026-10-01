@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ergonode_CoreAdminUi::css/ergonode-workspace.css"/>
+        <css src="Ergonode_CoreAdminUi::css/readiness.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Ergonode\CoreAdminUi\Block\Adminhtml\Readiness" name="ergonode.readiness" template="Ergonode_CoreAdminUi::readiness.phtml">
+                <arguments>
+                    <argument name="readiness_checks" xsi:type="object">Ergonode\CoreAdminUi\ViewModel\ReadinessChecks</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

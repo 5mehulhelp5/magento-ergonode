@@ -1,0 +1,12 @@
+.ergonode-config-title {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding: 2rem 0 0;
+}
+
+.ergonode-config-group > .config {
+    border: 0;
+    margin: 0;
+    padding: 0 0 2rem;
+}

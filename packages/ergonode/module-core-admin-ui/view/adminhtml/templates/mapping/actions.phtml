@@ -1,0 +1,77 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+$searchPlaceholder = (string)$block->getData('search_placeholder');
+$saveTitle = (string)$block->getData('save_title');
+$saveIconUrl = (string)$block->getData('save_icon_url');
+$autoMatchTitle = (string)$block->getData('auto_match_title');
+$completeTitle = (string)$block->getData('complete_title');
+$autoMatchDisabled = (bool)$block->getData('auto_match_disabled');
+$completeDisabled = (bool)$block->getData('complete_disabled');
+?>
+<div class="veui-panel-head-tools">
+    <label class="veui-search veui-search-expandable">
+        <span class="veui-search-icon" aria-hidden="true"></span>
+        <input type="search"
+               data-role="mapping-search"
+               aria-label="<?= $escaper->escapeHtmlAttr($searchPlaceholder) ?>"
+               placeholder="<?= $escaper->escapeHtmlAttr($searchPlaceholder) ?>"/>
+    </label>
+    <div class="veui-split-button veui-split-button-align-end veui-split-button-primary"
+         role="group"
+         aria-label="<?= $escaper->escapeHtmlAttr($saveTitle) ?>">
+        <button type="button"
+                class="veui-button veui-button-primary veui-button-toolbar veui-split-button-main
+                       vea-view-action vea-save-action"
+                data-role="save-mapping"
+                disabled
+                title="<?= $escaper->escapeHtmlAttr($saveTitle) ?>"
+                aria-label="<?= $escaper->escapeHtmlAttr($saveTitle) ?>">
+            <img class="vea-save-icon"
+                 src="<?= $escaper->escapeUrl($saveIconUrl) ?>"
+                 width="14"
+                 height="14"
+                 alt=""
+                 aria-hidden="true">
+            <em data-role="save-mapping-label"><?= $escaper->escapeHtml(__('Zapisz')) ?></em>
+        </button>
+        <details class="veui-entity-options veui-split-button-options" data-role="entity-options">
+            <summary class="veui-split-button-toggle"
+                     role="button"
+                     title="<?= $escaper->escapeHtmlAttr(__('Opcje mapowania')) ?>"
+                     aria-label="<?= $escaper->escapeHtmlAttr(__('Opcje mapowania')) ?>">
+                <span class="veui-split-button-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="veui-entity-options-menu veui-split-button-menu"
+                 role="group"
+                 aria-label="<?= $escaper->escapeHtmlAttr(__('Opcje mapowania')) ?>">
+                <button type="button"
+                        class="veui-entity-options-action veui-split-button-option vea-auto-match"
+                        data-role="auto-match"
+                        <?= $autoMatchDisabled ? 'disabled' : '' ?>
+                        title="<?= $escaper->escapeHtmlAttr($autoMatchTitle) ?>"
+                        aria-label="<?= $escaper->escapeHtmlAttr($autoMatchTitle) ?>">
+                    <span class="vea-auto-match-icon" aria-hidden="true"></span>
+                    <span class="veui-entity-options-action-label" data-role="auto-match-label">
+                        <?= $escaper->escapeHtml(__('Auto Connect')) ?>
+                    </span>
+                </button>
+                <button type="button"
+                        class="veui-entity-options-action veui-split-button-option
+                               vea-auto-match vea-complete-missing"
+                        data-role="complete-missing"
+                        <?= $completeDisabled ? 'disabled' : '' ?>
+                        title="<?= $escaper->escapeHtmlAttr($completeTitle) ?>"
+                        aria-label="<?= $escaper->escapeHtmlAttr($completeTitle) ?>">
+                    <span class="vea-complete-missing-icon" aria-hidden="true"></span>
+                    <span class="veui-entity-options-action-label">
+                        <?= $escaper->escapeHtml(__('Uzupełnij')) ?>
+                    </span>
+                </button>
+            </div>
+        </details>
+    </div>
+</div>

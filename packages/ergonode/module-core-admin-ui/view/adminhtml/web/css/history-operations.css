@@ -1,0 +1,201 @@
+.veah-workspace {
+    --veah-control-text: #334155;
+}
+.veah-operation-list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 12px;
+}
+.veah-operation {
+    border: 1px solid var(--veui-border);
+    background: var(--veui-surface);
+    border-radius: 8px;
+    display: flex;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+}
+.veah-operation.is-selected {
+    background: var(--veui-blue-softer);
+    border-color: var(--veui-blue-border);
+}
+.veah-workspace .veah-operation-select {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: var(--veui-text);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    line-height: 1.45;
+    min-width: 0;
+    padding: 11px 12px;
+    text-align: left;
+    text-decoration: none;
+}
+.veah-operation-select strong {
+    font-size: 12px;
+    font-weight: 700;
+}
+.veah-operation-select time {
+    color: var(--veui-text-muted-strong);
+    font-size: 11px;
+    font-weight: 500;
+}
+.veah-operation-meta,
+.veah-operation-count {
+    color: var(--veui-muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+.veah-operation-count {
+    color: var(--veui-text);
+}
+.veah-workspace .veah-operation-details {
+    align-self: center;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: var(--veui-muted);
+    margin: 0 10px 0 0;
+    padding: 8px;
+}
+.veah-list-icon {
+    background: currentColor;
+    box-shadow:
+        0 -4px currentColor,
+        0 4px currentColor;
+    display: block;
+    height: 1px;
+    width: 12px;
+}
+.veah-current {
+    align-items: center;
+    background: var(--veui-surface-hover);
+    border: 1px dashed var(--veui-border-strong);
+    border-radius: 8px;
+    color: var(--veui-text-muted-strong);
+    display: flex;
+    font-size: 12px;
+    font-weight: 600;
+    justify-content: space-between;
+    padding: 13px 12px;
+    text-decoration: none;
+}
+.veah-pagination {
+    align-items: center;
+    color: var(--veui-muted);
+    display: flex;
+    flex-direction: column;
+    font-size: 10px;
+    gap: 10px;
+    padding: 16px 0 4px;
+}
+.veah-workspace .veah-button {
+    background: var(--veui-surface);
+    border: 1px solid var(--veui-border-strong);
+    border-radius: 6px;
+    box-shadow: none;
+    color: var(--veah-control-text);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 7px 10px;
+}
+.veah-workspace button:focus-visible,
+.veah-current:focus-visible {
+    outline: 2px solid var(--veui-blue);
+    outline-offset: -2px;
+}
+.veah-workspace button:hover {
+    filter: brightness(0.96);
+}
+.veah-empty {
+    color: var(--veui-muted);
+    font-size: 12px;
+    line-height: 1.6;
+    padding: 16px;
+    text-align: center;
+}
+.veah-message {
+    flex-shrink: 0;
+    margin-bottom: 12px;
+}
+.veah-mapping-history {
+    border-top: 1px solid var(--veui-border);
+    margin: 0 14px 14px;
+    min-width: 0;
+}
+.veah-mapping-head {
+    padding: 14px 0 12px;
+}
+.veah-mapping-history .veah-operation-list {
+    overflow: visible;
+    padding: 0;
+}
+.veah-operation-top {
+    align-items: flex-start;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    width: 100%;
+}
+.veah-operation-top strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.veah-status {
+    background: var(--veui-surface-hover);
+    border-radius: 4px;
+    color: var(--veui-text-muted-strong);
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 6px;
+}
+.veah-operation-meta {
+    align-items: baseline;
+    color: var(--veui-text-muted-strong);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 8px;
+}
+.veah-operation-origin {
+    border-left: 1px solid var(--veui-border-strong);
+    padding-left: 8px;
+}
+.veah-operation:hover {
+    border-color: var(--veui-border-strong);
+}
+.veah-current.is-selected {
+    background: var(--veui-blue-softer);
+    border: 1px solid var(--veui-blue-border);
+    min-height: 76px;
+    position: relative;
+}
+.veah-operation.is-selected::after,
+.veah-current.is-selected::after {
+    --veah-mask-color: #000;
+    border-radius: 0 0 0 7px;
+    bottom: 0;
+    box-shadow: inset 3px 0 0 var(--veui-blue);
+    content: '';
+    height: 42px;
+    left: 0;
+    mask-image: radial-gradient(circle at 8px 0, transparent 8px, var(--veah-mask-color) 8.5px);
+    pointer-events: none;
+    position: absolute;
+    width: 8px;
+}
+.veah-operation-select:focus-visible {
+    outline: 2px solid var(--veui-blue);
+    outline-offset: -2px;
+}
+
+
+@media (max-width: 1000px) {
+    .veah-operation-list {
+        padding: 8px;
+    }
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryWriteTransactionInterface" type="Ergonode\CategoryConsumer\Model\ResourceModel\CategoryWriteTransaction"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryStreamAvailabilityProviderInterface" type="Ergonode\CategoryConsumer\Model\Sync\CategoryStreamEligibility"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryEntityRefresherInterface" type="Ergonode\CategoryConsumer\Model\Sync\UnavailableCategoryEntityRefresher"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryStructureSynchronizationProcessInterface" type="Ergonode\CategoryConsumer\Model\Sync\CategoryStructureSynchronizationProcess"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryPositionWriterInterface" type="Ergonode\CategoryConsumer\Model\ResourceModel\CategoryPositionWriter"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryCreationConfigurationProviderInterface" type="Ergonode\CategoryConsumer\Model\Sync\DefaultCategoryCreationConfigurationProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryCreationDataProviderInterface" type="Ergonode\CategoryConsumer\Model\Sync\DefaultCategoryCreationDataProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryEntitySynchronizerInterface" type="Ergonode\CategoryConsumer\Model\Sync\CategoryEntitySynchronizer"/>
+    <preference for="Ergonode\CategoryConsumer\Api\MappedCategoryAttributeSynchronizerInterface" type="Ergonode\CategoryConsumer\Model\Sync\MappedCategoryAttributeSynchronizer"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryReconciliationServiceInterface" type="Ergonode\CategoryConsumer\Model\Reconciliation\CategoryReconciliationService"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryTreeSyncCursorResetterInterface" type="Ergonode\CategoryConsumer\Model\Import\CategoryTreeSyncCursorResetter"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryTreeSyncMetadataProviderInterface" type="Ergonode\CategoryConsumer\Model\Provider\CategoryTreeSyncMetadataProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryTreeReadinessProviderInterface" type="Ergonode\CategoryConsumer\Model\Provider\CategoryTreeReadinessProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryTreeStateProviderInterface" type="Ergonode\CategoryConsumer\Model\Provider\CategoryTreeStateProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\Data\CategoryReconciliationRequestInterface" type="Ergonode\CategoryConsumer\Model\Data\CategoryReconciliationRequest"/>
+    <preference for="Ergonode\CategoryConsumer\Api\Data\CategoryReconciliationResultInterface" type="Ergonode\CategoryConsumer\Model\Data\CategoryReconciliationResult"/>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="ergonode_category_trees_sync" xsi:type="object">Ergonode\CategoryConsumer\Console\Command\SyncCategoryTreesCommand</item>
+
+                <item name="ergonode_categories_sync" xsi:type="object">Ergonode\CategoryConsumer\Console\Command\SyncCategoryDataCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CategoryConsumer\Console\Command\SyncCategoryTreesCommand">
+        <arguments>
+            <argument name="process" xsi:type="object">Ergonode\CategoryConsumer\Api\CategoryStructureSynchronizationProcessInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Readiness\ReadinessService">
+        <arguments>
+            <argument name="checks" xsi:type="array">
+                <item name="ergonode_category_tree_mapping" xsi:type="object">Ergonode\CategoryConsumer\Model\Readiness\CategoryTreeMappingCheck</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Import\SynchronizationStatusProvider">
+        <arguments>
+            <argument name="synchronizations" xsi:type="array">
+                <item name="category_tree_stream" xsi:type="array">
+                    <item name="label" xsi:type="string">Category trees</item>
+                    <item name="description" xsi:type="string">Consumes category-tree changes and reconciles active Ergonode trees with Magento roots.</item>
+                    <item name="sort_order" xsi:type="number">20</item>
+                </item>
+
+                <item name="category_stream" xsi:type="array">
+                    <item name="label" xsi:type="string">Names</item>
+                    <item name="description" xsi:type="string">Updates names of mapped categories.</item>
+                    <item name="sort_order" xsi:type="number">21</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Core\Model\Import\SynchronizationOperationExecutor">
+        <arguments>
+            <argument name="operations" xsi:type="array">
+                <item name="category_tree_stream" xsi:type="object">Ergonode\CategoryConsumer\Model\Import\CategorySynchronizationOperation\Proxy</item>
+
+                <item name="category_stream" xsi:type="object">Ergonode\CategoryConsumer\Model\Import\CategoryDataSynchronizationOperation\Proxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryEntityLoaderInterface" type="Ergonode\CategoryConsumer\Model\Import\CategoryEntityLoader"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryNameTargetProviderInterface" type="Ergonode\CategoryConsumer\Model\Config\CategoryNameTargetProvider"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryNameSynchronizerInterface" type="Ergonode\CategoryConsumer\Model\Sync\CategoryNameSynchronizer"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryNameWriterInterface" type="Ergonode\CategoryConsumer\Model\ResourceModel\CategoryNameWriter"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategoryDataSynchronizationProcessInterface" type="Ergonode\CategoryConsumer\Model\Sync\CategoryDataSynchronizationProcess"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategorySynchronizationActionInterface" type="Ergonode\CategoryConsumer\Model\Sync\CategorySynchronizationAction"/>
+    <type name="Ergonode\CategoryConsumer\Console\Command\SyncCategoryDataCommand">
+        <arguments>
+            <argument name="synchronizationProcess" xsi:type="object">Ergonode\CategoryConsumer\Api\CategoryDataSynchronizationProcessInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\CategoryConsumer\Api\CategorySynchronizationRunInterface" type="Ergonode\CategoryConsumer\Model\Sync\CategorySynchronizationRun"/>
+    <preference for="Ergonode\CategoryConsumer\Api\CategorySynchronizationStateInterface" type="Ergonode\CategoryConsumer\Model\ResourceModel\CategorySynchronizationState"/>
+    <type name="Ergonode\Category\Model\Import\CategoryTreePageReader">
+        <plugin name="ergonode_category_download_progress" type="Ergonode\CategoryConsumer\Plugin\CategoryTreeDownloadProgress" sortOrder="10"/>
+    </type>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="environment" xsi:type="array">
+                <item name="ergonode_categories/cron/status" xsi:type="string">1</item>
+                <item name="ergonode_categories/cron/schedule" xsi:type="string">1</item>
+                <item name="ergonode_category_attributes/cron/status" xsi:type="string">1</item>
+                <item name="ergonode_category_attributes/cron/schedule" xsi:type="string">1</item>
+                <item name="ergonode_category_attributes/synchronization/status" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Ergonode\Category\Api\CategoryMappingSaveHandlerInterface" type="Ergonode\CategoryConsumer\Model\Mapping\CategoryMappingSaveHandler"/>
+</config>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_template" resource="default" engine="innodb" comment="Ergonode Template Cache">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="code" nullable="false" length="255" comment="Ergonode Template Code"/>
+        <column xsi:type="smallint" name="attribute_set_id" unsigned="true" nullable="true" identity="false" comment="Linked Magento Attribute Set ID"/>
+        <column xsi:type="smallint" name="is_deleted" unsigned="true" nullable="false" identity="false" default="0" comment="Deleted In Ergonode Flag"/>
+        <column xsi:type="varchar" name="content_hash" nullable="false" length="64" comment="Normalized Content Hash"/>
+        <column xsi:type="mediumtext" name="raw_json" nullable="false" comment="Raw Ergonode Payload JSON"/>
+        <column xsi:type="timestamp" name="synced_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Synced At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_TEMPLATE_CODE">
+            <column name="code"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_TEMPLATE_ATTRIBUTE_SET_UNIQUE">
+            <column name="attribute_set_id"/>
+        </constraint>
+        <index referenceId="ERGONODE_TEMPLATE_DELETED" indexType="btree">
+            <column name="is_deleted"/>
+        </index>
+    </table>
+</schema>

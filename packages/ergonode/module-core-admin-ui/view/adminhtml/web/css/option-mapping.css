@@ -1,0 +1,13 @@
+.vea-option-mapping .vea-pair-row {
+    padding-right: 10px;
+}
+
+.vea-option-mapping .vea-complete-missing-icon {
+    height: 14px;
+    width: 14px;
+}
+
+.vea-option-mapping .vea-complete-missing-icon {
+    -webkit-mask-size: 14px 14px;
+    mask-size: 14px 14px;
+}

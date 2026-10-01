@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Ergonode_Core::main">
+                    <resource id="Ergonode_Language::language_mapping" title="Language Mapping" sortOrder="5">
+                        <resource id="Ergonode_Language::language_mapping_refresh" title="Refresh Ergonode Languages" sortOrder="5"/>
+                        <resource id="Ergonode_Language::language_mapping_save" title="Save Language Mapping" sortOrder="10"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

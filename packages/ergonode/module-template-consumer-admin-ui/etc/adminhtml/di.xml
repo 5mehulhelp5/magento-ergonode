@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\TemplateAdminUi\Block\Adminhtml\Template\Index">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="consumer" xsi:type="object">Ergonode\TemplateConsumerAdminUi\Block\Adminhtml\Template\Actions</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Template\Model\Mapping\TemplateAttributeSetMappingSaver">
+        <arguments>
+            <argument name="targetResolvers" xsi:type="array">
+                <item name="consumer" xsi:type="object">Ergonode\TemplateConsumerAdminUi\Model\Mapping\CreationTargetResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CoreAdminUi\Plugin\AutomaticSynchronizationVisibility">
+        <arguments>
+            <argument name="paths" xsi:type="array">
+                <item name="ergonode_templates_cron" xsi:type="string">ergonode_templates/cron</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

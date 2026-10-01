@@ -1,0 +1,84 @@
+<?php
+declare(strict_types=1);
+
+/** @var \Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation $block */
+$navigationGroups = $block->getNavigationEntries();
+?>
+<?php if ($navigationGroups !== []): ?>
+    <?php if ($block->isStandalone()): ?>
+        <div class="veui-section-navigation-workspace">
+            <div class="veui-toolbar veui-viewbar">
+    <?php endif; ?>
+    <nav class="veui-section-navigation"
+         aria-label="<?= $escaper->escapeHtmlAttr(__('Ergonode sections')) ?>">
+        <?php foreach ($navigationGroups as $group): ?>
+            <?php
+            $isActive = false;
+            $isCurrent = false;
+            foreach ($group['items'] as $item) {
+                $isActive = $isActive || $item['is_current'];
+                $isCurrent = $isCurrent || ($item['is_current'] && $item['url'] === $group['url']);
+            }
+            ?>
+            <?php if (count($group['items']) === 1): ?>
+                <a class="veui-button veui-section-navigation-button"
+                   <?php if ($isCurrent): ?>
+                       aria-current="page" aria-disabled="true" role="link"
+                   <?php else: ?>
+                       href="<?= $escaper->escapeUrl($group['url']) ?>"
+                   <?php endif; ?>>
+                    <?php if ($group['icon'] !== null): ?>
+                        <span class="veui-section-navigation-icon veui-section-navigation-icon-<?=
+                            $escaper->escapeHtmlAttr($group['icon'])
+                        ?>" aria-hidden="true"></span>
+                    <?php endif; ?>
+                    <?= $escaper->escapeHtml($group['label']) ?>
+                </a>
+            <?php elseif (count($group['items']) > 1): ?>
+                <div class="veui-split-button<?= $isActive ? ' veui-section-navigation-active' : '' ?>"
+                     role="group"
+                     aria-label="<?= $escaper->escapeHtmlAttr($group['sections_label']) ?>">
+                    <a class="veui-button veui-section-navigation-button veui-split-button-main"
+                       <?php if ($isCurrent): ?>
+                           aria-current="page" aria-disabled="true" role="link"
+                       <?php else: ?>
+                           href="<?= $escaper->escapeUrl($group['url']) ?>"
+                       <?php endif; ?>>
+                        <?php if ($group['icon'] !== null): ?>
+                            <span class="veui-section-navigation-icon veui-section-navigation-icon-<?=
+                                $escaper->escapeHtmlAttr($group['icon'])
+                            ?>" aria-hidden="true"></span>
+                        <?php endif; ?>
+                        <?= $escaper->escapeHtml($group['label']) ?>
+                    </a>
+                    <details class="veui-split-button-options">
+                        <summary class="veui-split-button-toggle"
+                                 role="button"
+                                 tabindex="0"
+                                 aria-label="<?= $escaper->escapeHtmlAttr($group['options_label']) ?>">
+                            <span class="veui-split-button-toggle-icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="veui-split-button-menu">
+                            <?php foreach ($group['items'] as $item): ?>
+                                <a class="veui-split-button-option"
+                                   <?php if ($item['is_current']): ?>
+                                       aria-current="page" aria-disabled="true" role="link"
+                                   <?php else: ?>
+                                       href="<?= $escaper->escapeUrl($item['url']) ?>"
+                                   <?php endif; ?>>
+                                    <span class="veui-split-button-check"
+                                          aria-hidden="true"></span>
+                                    <?= $escaper->escapeHtml($item['label']) ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    </details>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </nav>
+    <?php if ($block->isStandalone()): ?>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-attribute-consumer",
+    "description": "Shared Ergonode attribute and option snapshots, public page import and option synchronization contracts, complete definition reconciliation, bounded reads and attribute-value file downloads. Owns definition check observations.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-attribute": "dev-main@dev",
+        "ergonode/module-language": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\AttributeConsumer\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

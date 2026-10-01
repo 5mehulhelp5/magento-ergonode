@@ -1,0 +1,56 @@
+<?php
+
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SynchronizationActions;
+
+/** @var SynchronizationActions $block */
+$primaryTitle = $block->getPrimaryTitle();
+$hasCursorActions = $block->hasCursorActions();
+?>
+<div<?= $hasCursorActions ? ' class="veui-split-button veui-split-button-align-end"' : '' ?>
+     data-role="synchronization-actions"
+     role="group"
+     aria-label="<?= $escaper->escapeHtmlAttr(__('Synchronization actions')) ?>">
+    <button type="button"
+            class="veui-button veui-button-toolbar<?= $hasCursorActions ? ' veui-split-button-main' : '' ?>"
+            data-role="<?= $escaper->escapeHtmlAttr($block->getPrimaryRole()) ?>"
+            data-synchronization-action="sync"
+            title="<?= $escaper->escapeHtmlAttr($primaryTitle) ?>"
+            <?= $block->isPrimaryDisabled() ? 'disabled' : '' ?>>
+        <span class="veui-sync-ergonode-icon" aria-hidden="true"></span>
+        <span><?= $escaper->escapeHtml(__('Sync')) ?></span>
+    </button>
+    <?php if ($hasCursorActions): ?>
+        <details class="veui-split-button-options"
+                 data-role="synchronization-action-options">
+            <summary class="veui-split-button-toggle"
+                     role="button"
+                     title="<?= $escaper->escapeHtmlAttr(__('Synchronization options')) ?>"
+                     aria-label="<?= $escaper->escapeHtmlAttr(__('Synchronization options')) ?>">
+                <span class="veui-split-button-toggle-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="veui-split-button-menu"
+                 role="menu"
+                 aria-label="<?= $escaper->escapeHtmlAttr(__('Synchronization options')) ?>">
+                <button type="button"
+                        class="veui-split-button-option"
+                        data-role="reset-sync-cursor"
+                        data-synchronization-action="reset-cursor"
+                        role="menuitem"
+                        <?= $block->isCursorResetDisabled() ? 'disabled' : '' ?>>
+                    <span class="veui-reset-cursor-icon" aria-hidden="true"></span>
+                    <span><?= $escaper->escapeHtml(__('Reset cursor')) ?></span>
+                </button>
+                <button type="button"
+                        class="veui-split-button-option"
+                        data-role="reset-sync-cursor-and-sync"
+                        data-synchronization-action="reset-cursor-and-sync"
+                        role="menuitem">
+                    <span class="veui-sync-ergonode-icon" aria-hidden="true"></span>
+                    <span><?= $escaper->escapeHtml(__('Reset cursor & Sync')) ?></span>
+                </button>
+            </div>
+        </details>
+    <?php endif; ?>
+</div>

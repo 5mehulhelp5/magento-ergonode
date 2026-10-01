@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\CategoryAttributeHistory\Api\HistoryQueryInterface" type="Ergonode\CategoryAttributeHistory\Model\ResourceModel\HistoryQuery"/>
+    <preference for="Ergonode\CategoryAttributeHistory\Api\HistoryActorProviderInterface" type="Ergonode\CategoryAttributeHistory\Model\Context\NullHistoryActorProvider"/>
+    <preference for="Ergonode\CategoryAttributeHistory\Api\HistoryOperationCaptureInterface" type="Ergonode\CategoryAttributeHistory\Model\OperationCapture"/>
+    <preference for="Ergonode\CategoryAttributeHistory\Api\SourceSnapshotProviderInterface" type="Ergonode\CategoryAttributeHistory\Model\EmptySourceSnapshotProvider"/>
+    <preference for="Ergonode\CategoryAttributeHistory\Model\Persistence\HistoryWriterInterface" type="Ergonode\CategoryAttributeHistory\Model\ResourceModel\HistoryWriter"/>
+    <type name="Ergonode\CategoryAttribute\Api\AttributeMappingWriterInterface">
+        <plugin name="ergonode_category_attribute_history_save" type="Ergonode\CategoryAttributeHistory\Plugin\MappingSaveHistoryPlugin" sortOrder="200"/>
+    </type>
+    <preference for="Ergonode\CategoryAttributeHistory\Model\Persistence\HistoryPrunerInterface" type="Ergonode\CategoryAttributeHistory\Model\ResourceModel\HistoryPruner"/>
+</config>

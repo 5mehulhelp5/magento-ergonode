@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Ergonode_CoreAdminUi::css/ergonode-actions.css"/>
+        <css src="Ergonode_CoreAdminUi::css/bulk-publish-progress.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block
+                name="ergonode.option.publisher.init"
+                class="Ergonode\AttributePublisherAdminUi\Block\Adminhtml\AttributePublisherMapping"
+                template="Ergonode_AttributePublisherAdminUi::ergonode-attribute-publisher-init.phtml"
+                after="ergonode.option.mapping"
+            >
+                <arguments>
+                    <argument name="mode" xsi:type="string">option</argument>
+                    <argument name="target_selector" xsi:type="string">#ergonode-option-mapping</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

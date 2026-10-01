@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+use Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation;
+
+/** @var \Ergonode\ProductAdminUi\Block\Adminhtml\Publication $block */
+/** @var \Magento\Framework\Escaper $escaper */
+$sectionNavigation = $block->getLayout()->createBlock(
+    SectionNavigation::class,
+    '',
+    ['data' => ['current_section' => SectionNavigation::SECTION_PRODUCTS]]
+);
+?>
+<div class="veui-workspace vepp-workspace"
+     data-mage-init="<?= $escaper->escapeHtmlAttr($block->getInitialization()) ?>">
+    <div class="veui-toolbar vea-viewbar" data-role="viewbar">
+        <?= /* @noEscape */ $sectionNavigation->toHtml() ?>
+    </div>
+</div>

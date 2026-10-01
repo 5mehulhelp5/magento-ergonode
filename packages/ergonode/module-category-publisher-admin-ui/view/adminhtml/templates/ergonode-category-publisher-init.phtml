@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Ergonode\CategoryPublisherAdminUi\Block\Adminhtml\ManualActions $block */
+?>
+<script type="text/x-magento-init">
+{
+    "#ergonode-category-tree-mapping": {
+        "Ergonode_CategoryPublisherAdminUi/js/ergonode-category-publisher-mapping":
+            <?= /* @noEscape */ $block->getConfigJson() ?>
+    }
+}
+</script>

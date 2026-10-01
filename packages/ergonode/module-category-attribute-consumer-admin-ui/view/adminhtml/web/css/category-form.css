@@ -1,0 +1,41 @@
+.vec-category-form-refresh {
+    --vec-category-status-error: #dc2626;
+    --vec-category-status-error-text: #991b1b;
+    --vec-category-status-muted: #64748b;
+    --vec-category-status-muted-text: #475569;
+    --vec-category-status-success: #079669;
+    --vec-category-status-success-text: #065f46;
+
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vec-category-form-refresh-button {
+    align-items: center;
+    display: inline-flex;
+    gap: 8px;
+}
+
+.vec-category-form-refresh-button:disabled {
+    cursor: wait;
+    opacity: .62;
+}
+
+.vec-category-form-refresh-status {
+    border-left: 3px solid var(--vec-category-status-muted);
+    color: var(--vec-category-status-muted-text);
+    line-height: 1.45;
+    padding: 6px 10px;
+}
+
+.vec-category-form-refresh-status.is-success {
+    border-color: var(--vec-category-status-success);
+    color: var(--vec-category-status-success-text);
+}
+
+.vec-category-form-refresh-status.is-error {
+    border-color: var(--vec-category-status-error);
+    color: var(--vec-category-status-error-text);
+}

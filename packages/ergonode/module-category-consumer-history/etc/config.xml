@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ergonode_categories>
+            <history>
+                <enabled>1</enabled>
+                <cleanup_enabled>1</cleanup_enabled>
+                <retention_days>30</retention_days>
+                <schedule>30 2 * * *</schedule>
+            </history>
+        </ergonode_categories>
+    </default>
+</config>

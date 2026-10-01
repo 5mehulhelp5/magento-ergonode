@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-publisher-admin-ui",
+    "description": "Write configuration, shared REST login UI, admin-session credential storage and publishing actions.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-core-admin-ui": "dev-main@dev",
+        "ergonode/module-publisher": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\PublisherAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

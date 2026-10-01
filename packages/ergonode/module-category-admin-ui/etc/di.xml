@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\CoreAdminUi\Block\Adminhtml\SectionNavigation">
+        <arguments>
+            <argument name="navigationGroupProviders" xsi:type="array">
+                <item name="categories" xsi:type="object">Ergonode\CategoryAdminUi\Model\Navigation\CategoryNavigationGroupProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\CategoryAdminUi\Model\Navigation\CategoryNavigationGroupProvider">
+        <arguments>
+            <argument name="itemProviders" xsi:type="array">
+                <item name="category_tree" xsi:type="object">Ergonode\CategoryAdminUi\Model\Navigation\CategoryTreeNavigationItemProvider</item>
+            </argument>
+            <argument name="sectionCodes" xsi:type="array">
+                <item name="category_tree" xsi:type="string">categories</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

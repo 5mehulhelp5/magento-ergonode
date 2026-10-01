@@ -18,10 +18,74 @@
     },
     "version": "2.4.9",
     "require": {
-        "magento/product-community-edition": "2.4.9",
+        "ergonode/module-attribute": "dev-main@dev",
+        "ergonode/module-attribute-consumer": "dev-main@dev",
+        "ergonode/module-attribute-publisher": "dev-main@dev",
+        "ergonode/module-attribute-publisher-admin-ui": "dev-main@dev",
+        "ergonode/module-category": "dev-main@dev",
+        "ergonode/module-category-admin-ui": "dev-main@dev",
+        "ergonode/module-category-attribute": "dev-main@dev",
+        "ergonode/module-category-attribute-admin-ui": "dev-main@dev",
+        "ergonode/module-category-attribute-consumer": "dev-main@dev",
+        "ergonode/module-category-attribute-consumer-admin-ui": "dev-main@dev",
+        "ergonode/module-category-attribute-consumer-history": "dev-main@dev",
+        "ergonode/module-category-attribute-history": "dev-main@dev",
+        "ergonode/module-category-attribute-history-admin-ui": "dev-main@dev",
+        "ergonode/module-category-attribute-publisher": "dev-main@dev",
+        "ergonode/module-category-attribute-publisher-admin-ui": "dev-main@dev",
+        "ergonode/module-category-consumer": "dev-main@dev",
+        "ergonode/module-category-consumer-admin-ui": "dev-main@dev",
+        "ergonode/module-category-consumer-history": "dev-main@dev",
+        "ergonode/module-category-consumer-history-admin-ui": "dev-main@dev",
+        "ergonode/module-category-publisher": "dev-main@dev",
+        "ergonode/module-category-publisher-admin-ui": "dev-main@dev",
+        "ergonode/module-consumer": "dev-main@dev",
+        "ergonode/module-consumer-admin-ui": "dev-main@dev",
+        "ergonode/module-core": "dev-main@dev",
+        "ergonode/module-core-admin-ui": "dev-main@dev",
+        "ergonode/module-language": "dev-main@dev",
+        "ergonode/module-language-admin-ui": "dev-main@dev",
+        "ergonode/module-product": "dev-main@dev",
+        "ergonode/module-product-admin-ui": "dev-main@dev",
+        "ergonode/module-product-attribute": "dev-main@dev",
+        "ergonode/module-product-attribute-admin-ui": "dev-main@dev",
+        "ergonode/module-product-attribute-consumer": "dev-main@dev",
+        "ergonode/module-product-attribute-consumer-admin-ui": "dev-main@dev",
+        "ergonode/module-product-attribute-consumer-history": "dev-main@dev",
+        "ergonode/module-product-attribute-history": "dev-main@dev",
+        "ergonode/module-product-attribute-history-admin-ui": "dev-main@dev",
+        "ergonode/module-product-attribute-publisher": "dev-main@dev",
+        "ergonode/module-product-attribute-publisher-admin-ui": "dev-main@dev",
+        "ergonode/module-product-category-attribute": "dev-main@dev",
+        "ergonode/module-product-category-attribute-admin-ui": "dev-main@dev",
+        "ergonode/module-product-category-attribute-consumer": "dev-main@dev",
+        "ergonode/module-product-category-attribute-publisher": "dev-main@dev",
+        "ergonode/module-product-category-consumer": "dev-main@dev",
+        "ergonode/module-product-category-publisher": "dev-main@dev",
+        "ergonode/module-product-category-publisher-admin-ui": "dev-main@dev",
+        "ergonode/module-product-consumer": "dev-main@dev",
+        "ergonode/module-product-consumer-admin-ui": "dev-main@dev",
+        "ergonode/module-product-publisher": "dev-main@dev",
+        "ergonode/module-product-publisher-admin-ui": "dev-main@dev",
+        "ergonode/module-product-template-publisher": "dev-main@dev",
+        "ergonode/module-publisher": "dev-main@dev",
+        "ergonode/module-publisher-admin-ui": "dev-main@dev",
+        "ergonode/module-template": "dev-main@dev",
+        "ergonode/module-template-admin-ui": "dev-main@dev",
+        "ergonode/module-template-attribute": "dev-main@dev",
+        "ergonode/module-template-attribute-admin-ui": "dev-main@dev",
+        "ergonode/module-template-attribute-consumer": "dev-main@dev",
+        "ergonode/module-template-attribute-consumer-admin-ui": "dev-main@dev",
+        "ergonode/module-template-consumer": "dev-main@dev",
+        "ergonode/module-template-consumer-admin-ui": "dev-main@dev",
+        "ergonode/module-template-publisher": "dev-main@dev",
+        "ergonode/module-template-publisher-admin-ui": "dev-main@dev",
+        "magento/composer": "^1.10.1-beta1",
         "magento/composer-dependency-version-audit-plugin": "~0.1",
         "magento/composer-root-update-plugin": "^2.0.4",
-        "magento/composer": "^1.10.1-beta1"
+        "magento/product-community-edition": "2.4.9",
+        "packhauer/module-file-attribute": "dev-main@dev",
+        "packhauer/module-unit-attribute": "dev-main@dev"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -75,6 +139,13 @@
     "prefer-stable": true,
     "repositories": [
         {
+            "type": "path",
+            "url": "packages/*/*",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
             "type": "composer",
             "url": "https://repo.magento.com/"
         }
@@ -83,4 +154,3 @@
         "magento-force": "override"
     }
 }
-

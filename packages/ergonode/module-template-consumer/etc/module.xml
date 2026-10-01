@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Ergonode_TemplateConsumer">
+        <sequence>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_Cron"/>
+            <module name="Magento_Eav"/>
+            <module name="Ergonode_Core"/>
+            <module name="Ergonode_Language"/>
+            <module name="Ergonode_Template"/>
+        </sequence>
+    </module>
+</config>

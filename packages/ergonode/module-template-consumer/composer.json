@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-template-consumer",
+    "description": "Ergonode template snapshot import and optional Magento attribute-set synchronization orchestration.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-language": "dev-main@dev",
+        "ergonode/module-template": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\TemplateConsumer\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

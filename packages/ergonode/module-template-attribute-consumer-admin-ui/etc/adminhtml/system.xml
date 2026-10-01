@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_templates">
+            <group id="import">
+                <field id="sync_attributes" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Synchronize Attributes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Add and remove only complete, mapped, non-system Magento attributes according to the Ergonode template.</comment>
+                </field>
+                <field id="sync_sections" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Synchronize Sections</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Create and synchronize Magento attribute groups named "Ergonode - {section}". When disabled, synchronized attributes are placed in one common "Ergonode" group.</comment>
+                    <depends>
+                        <field id="sync_attributes">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
