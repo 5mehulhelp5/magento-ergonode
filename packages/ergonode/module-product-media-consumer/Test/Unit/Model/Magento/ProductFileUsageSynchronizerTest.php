@@ -50,7 +50,9 @@ class ProductFileUsageSynchronizerTest extends TestCase
             ])
         );
 
-        (new ProductFileUsageSynchronizer($mappings, $languages, $recorder, $eav))->synchronize(23, [
+        (new ProductFileUsageSynchronizer($mappings, $languages, $recorder, $eav,
+            new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(),
+            $this->createStub(\Magento\Store\Model\StoreManagerInterface::class)))->synchronize(23, [
             new RemoteProductAttribute(
                 'manual',
                 new RemoteProductAttributeType('file'),
@@ -61,4 +63,47 @@ class ProductFileUsageSynchronizerTest extends TestCase
             ),
         ]);
     }
+    public function testWebsiteFileToTextUsesOneLanguagePerWebsite(): void
+    {
+        $mappings = $this->createStub(ProductAttributeMappingProviderInterface::class);
+        $mappings->method('getMappings')->willReturn([[
+            'ergonode_attribute_code' => 'manual', 'magento_attribute_code' => 'manual_url',
+            'ergonode_type' => 'file', 'magento_type' => 'text',
+        ]]);
+        $languages = $this->createStub(LanguageStoreMappingProviderInterface::class);
+        $languages->method('getLanguageStoreMap')->willReturn([0 => 'pl_PL', 2 => 'en_GB', 3 => 'de_DE', 4 => 'fr_FR']);
+        $attribute = $this->createStub(Attribute::class);
+        $attribute->method('getIsGlobal')->willReturn(2);
+        $eav = $this->createStub(Config::class);
+        $eav->method('getAttribute')->willReturn($attribute);
+        $defaultOne = $this->createStub(\Magento\Store\Model\Store::class);
+        $defaultOne->method('getId')->willReturn(3);
+        $defaultTwo = $this->createStub(\Magento\Store\Model\Store::class);
+        $defaultTwo->method('getId')->willReturn(4);
+        $websiteOne = $this->createStub(\Magento\Store\Model\Website::class);
+        $websiteOne->method('getId')->willReturn(1);
+        $websiteOne->method('getDefaultStore')->willReturn($defaultOne);
+        $websiteTwo = $this->createStub(\Magento\Store\Model\Website::class);
+        $websiteTwo->method('getId')->willReturn(2);
+        $websiteTwo->method('getDefaultStore')->willReturn($defaultTwo);
+        $storeOne = $this->createStub(\Magento\Store\Model\Store::class);
+        $storeOne->method('getWebsite')->willReturn($websiteOne);
+        $storeTwo = $this->createStub(\Magento\Store\Model\Store::class);
+        $storeTwo->method('getWebsite')->willReturn($websiteTwo);
+        $stores = $this->createStub(\Magento\Store\Model\StoreManagerInterface::class);
+        $stores->method('getStore')->willReturnCallback(static fn($id) => $id === 4 ? $storeTwo : $storeOne);
+        $recorder = $this->createMock(FileUsageRecorderInterface::class);
+        $recorder->expects(self::once())->method('synchronize')->with(23, self::callback(
+            static fn(FileUsageSet $set): bool => $set->toRows() === [
+                ['source_path' => 'pl.pdf', 'attribute_code' => 'manual_url', 'store_id' => 0],
+                ['source_path' => 'de.pdf', 'attribute_code' => 'manual_url', 'store_id' => 3],
+                ['source_path' => 'fr.pdf', 'attribute_code' => 'manual_url', 'store_id' => 4],
+            ]
+        ));
+        (new ProductFileUsageSynchronizer($mappings, $languages, $recorder, $eav,
+            new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(), $stores))
+            ->synchronize(23, [new RemoteProductAttribute('manual', new RemoteProductAttributeType('file'),
+                new LocalizedStringValues(['pl_PL' => 'pl.pdf', 'en_GB' => 'en.pdf', 'de_DE' => 'de.pdf', 'fr_FR' => 'fr.pdf']))]);
+    }
+
 }

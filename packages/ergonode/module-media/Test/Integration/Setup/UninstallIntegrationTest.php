@@ -45,7 +45,7 @@ class UninstallIntegrationTest extends TestCase
         );
     }
 
-    public function testRuntimeCleanerUsesRealAdapterForRecordsAndTables(): void
+    public function testRuntimeCleanerDropsOnlyOwnedTablesAndPreservesOtherRecords(): void
     {
         $connection = Bootstrap::getObjectManager()->get(ResourceConnection::class)->getConnection();
         $prefix = 'tmp_erg_media_uninstall_' . bin2hex(random_bytes(4)) . '_';
@@ -69,7 +69,7 @@ class UninstallIntegrationTest extends TestCase
             }
             foreach (array_keys(self::RUNTIME_TABLES) as $table) {
                 self::assertTrue($connection->isTableExists($prefix . $table), $table);
-                self::assertSame(0, (int)$connection->fetchOne(
+                self::assertSame(1, (int)$connection->fetchOne(
                     $connection->select()->from($prefix . $table, ['count' => 'COUNT(*)'])
                 ));
             }

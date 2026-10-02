@@ -118,7 +118,7 @@ class MediaRepository implements MediaRepositoryInterface
         return array_values($products);
     }
 
-    public function updateMetadata(int $assetId, array $media): void
+    public function updateMetadata(int $assetId, array $media, int $expectedRevision): void
     {
         $this->connection()->update($this->table(self::ASSET), [
             'download_url' => trim((string)$media['url']),
@@ -126,14 +126,20 @@ class MediaRepository implements MediaRepositoryInterface
             'extension' => $this->extension((string)$media['extension'], (string)$media['path']),
             'mime_type' => mb_substr(trim((string)$media['mime']), 0, 128),
             'size' => max(0, (int)$media['size']),
-        ], ['asset_id = ?' => $assetId]);
+        ], ['asset_id = ?' => $assetId, 'revision = ?' => $expectedRevision]);
+        if ($this->getAsset($assetId)->revision !== $expectedRevision) {
+            throw new LocalizedException(__('Ergonode media changed while its metadata was being fetched.'));
+        }
     }
 
-    public function activate(int $assetId, string $hash, string $cachePath, int $size): void
+    public function activate(int $assetId, string $hash, string $cachePath, int $size, int $expectedRevision): void
     {
-        $this->connection()->update($this->table(self::ASSET), [
+        $affected = $this->connection()->update($this->table(self::ASSET), [
             'content_hash' => $hash, 'cache_path' => $cachePath, 'size' => $size, 'status' => 'active',
-        ], ['asset_id = ?' => $assetId]);
+        ], ['asset_id = ?' => $assetId, 'revision = ?' => $expectedRevision]);
+        if ($affected === 0 && $this->getAsset($assetId)->revision !== $expectedRevision) {
+            throw new LocalizedException(__('Ergonode media changed while its file was being downloaded.'));
+        }
     }
 
     /** @param string[] $paths */
@@ -316,6 +322,34 @@ class MediaRepository implements MediaRepositoryInterface
         $this->connection()->delete($this->table(self::WORK), [
             'product_id = ?' => $item->productId, 'lease_token = ?' => $item->leaseToken,
         ]);
+    }
+
+    public function applyWork(WorkItem $item, callable $write): bool
+    {
+        $connection = $this->connection();
+        $connection->beginTransaction();
+        try {
+            // A reschedule replaces the token. Lock until all product and usage writes finish,
+            // so another claim or reschedule cannot invalidate this check during the write.
+            $row = $connection->fetchRow($connection->select()->from($this->table(self::WORK))
+                ->where('product_id = ?', $item->productId)->forUpdate(true));
+            if (!is_array($row) || $row['status'] !== 'processing'
+                || !hash_equals((string)$row['lease_token'], $item->leaseToken)
+            ) {
+                $connection->commit();
+                return false;
+            }
+            if ((string)$row['lease_expires_at'] <= $this->now()) {
+                // Throw so the consumer releases this unchanged token for retry instead of completing it.
+                throw new LocalizedException(__('Ergonode media work lease expired before the product write.'));
+            }
+            $write();
+            $connection->commit();
+            return true;
+        } catch (Throwable $exception) {
+            $connection->rollBack();
+            throw $exception;
+        }
     }
 
     public function release(WorkItem $item, string $error, int $maxAttempts, int $delay): void

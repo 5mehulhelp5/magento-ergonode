@@ -90,8 +90,9 @@ try {
             parent::get($uri);
         }
     };
-    $config = new class extends ConfigProvider {
-        public function __construct() {}
+    $config = new class($address) extends ConfigProvider {
+        public function __construct(private readonly string $address) {}
+        public function getGraphQlUrl(): string { return "http://" . $this->address . "/api/graphql/"; }
         public function getApiKey(): string { return ''; }
         public function isEnabled(): bool { return true; }
     };
@@ -130,7 +131,12 @@ try {
     $repository = $om->get(MediaRepository::class);
     $cache = new MaterializationCache();
     $locks = $om->get(LockManagerInterface::class);
-    $preparer = new SourcePreparer($repository, $om->get(MultimediaClient::class), $curl, $config,
+    $curlFactory = new class($curl) extends \Magento\Framework\HTTP\Client\CurlFactory {
+        public function __construct(private readonly \Magento\Framework\HTTP\Client\Curl $client) {}
+        public function create(array $data = []) { return $this->client; }
+    };
+    $preparer = new SourcePreparer($repository, $om->get(MultimediaClient::class), $curlFactory,
+        new \Ergonode\Core\Model\Http\DownloadSourcePolicy($config),
         $om->get(DownloadGuard::class), $directories, new File(), $locks);
     $materializer = new AssetMaterializer($repository, $preparer, $directories, $files, $locks,
         new DefaultSharedPathStrategy(), $om->get(ProductPathStrategy::class),
@@ -143,7 +149,8 @@ try {
     $worker = new WorkProcessor($repository, $gallery,
         $om->get(\Ergonode\Media\Api\SharedAssetResolverInterface::class),
         $om->get(\Ergonode\Media\Model\Port\FileAttributeWriterInterface::class), $galleryConfig,
-        $om->get(\Ergonode\ProductMedia\Api\ImageRolesInterface::class));
+        $om->get(\Ergonode\ProductMedia\Api\ImageRolesInterface::class),
+        $om->get(\Ergonode\ProductMedia\Model\Gallery\GalleryWriteLocks::class));
     $selection = new ProductGallerySelectionProvider($galleryConfig,
         $om->get(\Ergonode\ProductMediaConsumer\Model\Media\AdditionalImageSelection::class),
         $om->get(\Ergonode\ProductMedia\Api\GalleryLayoutInterface::class));
@@ -154,7 +161,9 @@ try {
     $fileUsages = new \Ergonode\ProductMediaConsumer\Model\Magento\ProductFileUsageSynchronizer(
         $om->get(\Ergonode\ProductAttributeConsumer\Api\ProductAttributeMappingProviderInterface::class),
         $languages, $om->get(\Ergonode\Media\Api\FileUsageRecorderInterface::class),
-        $om->get(\Magento\Eav\Model\Config::class));
+        $om->get(\Magento\Eav\Model\Config::class),
+        new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(),
+        $om->get(\Magento\Store\Model\StoreManagerInterface::class));
     $bridge = new ProductMediaSynchronizer($fileUsages, $selection,
         new GalleryScheduler($galleryConfig, $repository, $publisher));
     $productResource = $om->get(ProductResource::class);
@@ -257,6 +266,33 @@ try {
     $assert($reused === $manual && $curl->downloads === 4 && $files->copies === 3,
         'An indexed existing image was copied instead of reusing its original path.');
 
+    // A worker prepared old data before a newer task changed the desired gallery.
+    $staleWork = $repository->claim(1, 300)[0];
+    $staleGalleryWrite = $gallery->prepare($staleWork->productId);
+    $repository->replaceGallery($staleWork->productId, [$aliasPath]);
+    $freshWork = $repository->claim(1, 300)[0];
+    $assert($freshWork->productId === $staleWork->productId, 'The replacement task was not claimed.');
+    $worker->process($freshWork);
+    $repository->complete($freshWork);
+    $assert(!$repository->applyWork($staleWork, $staleGalleryWrite), 'The stale worker was allowed to write.');
+    $assert($repository->galleryUsages($staleWork->productId)[0]['attached_path'] === $firstPath,
+        'The stale worker replaced the current attachment.');
+    $assert($productResource->getAttributeRawValue($staleWork->productId, 'image', 0)
+        === '/' . substr($firstPath, strlen('catalog/product/')), 'The stale worker replaced the current image role.');
+
+    // A download started at one revision must not activate after the stream advances.
+    $revisionPath = '/' . $prefix . '/revision.png';
+    $revisionAsset = $repository->ensureAsset($revisionPath);
+    $repository->recordStream([$item($revisionPath, 'http://' . $address . '/first.png', 'revision-next')]);
+    $activationRejected = false;
+    try {
+        $repository->activate($revisionAsset->id, hash('sha256', 'old', true), 'old.png', 3, $revisionAsset->revision);
+    } catch (\Magento\Framework\Exception\LocalizedException) {
+        $activationRejected = true;
+    }
+    $assert($activationRejected, 'Old downloaded content activated over a newer source revision.');
+    $assert($repository->getAsset($revisionAsset->id)->status === 'dirty', 'New revision lost its dirty state.');
+
     // Exercise the actual consumer boundary; its cache must not outlive one message.
     $consumer = new Consumer($repository, $worker, $publisher,
         $om->get(\Ergonode\Media\Model\Config\MediaConfig::class), $config,
@@ -268,7 +304,8 @@ try {
     $report = ['success' => true, 'products' => 3, 'repeated_resolutions' => 100,
         'initial_import' => $initialMetrics, 'after_replacement' => $replacementMetrics, 'final_totals' => [
             'http_downloads' => $curl->downloads, 'permanent_copies' => $files->copies,
-        ], 'missing_target_restored_without_download' => true, 'indexed_existing_file_reused' => true];
+        ], 'missing_target_restored_without_download' => true, 'indexed_existing_file_reused' => true,
+        'stale_worker_rejected' => true, 'stale_source_activation_rejected' => true];
 } finally {
     $db->rollBack();
     if (is_resource($server)) {

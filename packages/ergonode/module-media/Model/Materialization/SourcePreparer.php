@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ergonode\Media\Model\Materialization;
 
-use Ergonode\Core\Model\Config\ConfigProvider;
+use Ergonode\Core\Api\DownloadSourcePolicyInterface;
 use Ergonode\Media\Model\Data\Asset;
 use Ergonode\Media\Model\Download\DownloadGuard;
 use Ergonode\Media\Model\GraphQl\MultimediaClient;
@@ -12,7 +12,7 @@ use Ergonode\Media\Model\ResourceModel\MediaRepository;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem\Io\File;
-use Magento\Framework\HTTP\Client\Curl;
+use Magento\Framework\HTTP\Client\CurlFactory;
 use Magento\Framework\Lock\LockManagerInterface;
 
 class SourcePreparer
@@ -20,8 +20,8 @@ class SourcePreparer
     public function __construct(
         private readonly MediaRepository $repository,
         private readonly MultimediaClient $client,
-        private readonly Curl $curl,
-        private readonly ConfigProvider $config,
+        private readonly CurlFactory $curlFactory,
+        private readonly DownloadSourcePolicyInterface $downloadPolicy,
         private readonly DownloadGuard $guard,
         private readonly DirectoryList $directories,
         private readonly File $file,
@@ -46,7 +46,7 @@ class SourcePreparer
                 $media = $this->guard->run(
                     fn (): array => $this->client->get($asset->sourcePath)
                 );
-                $this->repository->updateMetadata($asset->id, $media);
+                $this->repository->updateMetadata($asset->id, $media, $asset->revision);
                 $asset = $this->repository->getAsset($asset->id);
             }
             $body = $this->guard->run(fn (): string => $this->download($asset));
@@ -59,8 +59,12 @@ class SourcePreparer
                 $this->file->checkAndCreateFolder($this->file->dirname($absolute));
                 $this->file->write($absolute, $body);
             }
-            $this->repository->activate($asset->id, $hash, $cache, strlen($body));
-            return $this->repository->getAsset($asset->id);
+            $this->repository->activate($asset->id, $hash, $cache, strlen($body), $asset->revision);
+            $prepared = $this->repository->getAsset($asset->id);
+            if ($prepared->revision !== $asset->revision || $prepared->status !== 'active') {
+                throw new LocalizedException(__('Ergonode media changed while its file was being downloaded.'));
+            }
+            return $prepared;
         } finally {
             $this->locks->unlock($lock);
         }
@@ -68,15 +72,16 @@ class SourcePreparer
 
     private function download(Asset $asset): string
     {
-        $this->curl->addHeader('Accept', '*/*');
-        $key = $this->config->getApiKey();
-        if ($key !== '') {
-            $this->curl->addHeader('X-API-KEY', $key);
-        }
-        $this->curl->setTimeout(60);
-        $this->curl->get((string)$asset->url);
-        $body = (string)$this->curl->getBody();
-        if ($this->curl->getStatus() < 200 || $this->curl->getStatus() >= 300 || $body === '') {
+        $this->downloadPolicy->authorize((string)$asset->url);
+        $curl = $this->curlFactory->create();
+        $curl->setHeaders(['Accept' => '*/*']);
+        $curl->setTimeout(60);
+        $curl->setOption(CURLOPT_CONNECTTIMEOUT, 10);
+        $curl->setOption(CURLOPT_FOLLOWLOCATION, false);
+        $curl->setOption(CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        $curl->get((string)$asset->url);
+        $body = (string)$curl->getBody();
+        if ($curl->getStatus() < 200 || $curl->getStatus() >= 300 || $body === '') {
             throw new LocalizedException(__('Unable to download Ergonode media.'));
         }
         return $body;

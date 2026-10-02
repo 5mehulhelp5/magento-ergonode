@@ -29,6 +29,16 @@ are refreshed. The cursor is advanced only after idempotent database work has
 been persisted. Download concurrency is limited to six and downloads to 250 per
 minute.
 
+Downloads use a fresh HTTP client without the GraphQL API key. The existing
+Ergonode origin policy validates the URL and redirects are disabled. Source
+metadata and activation use the expected local revision to reject stale downloads.
+
+Workers prepare files before starting the product-write transaction. The transaction
+locks the work row and verifies its current lease token and expiry before updating
+gallery, roles, file attributes and attachment records. A rescheduled worker cannot
+write; an expired lease is retried. Gallery path locks remain held until commit or
+rollback so simultaneous products reuse the same native gallery entry.
+
 An active asset with a matching stored content hash and revision reuses its
 existing target file before source preparation. Removing the temporary source
 cache under `var` does not download that asset again. A missing target, missing
@@ -129,17 +139,12 @@ ddev exec bin/magento developer:module:backlog --remove-data \
     Ergonode_ProductMediaConsumer Ergonode_Media
 ```
 
-The standard `Ergonode_Media\Setup\Uninstall` removes module tables, saved
-`ergonode_products/media/*` configuration, cron and database-queue records,
-managed native gallery links, still-managed file-attribute values, downloaded
-`shared` and `seo` files, and the `var/ergonode/media` source cache. It does not
-remove `catalog/product/ergonode` or `catalog/product/files`, because those
-locations are also used by synchronous imports and manually uploaded file
-attributes. When an external AMQP or STOMP broker is configured, purge the
-`ergonode.media.gallery` broker queue operationally before removing the module.
-When `PackHauer_ProductMedia` is enabled, run
-`ddev exec bin/magento product:media:scan`
-afterwards to refresh its independent filesystem snapshot.
+The standard `Ergonode_Media\Setup\Uninstall` removes only the eight tables
+owned by this module. It preserves product attribute values, native gallery
+entries, image roles, all media files and the source cache. It also preserves
+configuration, cron and queue records in Magento-owned tables. Stop consumers
+and disable schedules before uninstalling. Broker queue maintenance is a separate
+operational action and is not performed by the uninstaller.
 
 ## Environment-specific automation settings
 

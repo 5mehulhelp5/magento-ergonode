@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Ergonode\ProductMedia\Model\ResourceModel;
 
 use Ergonode\ProductMedia\Model\Port\GalleryWriterInterface;
+use Ergonode\ProductMedia\Model\Gallery\GalleryWriteLocks;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Lock\LockManagerInterface;
 
 class NativeGalleryWriter implements GalleryWriterInterface
 {
     public function __construct(
         private readonly ResourceConnection $resource,
         private readonly Config $eav,
-        private readonly LockManagerInterface $locks
+        private readonly GalleryWriteLocks $locks
     ) {
     }
 
@@ -31,6 +31,8 @@ class NativeGalleryWriter implements GalleryWriterInterface
     public function synchronize(int $productId, array $desired, array $managed): void
     {
         $connection = $this->resource->getConnection();
+        // Acquire retained path locks in a stable order across products.
+        usort($desired, fn(array $a, array $b): int => $this->path($a['path']) <=> $this->path($b['path']));
         $wanted = [];
         foreach ($desired as $item) {
             $path = $this->path($item['path']);
@@ -74,11 +76,7 @@ class NativeGalleryWriter implements GalleryWriterInterface
     }
     private function valueId(string $path): int
     {
-        $lock = 'ergonode_gallery_' . hash('sha256', $path);
-        if (!$this->locks->lock($lock, 30)) {
-            throw new LocalizedException(__('Gallery path is being registered.'));
-        }
-        try {
+        return $this->locks->forPath($path, function () use ($path): int {
             $ids = $this->valueIds($path);
             if ($ids !== []) {
                 return $ids[0];
@@ -94,9 +92,7 @@ class NativeGalleryWriter implements GalleryWriterInterface
                 ]
             );
             return $this->valueIds($path)[0];
-        } finally {
-            $this->locks->unlock($lock);
-        }
+        });
     }
     /**
      * Find native gallery values for a local path.
@@ -109,7 +105,7 @@ class NativeGalleryWriter implements GalleryWriterInterface
             ->from($this->table('catalog_product_entity_media_gallery'), ['value_id'])
             ->where('attribute_id = ?', $this->attributeId())
             ->where('BINARY value = BINARY ?', '/' . substr($path, strlen('catalog/product/')))
-            ->order('value_id ASC');
+            ->order('value_id ASC')->forUpdate(true);
 
         return array_map('intval', $this->resource->getConnection()->fetchCol($select));
     }

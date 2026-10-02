@@ -26,6 +26,12 @@ class GalleryWorkProcessor
     }
     public function process(int $productId): void
     {
+        ($this->prepare($productId))();
+    }
+
+    /** Resolve files before the caller enters the guarded product-write transaction. */
+    public function prepare(int $productId): \Closure
+    {
         $mode = $this->modeProvider->get();
         $desired = [];
         $managed = [];
@@ -62,13 +68,15 @@ class GalleryWorkProcessor
                 'path' => $path,
             ];
         }
-        $this->gallery->synchronize($productId, $desired, array_values(array_unique($managed)), $mappedRoles);
-        foreach ($attachments as $assetId => $path) {
-            $this->repository->saveGalleryPath($productId, $assetId, $path);
-        }
-        if ($desired !== []) {
-            $this->modeLock->lock($mode);
-        }
-        $this->repository->purgeObsoleteGalleryUsages($productId);
+        return function () use ($productId, $desired, $managed, $mappedRoles, $attachments, $mode): void {
+            $this->gallery->synchronize($productId, $desired, array_values(array_unique($managed)), $mappedRoles);
+            foreach ($attachments as $assetId => $path) {
+                $this->repository->saveGalleryPath($productId, $assetId, $path);
+            }
+            if ($desired !== []) {
+                $this->modeLock->lock($mode);
+            }
+            $this->repository->purgeObsoleteGalleryUsages($productId);
+        };
     }
 }

@@ -14,6 +14,7 @@ use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProductAttribute;
 use LogicException;
 use Magento\Catalog\Model\Product;
 use Magento\Eav\Model\Config;
+use Magento\Store\Model\StoreManagerInterface;
 
 class ProductFileUsageSynchronizer
 {
@@ -21,7 +22,9 @@ class ProductFileUsageSynchronizer
         private readonly ProductAttributeMappingProviderInterface $mappings,
         private readonly LanguageStoreMappingProviderInterface $languages,
         private readonly FileUsageRecorderInterface $recorder,
-        private readonly Config $eav
+        private readonly Config $eav,
+        private readonly AsynchronousFileAttributeMapping $deferredMappings,
+        private readonly StoreManagerInterface $storeManager
     ) {
     }
 
@@ -35,9 +38,7 @@ class ProductFileUsageSynchronizer
         $storeLanguages = $this->languages->getLanguageStoreMap();
         $references = [];
         foreach ($this->mappings->getMappings() as $mapping) {
-            $sourceType = strtolower((string)$mapping['ergonode_type']);
-            $targetType = strtolower((string)$mapping['magento_type']);
-            if (!in_array($sourceType, ['image', 'file'], true) || $sourceType !== $targetType) {
+            if (!$this->deferredMappings->supports($mapping)) {
                 continue;
             }
             $item = $source[(string)$mapping['ergonode_attribute_code']] ?? null;
@@ -48,7 +49,7 @@ class ProductFileUsageSynchronizer
                 throw new LogicException('Remote file attribute must contain localized path values.');
             }
             $attribute = $this->eav->getAttribute(Product::ENTITY, (string)$mapping['magento_attribute_code']);
-            $stores = (int)$attribute->getIsGlobal() !== 0 ? [0 => $storeLanguages[0] ?? null] : $storeLanguages;
+            $stores = $this->stores((int)$attribute->getIsGlobal(), $storeLanguages);
             foreach ($stores as $storeId => $language) {
                 $path = $language === null ? null : ($item->values->all()[$language] ?? null);
                 $path = trim((string)$path);
@@ -62,5 +63,35 @@ class ProductFileUsageSynchronizer
             }
         }
         $this->recorder->synchronize($productId, new FileUsageSet($references));
+    }
+
+    /** @param array<int, string|null> $languages @return array<int, string|null> */
+    private function stores(int $scope, array $languages): array
+    {
+        if ($scope === 1) {
+            return [0 => $languages[0] ?? null];
+        }
+        if ($scope !== 2) {
+            return $languages;
+        }
+        $result = [0 => $languages[0] ?? null];
+        $websites = [];
+        ksort($languages);
+        foreach ($languages as $storeId => $language) {
+            if ((int)$storeId === 0) {
+                continue;
+            }
+            $website = $this->storeManager->getStore($storeId)->getWebsite();
+            $websiteId = (int)$website->getId();
+            if (isset($websites[$websiteId])) {
+                continue;
+            }
+            $websites[$websiteId] = true;
+            // Product Action propagates this single value to every store in the website.
+            $defaultId = (int)$website->getDefaultStore()->getId();
+            $selectedId = array_key_exists($defaultId, $languages) ? $defaultId : (int)$storeId;
+            $result[$selectedId] = $languages[$selectedId];
+        }
+        return $result;
     }
 }

@@ -13,7 +13,7 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Catalog\Model\ResourceModel\Product\Action;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Lock\LockManagerInterface;
+use Ergonode\ProductMedia\Model\Gallery\GalleryWriteLocks;
 use Magento\Eav\Model\Config;
 use Magento\TestFramework\Fixture\DbIsolation;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -28,7 +28,7 @@ class GalleryRolesIntegrationTest extends TestCase
         $resource = $om->get(ResourceConnection::class);
         $connection = $resource->getConnection();
         $products = $om->get(ProductResource::class);
-        $writer = new NativeGalleryWriter($resource, $om->get(Config::class), $om->get(LockManagerInterface::class));
+        $writer = new NativeGalleryWriter($resource, $om->get(Config::class), $om->get(GalleryWriteLocks::class));
         $roles = new RoleWriter($products, $om->get(Action::class));
         $sync = new GallerySynchronizer(
             $writer,

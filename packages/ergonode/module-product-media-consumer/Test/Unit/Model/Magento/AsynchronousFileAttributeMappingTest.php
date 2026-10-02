@@ -16,13 +16,14 @@ class AsynchronousFileAttributeMappingTest extends TestCase
         return [
             'file to file' => ['file', 'file', true],
             'normalized file to file' => [' FILE ', 'File', true],
-            'file to text' => ['file', 'text', false],
+            'file to text' => ['file', 'text', true],
+            'file to textarea' => ['file', 'textarea', true],
             'image to file' => ['image', 'file', false],
         ];
     }
 
     #[DataProvider('mappingProvider')]
-    public function testClaimsOnlyFileToFileMapping(string $source, string $target, bool $expected): void
+    public function testClaimsSupportedDeferredMappings(string $source, string $target, bool $expected): void
     {
         self::assertSame($expected, (new AsynchronousFileAttributeMapping())->supports([
             'ergonode_type' => $source,

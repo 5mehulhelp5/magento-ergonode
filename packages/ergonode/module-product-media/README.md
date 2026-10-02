@@ -52,7 +52,8 @@ bridge is enabled and gallery synchronization is enabled. Binary publication is
 not implemented, so the adapter does not advertise publication support. Removing
 a capability never converts an excluded mapping into a clear operation.
 
-Uninstall removes only this module's configuration; it preserves native product
-data and ProductAttribute mapping markers. Media owns transfer data cleanup.
+Uninstall preserves configuration, native product data, media files and
+ProductAttribute mapping markers. This module owns no tables; Media removes only
+its own transfer tables.
 The module must be enabled together with its dependent Media modules. This change
 does not enable modules or execute configuration/data migration automatically.

@@ -10,6 +10,8 @@ use Magento\Catalog\Model\ResourceModel\Product\Action;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 class FileAttributeWriter implements FileAttributeWriterInterface
 {
@@ -17,13 +19,19 @@ class FileAttributeWriter implements FileAttributeWriterInterface
         private readonly ResourceConnection $resource,
         private readonly ProductResource $products,
         private readonly Config $eav,
-        private readonly Action $action
+        private readonly Action $action,
+        private readonly StoreManagerInterface $storeManager
     ) {
     }
 
     public function write(int $productId, string $code, int $storeId, string $path): void
     {
-        $this->action->updateAttributes([$productId], [$code => $path], $storeId);
+        $attribute = $this->eav->getAttribute(Product::ENTITY, $code);
+        $value = in_array($attribute->getFrontendInput(), ['text', 'textarea'], true)
+            ? rtrim($this->storeManager->getStore($storeId)->getBaseUrl(UrlInterface::URL_TYPE_MEDIA), '/')
+                . '/' . ltrim($path, '/')
+            : $path;
+        $this->action->updateAttributes([$productId], [$code => $value], $storeId);
     }
     public function clear(int $productId, string $code, int $storeId): void
     {
@@ -42,12 +50,17 @@ class FileAttributeWriter implements FileAttributeWriterInterface
                 ->limit(1);
             $value = (int)$this->resource->getConnection()->fetchOne($select);
         }
+        $scope = (int)$attribute->getIsGlobal();
+        $storeIds = $scope === 1 ? [0] : [$storeId];
+        if ($scope === 2 && $storeId !== 0) {
+            $storeIds = $this->storeManager->getStore($storeId)->getWebsite()->getStoreIds(true);
+        }
         $this->resource->getConnection()->delete(
             $this->resource->getTableName($table),
             [
                 'attribute_id = ?' => $id,
                 $link . ' = ?' => $value,
-                'store_id = ?' => (int)$attribute->getIsGlobal() === 0 ? $storeId : 0,
+                'store_id IN (?)' => $storeIds,
             ]
         );
     }

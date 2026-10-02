@@ -12,8 +12,8 @@ interface MediaRepositoryInterface
     public function ensureAsset(string $sourcePath): Asset;
     public function getAsset(int $assetId): Asset;
     public function recordStream(array $items): array;
-    public function updateMetadata(int $assetId, array $media): void;
-    public function activate(int $assetId, string $hash, string $cachePath, int $size): void;
+    public function updateMetadata(int $assetId, array $media, int $expectedRevision): void;
+    public function activate(int $assetId, string $hash, string $cachePath, int $size, int $expectedRevision): void;
     public function replaceGallery(int $productId, array $paths): void;
     public function replaceFileUsages(int $productId, array $references): void;
     public function galleryUsages(int $productId): array;
@@ -42,6 +42,8 @@ interface MediaRepositoryInterface
     public function scheduleProducts(array $productIds): void;
     public function claim(int $limit, int $leaseSeconds): array;
     public function complete(WorkItem $item): void;
+    /** Apply product writes atomically only while this worker still owns the current task. */
+    public function applyWork(WorkItem $item, callable $write): bool;
     public function release(WorkItem $item, string $error, int $maxAttempts, int $delay): void;
     public function hasWork(): bool;
 }

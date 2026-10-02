@@ -12,7 +12,8 @@ class AsynchronousFileAttributeMapping implements ProductAttributeMappingDeferre
     {
         $source = $this->normalize((string)$mapping['ergonode_type']);
         $target = $this->normalize((string)$mapping['magento_type']);
-        return ($source === 'file' && $target === 'file') || ($source === 'image' && $target === 'image');
+        return ($source === 'file' && in_array($target, ['file', 'text', 'textarea'], true))
+            || ($source === 'image' && $target === 'image');
     }
 
     private function normalize(string $type): string
