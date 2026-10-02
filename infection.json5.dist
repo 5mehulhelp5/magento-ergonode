@@ -1,0 +1,36 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "packages/ergonode",
+            "packages/packhauer"
+        ],
+        "excludes": [
+            "{.*/Test/.*}",
+            "{.*/Setup/.*}",
+            "{.*/etc/.*}",
+            "{.*/i18n/.*}",
+            "{.*/view/.*}",
+            "{.*/registration\\.php$}"
+        ]
+    },
+    "timeout": 30,
+    "threads": "max",
+    "tmpDir": "var/infection/tmp",
+    "logs": {
+        "text": "var/infection/infection.log",
+        "summaryJson": "var/infection/summary.json",
+        "html": "var/infection/report.html"
+    },
+    "phpUnit": {
+        "configDir": ".",
+        "customPath": "vendor/bin/phpunit"
+    },
+    "testFramework": "phpunit",
+    "mutators": {
+        "@default": true
+    },
+    "minMsi": 0,
+    "minCoveredMsi": 0,
+    "ignoreMsiWithNoMutations": true
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
+         bootstrap="tests/bootstrap-unit.php" cacheDirectory="var/quality/phpunit" colors="true">
+    <testsuites>
+        <testsuite name="Ergonode Unit">
+            <directory suffix="Test.php">packages/ergonode/*/Test/Unit</directory>
+            <directory suffix="Test.php">packages/packhauer/*/Test/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include><directory suffix=".php">packages/ergonode</directory><directory suffix=".php">packages/packhauer</directory></include>
+        <exclude><directory>packages/*/*/Test</directory></exclude>
+    </source>
+    <php><ini name="memory_limit" value="-1"/><ini name="date.timezone" value="Europe/Warsaw"/></php>
+</phpunit>

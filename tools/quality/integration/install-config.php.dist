@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+// Copy to install-config.php and configure a user restricted to this disposable database.
+return [
+    'db-host' => 'db',
+    'db-user' => 'ergonode_test',
+    'db-password' => 'CHANGE_ME',
+    'db-name' => 'ergonode_integration_test',
+    'db-prefix' => '',
+    'backend-frontname' => 'backend',
+    'search-engine' => 'opensearch',
+    'opensearch-host' => 'opensearch',
+    'opensearch-port' => 9200,
+    'opensearch-index-prefix' => 'ergonode_integration_test',
+    'admin-user' => 'admin',
+    'admin-password' => 'IntegrationTest123!',
+    'admin-email' => 'integration@example.test',
+    'admin-firstname' => 'Integration',
+    'admin-lastname' => 'Test',
+    'consumers-wait-for-messages' => '0',
+];

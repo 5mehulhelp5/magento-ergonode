@@ -1,0 +1,97 @@
+<?php
+
+namespace Magento\Catalog\Model;
+
+class CategoryFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}
+
+namespace Magento\Catalog\Model\ResourceModel\Category;
+
+class CollectionFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}
+
+namespace Magento\Catalog\Model\ResourceModel\Product\Attribute;
+
+class CollectionFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}
+
+namespace Magento\Cms\Model\ResourceModel\Page;
+
+class CollectionFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}
+
+namespace Magento\Eav\Api\Data;
+
+class AttributeOptionInterfaceFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}
+
+namespace Magento\Eav\Setup;
+
+class EavSetupFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}
+
+namespace Magento\MediaStorage\Model\File;
+
+class UploaderFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}
+
+namespace Magento\UrlRewrite\Service\V1\Data;
+
+class UrlRewriteFactory
+{
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function create(array $data = []): mixed
+    {
+    }
+}

@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$autoloadCandidates = [
+    $GLOBALS['_composer_autoload_path'] ?? null,
+    dirname(__DIR__) . '/vendor/autoload.php',
+    dirname(__DIR__, 4) . '/vendor/autoload.php',
+];
+$autoloaded = false;
+foreach ($autoloadCandidates as $autoloadCandidate) {
+    if (is_string($autoloadCandidate) && is_file($autoloadCandidate)) {
+        require $autoloadCandidate;
+        $autoloaded = true;
+        break;
+    }
+}
+if (!$autoloaded) {
+    fwrite(STDERR, "Unable to locate Composer autoload.php.\n");
+    exit(2);
+}
+
+$workingDirectory = getcwd();
+if ($workingDirectory === false) {
+    fwrite(STDERR, "Unable to resolve the working directory.\n");
+    exit(2);
+}
+
+/** @var list<string> $arguments */
+$arguments = $_SERVER['argv'] ?? [];
+exit((new Vendivo\CodeDuplicates\ConsoleApplication($workingDirectory, ['src']))->run(array_slice($arguments, 1)));

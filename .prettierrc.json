@@ -1,0 +1,18 @@
+{
+  "plugins": ["@prettier/plugin-xml"],
+  "overrides": [
+    {
+      "files": ["**/*.xml"],
+      "options": {
+        "parser": "xml",
+        "tabWidth": 4,
+        "printWidth": 200,
+        "singleAttributePerLine": false,
+        "xmlQuoteAttributes": "double",
+        "xmlSelfClosingSpace": false,
+        "xmlSortAttributesByKey": false,
+        "xmlWhitespaceSensitivity": "preserve"
+      }
+    }
+  ]
+}

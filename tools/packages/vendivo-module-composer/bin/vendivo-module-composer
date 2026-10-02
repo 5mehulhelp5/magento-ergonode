@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Vendivo\ModuleComposer\Cli\Application;
+
+$autoloadCandidates = array_filter([
+    $GLOBALS['_composer_autoload_path'] ?? null,
+    dirname(__DIR__, 4) . '/vendor/autoload.php',
+    dirname(__DIR__) . '/vendor/autoload.php',
+]);
+
+foreach ($autoloadCandidates as $autoloadPath) {
+    if (is_file($autoloadPath)) {
+        require $autoloadPath;
+
+        /** @var list<string> $arguments */
+        $arguments = $_SERVER['argv'] ?? [];
+        exit((new Application())->run(array_slice($arguments, 1)));
+    }
+}
+
+fwrite(STDERR, "ERROR [MODULE-COMPOSER-RUNTIME] Unable to locate Composer autoload.php.\n");
+exit(2);

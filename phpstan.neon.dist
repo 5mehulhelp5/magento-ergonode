@@ -1,0 +1,30 @@
+includes:
+    - tools/quality/phpstan/extension.neon
+
+parameters:
+    level: 2
+    paths:
+        - packages/ergonode
+        - packages/packhauer
+    excludePaths:
+        - packages/*/*/Test/*
+    ignoreErrors:
+        # File-boundary policies belong to PHPCS.
+        -
+            identifier: whitespace.bom
+            reportUnmatched: false
+        -
+            identifier: whitespace.fileEnd
+            reportUnmatched: false
+    tmpDir: var/phpstan
+    # PHPStan 2.2.13's shared cache bypasses phpstan-magento's generated-file paths.
+    # Keep every analysis rule enabled while avoiding the incompatible parallel cache.
+    parallel:
+        maximumNumberOfProcesses: 1
+    magento:
+        magentoRoot: %currentWorkingDirectory%
+        checkCollectionViaFactory: true
+        checkServiceContracts: true
+        checkResourceModelsUsedDirectly: true
+    extdn:
+        setTemplateDisallowedForBlockClasses: true

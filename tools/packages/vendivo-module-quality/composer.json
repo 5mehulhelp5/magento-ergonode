@@ -1,0 +1,12 @@
+{
+    "name": "vendivo/module-quality",
+    "description": "Portable module-scoped quality orchestration with deterministic Git manifests.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3"
+    },
+    "bin": [
+        "bin/vendivo-module-quality"
+    ]
+}

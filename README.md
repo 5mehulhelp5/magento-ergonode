@@ -175,3 +175,18 @@ i `phpserver` są odtwarzane przez Composer i również wykluczone z Git.
 Dokumentacja: [Magento w DDEV](https://docs.ddev.com/en/stable/users/quickstart/#magento-2),
 [wymagania Magento](https://experienceleague.adobe.com/en/docs/commerce-operations/installation-guide/system-requirements),
 [dodatek OpenSearch](https://github.com/ddev/ddev-opensearch).
+
+## Bramki jakości
+
+Analizy i testy przeniesione z Vendivo obejmują lokalne pakiety Ergonode i PackHauer.
+
+```bash
+ddev exec npm ci --ignore-scripts
+./quality modules
+./quality module-check Ergonode_Media --base-commit=HEAD
+./quality module-done Ergonode_Media
+./quality all
+```
+
+Zasady Factory, pluginów i zależności, opis bramek, testów integracyjnych oraz
+opcjonalnych audytów: [Bramki jakości](docs/quality.md).

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ruleset name="Vendivo">
+    <description>Selected project rules retained from Vendivo.</description>
+    <rule ref="./Sniffs/Adminhtml/AdminControllerRequiresAdminResourceSniff.php"/>
+    <rule ref="./Sniffs/ObjectManager/NoObjectManagerServiceLocatorSniff.php"/>
+    <rule ref="./Sniffs/StrictTypes/RequireStrictTypesSniff.php"/>
+    <rule ref="./Sniffs/GeneratedFactory/MissingExplicitFactorySniff.php"/>
+    <rule ref="./Sniffs/Plugins/AroundPluginCallsProceedSniff.php"/>
+    <rule ref="./Sniffs/Plugins/PreferBeforeAfterSniff.php"/>
+    <rule ref="./Sniffs/Commenting/ApiDataInterfaceDocBlockSniff.php"/>
+</ruleset>

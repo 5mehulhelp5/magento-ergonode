@@ -1,0 +1,27 @@
+includes:
+    - phpstan.neon.dist
+    - vendor/shipmonk/dead-code-detector/rules.neon
+
+parameters:
+    tmpDir: var/phpstan-dead-code
+    paths:
+        - packages/ergonode
+        - packages/packhauer
+        - tools/quality/phpstan/src/DeadCode
+    shipmonkDeadCode:
+        reportTransitivelyDeadMethodAsSeparateError: false
+        usageExcluders:
+            tests:
+                enabled: false
+                devPaths:
+                    - %currentWorkingDirectory%/dev/tests
+            usageOverMixed:
+                enabled: false
+
+services:
+    -
+        class: Vendivo\PHPStan\DeadCode\MagentoDynamicUsageProvider
+        arguments:
+            projectCodeDirectory: %currentWorkingDirectory%/packages
+        tags:
+            - shipmonk.deadCode.memberUsageProvider

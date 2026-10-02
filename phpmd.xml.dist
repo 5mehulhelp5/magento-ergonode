@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Vendivo PHPMD"
+         xmlns="https://phpmd.org/xml/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://phpmd.org/xml/ruleset/1.0.0 https://phpmd.org/xml/ruleset_xml_schema_1.0.0.xsd">
+    <description>
+        Conservative PHPMD rules for Magento application code.
+    </description>
+
+    <rule ref="rulesets/cleancode.xml/IfStatementAssignment"/>
+    <rule ref="rulesets/cleancode.xml/IfStatementWithoutLogic"/>
+
+    <rule ref="rulesets/design.xml/DevelopmentCodeFragment">
+        <properties>
+            <property name="unwanted-functions"
+                      value="print_r,debug_zval_dump,debug_print_backtrace"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/design.xml/ExitExpression"/>
+</ruleset>

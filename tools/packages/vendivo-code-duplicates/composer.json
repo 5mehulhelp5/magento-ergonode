@@ -1,0 +1,25 @@
+{
+    "name": "vendivo/code-duplicates",
+    "description": "Structural PHP duplicate detector with human, JSON and AI-oriented output.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*",
+        "ext-tokenizer": "*",
+        "nikic/php-parser": "^5.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vendivo\\CodeDuplicates\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vendivo\\CodeDuplicates\\Test\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/code-duplicates"
+    ]
+}

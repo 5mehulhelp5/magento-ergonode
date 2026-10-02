@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PACKAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+usage() {
+  cat >&2 <<'USAGE'
+Usage:
+  vendivo-module-quality check Vendor_Module [options]
+  vendivo-module-quality audit Vendor_Module [options]
+  vendivo-module-quality done Vendor_Module [--integration] [options]
+  vendivo-module-quality static Vendor_Module [--scope=changed|full] [options]
+  vendivo-module-quality manifest Vendor_Module [options]
+
+Options:
+  --root=PATH                 Project root; defaults to the current directory
+  --module-root=PATH          Module root relative to the project; default: app/code
+  --module-path=PATH          Exact module path relative to the project (for packages)
+  --report-dir=PATH           Gate logs and summaries; default: var/module-quality/reports
+  --manifest-dir=PATH         Runtime-readable input manifests; defaults to report-dir
+  --base-commit=COMMIT        Git baseline for committed changes
+  --source-changes-file=PATH  Authoritative newline-delimited changed-file list
+  --gate-runner=PATH          Project adapter implementing the gate-runner contract
+  --phpmd-cache=PATH          Content cache file; default: var/phpmd.result-cache.php
+  --integration[=0|1]         Include module integration tests in done mode
+  --scope=changed|full        Static-analysis scope in static mode
+  --verbose[=0|1]             Print complete gate logs
+  --diagnostic-lines=N        Maximum diagnostic preview lines; default: 8
+  --diagnostic-columns=N      Maximum diagnostic line width; default: 500
+USAGE
+}
+
+absolute_path() {
+  local path="$1"
+
+  case "$path" in
+    /*) printf '%s\n' "$path" ;;
+    *) printf '%s/%s\n' "$PROJECT_ROOT" "${path#./}" ;;
+  esac
+}
+
+truthy_value() {
+  local normalized
+
+  normalized="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"
+  case "$normalized" in
+    1|true|yes) printf '1\n' ;;
+    0|false|no|'') printf '0\n' ;;
+    *) printf 'Expected a boolean value, got: %s\n' "$1" >&2; exit 2 ;;
+  esac
+}
+
+COMMAND="${1:-}"
+if [[ "$COMMAND" =~ ^(-h|--help|help)$ ]]; then
+  usage
+  exit 0
+fi
+MODULE="${2:-}"
+if [[ ! "$COMMAND" =~ ^(check|audit|done|static|manifest)$ ]] \
+  || [[ ! "$MODULE" =~ ^[A-Z][A-Za-z0-9]*_[A-Z][A-Za-z0-9]*$ ]]; then
+  usage
+  exit 2
+fi
+shift 2
+
+PROJECT_ROOT="${MODULE_QUALITY_ROOT:-$PWD}"
+MODULE_ROOT="${MODULE_QUALITY_MODULE_ROOT:-app/code}"
+MODULE_PATH="${MODULE_QUALITY_MODULE_PATH:-}"
+REPORT_DIR="${MODULE_QUALITY_REPORT_DIR:-var/module-quality/reports}"
+MANIFEST_DIR="${MODULE_QUALITY_MANIFEST_DIR:-}"
+BASE_COMMIT="${MODULE_QUALITY_BASE_COMMIT:-}"
+SOURCE_CHANGES_FILE="${MODULE_QUALITY_SOURCE_CHANGES_FILE:-}"
+GATE_RUNNER="${MODULE_QUALITY_GATE_RUNNER:-}"
+PHPMD_CACHE="${MODULE_QUALITY_PHPMD_CACHE:-var/phpmd.result-cache.php}"
+INTEGRATION="${MODULE_QUALITY_INTEGRATION:-0}"
+SCOPE="${MODULE_QUALITY_SCOPE:-changed}"
+VERBOSE="${MODULE_QUALITY_VERBOSE:-0}"
+DIAGNOSTIC_LINES="${MODULE_QUALITY_DIAGNOSTIC_LINES:-8}"
+DIAGNOSTIC_COLUMNS="${MODULE_QUALITY_DIAGNOSTIC_COLUMNS:-500}"
+
+for option in "$@"; do
+  case "$option" in
+    --root=*) PROJECT_ROOT="${option#*=}" ;;
+    --module-root=*) MODULE_ROOT="${option#*=}" ;;
+    --module-path=*) MODULE_PATH="${option#*=}" ;;
+    --report-dir=*) REPORT_DIR="${option#*=}" ;;
+    --manifest-dir=*) MANIFEST_DIR="${option#*=}" ;;
+    --base-commit=*) BASE_COMMIT="${option#*=}" ;;
+    --source-changes-file=*) SOURCE_CHANGES_FILE="${option#*=}" ;;
+    --gate-runner=*) GATE_RUNNER="${option#*=}" ;;
+    --phpmd-cache=*) PHPMD_CACHE="${option#*=}" ;;
+    --integration) INTEGRATION=1 ;;
+    --integration=*) INTEGRATION="${option#*=}" ;;
+    --scope=*) SCOPE="${option#*=}" ;;
+    --verbose) VERBOSE=1 ;;
+    --verbose=*) VERBOSE="${option#*=}" ;;
+    --diagnostic-lines=*) DIAGNOSTIC_LINES="${option#*=}" ;;
+    --diagnostic-columns=*) DIAGNOSTIC_COLUMNS="${option#*=}" ;;
+    *) printf 'Unknown option: %s\n' "$option" >&2; usage; exit 2 ;;
+  esac
+done
+
+if [ ! -d "$PROJECT_ROOT" ]; then
+  printf 'Project root does not exist: %s\n' "$PROJECT_ROOT" >&2
+  exit 2
+fi
+PROJECT_ROOT="$(cd "$PROJECT_ROOT" && pwd)"
+MODULE_ROOT="${MODULE_ROOT#./}"
+MODULE_ROOT="${MODULE_ROOT%/}"
+if [ -z "$MODULE_ROOT" ] || [[ "$MODULE_ROOT" = /* ]] || [[ "/$MODULE_ROOT/" = *'/../'* ]]; then
+  printf 'Module root must be a safe project-relative path: %s\n' "$MODULE_ROOT" >&2
+  exit 2
+fi
+if [ -n "$MODULE_PATH" ] && { [[ "$MODULE_PATH" = /* ]] || [[ "/$MODULE_PATH/" = *'/../'* ]]; }; then
+  printf 'Module path must be a safe project-relative path: %s\n' "$MODULE_PATH" >&2
+  exit 2
+fi
+
+REPORT_DIR="$(absolute_path "$REPORT_DIR")"
+if [ -z "$MANIFEST_DIR" ]; then
+  MANIFEST_DIR="$REPORT_DIR"
+else
+  MANIFEST_DIR="$(absolute_path "$MANIFEST_DIR")"
+fi
+if [ -n "$SOURCE_CHANGES_FILE" ]; then
+  SOURCE_CHANGES_FILE="$(absolute_path "$SOURCE_CHANGES_FILE")"
+fi
+if [ -n "$GATE_RUNNER" ]; then
+  GATE_RUNNER="$(absolute_path "$GATE_RUNNER")"
+fi
+
+INTEGRATION="$(truthy_value "$INTEGRATION")"
+VERBOSE="$(truthy_value "$VERBOSE")"
+if [[ ! "$SCOPE" =~ ^(changed|full)$ ]]; then
+  printf 'Scope must be changed or full, got: %s\n' "$SCOPE" >&2
+  exit 2
+fi
+if [[ ! "$DIAGNOSTIC_LINES" =~ ^[1-9][0-9]*$ ]] \
+  || [[ ! "$DIAGNOSTIC_COLUMNS" =~ ^[1-9][0-9]*$ ]]; then
+  printf '%s\n' 'Diagnostic limits must be positive integers.' >&2
+  exit 2
+fi
+
+export MODULE_QUALITY_ROOT="$PROJECT_ROOT"
+export MODULE_QUALITY_MODULE_ROOT="$MODULE_ROOT"
+export MODULE_QUALITY_MODULE_PATH="$MODULE_PATH"
+export MODULE_QUALITY_REPORT_DIR="$REPORT_DIR"
+export MODULE_QUALITY_MANIFEST_DIR="$MANIFEST_DIR"
+export MODULE_QUALITY_BASE_COMMIT="$BASE_COMMIT"
+export MODULE_QUALITY_SOURCE_CHANGES_FILE="$SOURCE_CHANGES_FILE"
+export MODULE_QUALITY_GATE_RUNNER="$GATE_RUNNER"
+export MODULE_QUALITY_PHPMD_CACHE="$PHPMD_CACHE"
+export MODULE_QUALITY_VERBOSE="$VERBOSE"
+export MODULE_QUALITY_DIAGNOSTIC_LINES="$DIAGNOSTIC_LINES"
+export MODULE_QUALITY_DIAGNOSTIC_COLUMNS="$DIAGNOSTIC_COLUMNS"
+export MODULE_QUALITY_PACKAGE_DIR="$PACKAGE_DIR"
+
+if [ "$COMMAND" = 'manifest' ]; then
+  exec bash "$PACKAGE_DIR/src/changed-files.sh" "$MODULE"
+fi
+
+if [ -z "$GATE_RUNNER" ] || [ ! -x "$GATE_RUNNER" ]; then
+  printf 'Gate runner is required and must be executable: %s\n' "${GATE_RUNNER:--}" >&2
+  exit 2
+fi
+
+MODE_OPTION="$INTEGRATION"
+if [ "$COMMAND" = 'static' ]; then
+  MODE_OPTION="$SCOPE"
+fi
+exec bash "$PACKAGE_DIR/src/module-quality.sh" "$COMMAND" "$MODULE" "$MODE_OPTION"

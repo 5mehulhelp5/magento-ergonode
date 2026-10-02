@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="Ergonode">
+    <description>Magento coding standard and selected Vendivo checks for local packages.</description>
+    <file>packages/ergonode</file>
+    <file>packages/packhauer</file>
+    <arg name="extensions" value="php,phtml"/>
+    <arg name="parallel" value="4"/>
+    <rule ref="Magento2"/>
+    <rule ref="tools/quality/phpcs/Vendivo/ruleset.xml">
+        <include-pattern>*\.php$</include-pattern>
+        <include-pattern>*\.phtml$</include-pattern>
+    </rule>
+</ruleset>

@@ -58,3 +58,6 @@
 *.orig
 *.swp
 *.swo
+
+# Dedicated integration-test database credentials
+/tools/quality/integration/install-config.php

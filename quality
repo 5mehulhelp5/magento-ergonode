@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+command="${1:-help}"
+if [ "$#" -gt 0 ]; then shift; fi
+if [ "$command" = help ] || [ "$command" = --help ]; then
+  cat <<'HELP'
+Usage: ./quality COMMAND [arguments]
+  modules                              List discovered Magento packages
+  all                                  Full static gates + unit + JS; no DB writes
+  module-check Vendor_Module [--base-commit=REF]
+  module-static Vendor_Module [--scope=changed|full] [--base-commit=REF]
+  module-done Vendor_Module [--integration] [--base-commit=REF]
+  phpcs|phpmd|phpstan|arkitect [PATH]    Individual static analyzer
+  composer|xml-schema|xml-format|area [Vendor_Module]
+  unit|js [PATH]                       Existing module tests
+  integration [PATH]                   Separate integration DB; local config required
+  dead-code [PATH]                     Advisory audit (findings return nonzero)
+  duplicates [PATH]                    Advisory structural duplication report
+  infection PATH [--filter=...]         Scoped mutation audit; coverage driver required
+  tooling-tests                        Regression tests for the imported tools
+Reports: var/quality. Optional audits are never part of all/check/done.
+HELP
+  exit 0
+fi
+ddev mutagen sync
+case "$command" in
+  module-check|module-static|module-done)
+    module="${1:?Pass Vendor_Module}"; shift
+    module_path="$(ddev exec php tools/quality/run.php module-path "$module")"
+    export MODULE_QUALITY_PHPCS_EXTENSIONS='php phtml'
+    exec tools/packages/vendivo-module-quality/bin/vendivo-module-quality \
+      "${command#module-}" "$module" --root="$PWD" --module-path="$module_path" \
+      --report-dir="var/quality/$module" --gate-runner=tools/quality/gate.sh "$@"
+    ;;
+  infection) exec ddev exec env XDEBUG_MODE=coverage php tools/quality/run.php infection "$@" ;;
+  *) exec ddev exec php tools/quality/run.php "$command" "$@" ;;
+esac
