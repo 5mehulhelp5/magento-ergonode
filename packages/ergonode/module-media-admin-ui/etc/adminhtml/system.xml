@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ergonode_products" translate="label" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Products</label>
+            <tab>ergonode</tab>
+            <resource>Ergonode_Core::config</resource>
+            <group id="media" translate="label" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Media</label>
+                <field id="index" translate="label" type="button" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Local Media</label>
+                    <frontend_model>Ergonode\MediaAdminUi\Block\Adminhtml\System\Config\Scan</frontend_model>
+                </field>
+                <field id="synchronization_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Synchronize Media</label>
+                    <comment>Synchronize the Magento media gallery from Ergonode during product imports.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="gallery_attribute" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Gallery Attribute</label>
+                    <comment
+                    >Select the Ergonode Gallery attribute. The first image in the completed Magento gallery receives image, small_image and thumbnail. We synchronize the gallery first, then its roles. Synchronization overwrites manual changes to managed roles.</comment>
+                    <validate>required-entry</validate>
+                    <source_model>Ergonode\MediaAdminUi\Model\Config\Source\GalleryAttribute</source_model>
+                    <backend_model>Ergonode\MediaAdminUi\Model\Config\Backend\GalleryAttribute</backend_model>
+                </field>
+                <field id="gallery_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>File strategy</label>
+                    <comment>Shared reuses a file; SEO creates a product-named copy. Locked after the first gallery.</comment>
+                    <source_model>Ergonode\MediaAdminUi\Model\Config\Source\GalleryMode</source_model>
+                    <backend_model>Ergonode\MediaAdminUi\Model\Config\Backend\GalleryMode</backend_model>
+                </field>
+
+                <field id="role_position" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Additional role position</label>
+                    <comment>Position in the completed Magento gallery, after inserting additional Image attributes. Default: 2.</comment>
+                    <validate>required-entry validate-digits validate-digits-range digits-range-2-65535</validate>
+                    <backend_model>Ergonode\MediaAdminUi\Model\Config\Backend\RolePosition</backend_model>
+                </field>
+                <field id="additional_role" translate="label comment" type="select" sortOrder="35" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Additional image role</label>
+                    <comment>Choose one existing Magento image attribute. Native primary roles and attributes already mapped individually are excluded.</comment>
+                    <source_model>Ergonode\MediaAdminUi\Model\Config\Source\AdditionalRole</source_model>
+                    <backend_model>Ergonode\MediaAdminUi\Model\Config\Backend\AdditionalRole</backend_model>
+                </field>
+                <field id="additional_images" translate="label comment" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Additional gallery images</label>
+                    <comment
+                    >Insert Image attributes starting from position 2. An existing resource is moved without adding a copy. Other images retain their relative order. A position beyond the gallery length appends the image. The first Gallery image stays first.</comment>
+                    <frontend_model>Ergonode\MediaAdminUi\Block\Adminhtml\System\Config\AdditionalImages</frontend_model>
+                    <backend_model>Ergonode\MediaAdminUi\Model\Config\Backend\AdditionalImages</backend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="ergonode">
+        <job name="ergonode_media_scan" instance="Ergonode\Media\Cron\ScanFiles" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+        <job name="ergonode_multimedia_stream_schedule" instance="Ergonode\Media\Cron\ScheduleStream" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+        <job name="ergonode_media_recovery" instance="Ergonode\Media\Cron\RecoverWork" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+    </group>
+</config>

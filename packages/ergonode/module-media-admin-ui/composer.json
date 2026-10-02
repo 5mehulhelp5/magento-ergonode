@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-media-admin-ui",
+    "description": "Magento Admin gallery rules, image role configuration and local media scan controls for Ergonode.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-core-admin-ui": "dev-main@dev",
+        "ergonode/module-media": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\MediaAdminUi\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

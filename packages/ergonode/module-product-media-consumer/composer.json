@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-product-media-consumer",
+    "description": "Product import bridge for selected Gallery and positioned Image sources, asynchronous file usages and mapped image roles.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "ergonode/module-media": "dev-main@dev",
+        "ergonode/module-product-consumer": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\ProductMediaConsumer\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Ergonode\ProductConsumer\Model\GraphQl\ProductAttributeCodeProviderPool">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="media" xsi:type="object">Ergonode\ProductMediaConsumer\Model\GraphQl\MediaAttributeCodeProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Magento\ProductAttributeMappingDeferrerPool">
+        <arguments>
+            <argument name="deferrers" xsi:type="array">
+                <item name="media_file" xsi:type="object">Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Magento\ProductStateSynchronizerPool">
+        <arguments>
+            <argument name="synchronizers" xsi:type="array">
+                <item name="media" xsi:type="object">Ergonode\ProductMediaConsumer\Model\Media\ProductMediaSynchronizer</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Ergonode\ProductMedia\Model\Mapping\ImageValueAdapter">
+        <arguments>
+            <argument name="importEnabled" xsi:type="boolean">true</argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,30 @@
+{
+    "name": "ergonode/module-media",
+    "description": "Asynchronous Ergonode binary transfer, usage queue, SHA-256 index and local scan readiness; delegates native product galleries to ProductMedia.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Pack Hauer",
+            "email": "packhauer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0||~8.5.0",
+        "magento/module-message-queue": "*",
+        "ergonode/module-product-media": "dev-main@dev"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Ergonode\\Media\\": ""
+        }
+    },
+    "extra": {
+        "ergonode": {
+            "lifecycle": "development"
+        }
+    }
+}

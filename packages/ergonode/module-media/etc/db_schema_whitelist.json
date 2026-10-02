@@ -1,0 +1,150 @@
+{
+    "ergonode_media_asset": {
+        "column": {
+            "asset_id": true,
+            "source_path_hash": true,
+            "source_path": true,
+            "download_url": true,
+            "name": true,
+            "extension": true,
+            "mime_type": true,
+            "size": true,
+            "content_hash": true,
+            "cache_path": true,
+            "revision": true,
+            "last_cursor": true,
+            "status": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_MEDIA_ASSET_CONTENT_HASH": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_MEDIA_ASSET_SOURCE_PATH_HASH": true
+        }
+    },
+    "ergonode_media_materialization": {
+        "column": {
+            "materialization_id": true,
+            "asset_id": true,
+            "scope_key": true,
+            "product_id": true,
+            "local_path_hash": true,
+            "local_path": true,
+            "content_hash": true,
+            "revision": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_MEDIA_MATERIALIZATION_LOCAL_PATH_HASH": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_FDA8F7B23A655752E285AE0EEE9A82FE": true,
+            "ERGONODE_MEDIA_MATERIALIZATION_ASSET_ID_SCOPE_KEY": true
+        }
+    },
+    "ergonode_media_product_usage": {
+        "column": {
+            "product_id": true,
+            "asset_id": true,
+            "position": true,
+            "desired": true,
+            "attached_path": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_MEDIA_PRODUCT_USAGE_ASSET_ID_DESIRED_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_MDA_PRD_USAGE_ASSET_ID_ERGONODE_MDA_ASSET_ASSET_ID": true,
+            "ERGONODE_MDA_PRD_USAGE_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "ergonode_media_product_work": {
+        "column": {
+            "product_id": true,
+            "status": true,
+            "attempt_count": true,
+            "available_at": true,
+            "lease_token": true,
+            "lease_expires_at": true,
+            "last_error": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_MDA_PRD_WORK_STS_AVAILABLE_AT_LEASE_EXPIRES_AT_PRD_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_MDA_PRD_WORK_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "ergonode_media_file_usage": {
+        "column": {
+            "product_id": true,
+            "attribute_code": true,
+            "store_id": true,
+            "source_path_hash": true,
+            "source_path": true,
+            "attached_path": true,
+            "desired": true,
+            "updated_at": true
+        },
+        "index": {
+            "ERGONODE_MEDIA_FILE_USAGE_SOURCE_PATH_HASH_DESIRED_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_MDA_FILE_USAGE_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "ergonode_media_state": {
+        "column": {
+            "state_id": true,
+            "gallery_mode": true,
+            "locked_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "ergonode_media_local_file": {
+        "column": {
+            "path_hash": true,
+            "path": true,
+            "content_hash": true,
+            "size": true,
+            "modified_at": true
+        },
+        "index": {
+            "ERGONODE_MEDIA_LOCAL_FILE_CONTENT_HASH": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "ergonode_media_scan": {
+        "column": {
+            "state_id": true,
+            "status": true,
+            "estimated_total": true,
+            "indexed": true,
+            "reused": true,
+            "removed": true,
+            "bytes": true,
+            "started_at": true,
+            "updated_at": true,
+            "last_completed_at": true,
+            "error": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

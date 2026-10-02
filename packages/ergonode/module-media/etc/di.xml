@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\Media\Model\Port\ScanStateInterface" type="Ergonode\Media\Model\ResourceModel\ScanState"/>
+    <preference for="Ergonode\Media\Api\ScanRequesterInterface" type="Ergonode\Media\Model\Index\ScanRequest"/>
+    <preference for="Ergonode\Media\Api\ScanStatusProviderInterface" type="Ergonode\Media\Model\Index\ScanStatusProvider"/>
+    <preference for="Ergonode\Media\Api\GalleryAttributeOptionsInterface" type="Ergonode\Media\Model\GraphQl\GalleryAttributeOptions"/>
+    <preference for="Ergonode\Media\Model\Port\LocalFileIndexInterface" type="Ergonode\Media\Model\ResourceModel\LocalFileIndex"/>
+    <preference for="Ergonode\Media\Api\GalleryModeLockInterface" type="Ergonode\Media\Model\ResourceModel\GalleryModeLock"/>
+    <preference for="Ergonode\Media\Api\GallerySchedulerInterface" type="Ergonode\Media\Model\Gallery\GalleryScheduler"/>
+    <preference for="Ergonode\Media\Api\FileUsageRecorderInterface" type="Ergonode\Media\Model\File\FileUsageRecorder"/>
+    <preference for="Ergonode\Media\Api\SharedAssetResolverInterface" type="Ergonode\Media\Model\Materialization\SharedAssetResolver"/>
+    <preference for="Ergonode\Media\Api\SharedPathStrategyInterface" type="Ergonode\Media\Model\Materialization\DefaultSharedPathStrategy"/>
+    <preference for="Ergonode\Media\Model\Port\MediaRepositoryInterface" type="Ergonode\Media\Model\ResourceModel\MediaRepository"/>
+    <preference for="Ergonode\Media\Model\Port\FileAttributeWriterInterface" type="Ergonode\Media\Model\ResourceModel\FileAttributeWriter"/>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="ergonode_media_scan" xsi:type="object">Ergonode\Media\Console\Command\ScanFilesCommand</item>
+                <item name="ergonode_media_list" xsi:type="object">Ergonode\Media\Console\Command\ListFilesCommand</item>
+                <item name="ergonode_media_schedule" xsi:type="object">Ergonode\Media\Console\Command\ScheduleMediaCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="environment" xsi:type="array"/>
+        </arguments>
+    </type>
+
+    <virtualType name="Ergonode\Media\Model\GraphQl\ImageAttributeOptions" type="Ergonode\Media\Model\GraphQl\GalleryAttributeOptions">
+        <arguments>
+            <argument name="attributeType" xsi:type="string">ImageAttribute</argument>
+        </arguments>
+    </virtualType>
+    <preference for="Ergonode\Media\Api\ImageAttributeOptionsInterface" type="Ergonode\Media\Model\GraphQl\ImageAttributeOptions"/>
+</config>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ergonode\ProductMedia\Api\GalleryConfigurationInterface" type="Ergonode\ProductMedia\Model\Config\GalleryConfig"/>
+    <preference for="Ergonode\ProductMedia\Api\GalleryRulesInterface" type="Ergonode\ProductMedia\Model\Config\GalleryConfig"/>
+    <preference for="Ergonode\ProductMedia\Api\GalleryLayoutInterface" type="Ergonode\ProductMedia\Model\Gallery\AdditionalImages"/>
+    <preference for="Ergonode\ProductMedia\Api\GallerySynchronizerInterface" type="Ergonode\ProductMedia\Model\Gallery\GallerySynchronizer"/>
+    <preference for="Ergonode\ProductMedia\Api\ImageRolesInterface" type="Ergonode\ProductMedia\Model\ResourceModel\ImageRoles"/>
+    <preference for="Ergonode\ProductMedia\Api\AdditionalRoleOptionsInterface" type="Ergonode\ProductMedia\Model\Config\AdditionalRoleOptions"/>
+    <preference for="Ergonode\ProductMedia\Api\ImageRulesNormalizerInterface" type="Ergonode\ProductMedia\Model\Config\ImageRulesNormalizer"/>
+    <preference for="Ergonode\ProductMedia\Model\Port\RoleWriterInterface" type="Ergonode\ProductMedia\Model\ResourceModel\RoleWriter"/>
+    <preference for="Ergonode\ProductMedia\Model\Port\GalleryWriterInterface" type="Ergonode\ProductMedia\Model\ResourceModel\NativeGalleryWriter"/>
+    <type name="Ergonode\ProductAttribute\Model\Config\ProductAttributePolicy">
+        <arguments>
+            <argument name="mediaTypes" xsi:type="array">
+                <item name="image" xsi:type="boolean">true</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductAttribute\Model\Mapping\ValueAdapterRegistry">
+        <arguments>
+            <argument name="adapters" xsi:type="array">
+                <item name="product_image" xsi:type="object">Ergonode\ProductMedia\Model\Mapping\ImageValueAdapter</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="environment" xsi:type="array">
+                <item name="ergonode_products/media/synchronization_enabled" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

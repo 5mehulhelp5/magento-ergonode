@@ -17,7 +17,7 @@ Sklep: <https://magento-ergonode.ddev.site/>. Panel administracyjny:
 <https://magento-ergonode.ddev.site:8026/>. OpenSearch Dashboards:
 <https://magento-ergonode.ddev.site:5602/>.
 
-Projekt zawiera Magento bez danych przykładowych oraz 62 moduły Ergonode
+Projekt zawiera Magento bez danych przykładowych oraz 66 modułów Ergonode
 i dwa wymagane moduły PackHauer, instalowane przez Composer z lokalnego `packages`.
 Ustawione `pl_PL` nie oznacza zainstalowania pełnego polskiego pakietu tłumaczeń.
 
@@ -58,16 +58,19 @@ nie należy przenosić na środowisko produkcyjne.
 
 Źródła skopiowano z `vendivo-1/backend/packages` do tego repozytorium:
 
-- `packages/ergonode`: 62 aktywne moduły, obejmujące podstawę integracji,
-  mapowania, import, publikację, historię i panel administracyjny.
+- `packages/ergonode`: 66 aktywnych modułów, obejmujących podstawę integracji,
+  mapowania, import, publikację, historię, media i panel administracyjny.
 - `packages/packhauer/module-unit-attribute`: wymagany przez moduły atrybutów
   produktu po stronie importu i publikacji.
 - `packages/packhauer/module-file-attribute`: wymagany przez import produktów.
 
 Repozytorium Composer typu `path` wskazuje `packages/*/*` i ma ustawione
 `symlink: true`. Linki w `vendor` prowadzą do kopii w tym projekcie.
-Moduły wycofane do `backlog`, pozostałe pakiety Vendivo oraz konfiguracja,
-klucze API i dane bazy źródłowego projektu nie są importowane.
+Moduły mediów `Media`, `ProductMedia`, `ProductMediaConsumer` i `MediaAdminUi`
+skopiowano dodatkowo z `vendivo-1/backend/app/code/Ergonode` i zainstalowano jako
+lokalne pakiety Composer. Pozostałe pakiety Vendivo i moduły z `backlog` nie są
+częścią projektu. Klucze API oraz dane bazy pozostają poza Git. W lokalnej bazie
+skonfigurowano testowe połączenie Ergonode z `vendivo-1`.
 
 Zwykłe zmiany kodu w `packages` są widoczne przez symlinki w `vendor`.
 Po zmianie manifestów pakietów wykonaj:
@@ -84,6 +87,55 @@ Przy odtwarzaniu projektu z istniejącego `composer.lock` wystarczy
 `ddev composer install`. Połączenie z Ergonode należy skonfigurować w panelu
 administracyjnym dla własnego środowiska; instalacja pakietów nie uruchamia
 synchronizacji z instancją używaną w `vendivo-1`.
+
+## Import mediów produktowych
+
+Media działają w trybie `shared`: produkty korzystają ze wspólnych plików
+rozpoznawanych według SHA-256 zawartości. Rejestr źródeł, indeks lokalnych plików,
+rewizje i powiązania produktów są zapisywane w tabelach `ergonode_media_*`.
+Jedna partia kolejki pamięta już rozpoznane ścieżki, dzięki czemu kolejne produkty
+nie powtarzają kontroli pliku ani hashowania zweryfikowanej zawartości.
+
+Lokalnie wybrano standardowy atrybut Ergonode `gallery`, tryb `shared` oraz
+mapowanie `pl_PL` na Default Values i domyślny Store View. Pierwszy pełny skan
+zakończono na pustym katalogu produktów. Konfiguracja i wynik skanu są w bazie;
+przy odtwarzaniu środowiska trzeba je ustawić ponownie:
+
+```bash
+ddev magento config:set ergonode_products/media/gallery_attribute gallery
+ddev magento config:set ergonode_products/media/gallery_mode shared
+ddev magento cache:clean config
+ddev magento ergonode:media:scan
+ddev magento ergonode:media:list --limit=100
+```
+
+Przed importem skonfiguruj połączenie i aktywne mapowanie języka w panelu Ergonode.
+Jeżeli źródło ma inny atrybut Gallery, użyj jego kodu. Kolejka
+`ergonode.media.gallery` jest obsługiwana przez standardowy mechanizm konsumentów
+Magento uruchamiany z crona; można ją również przetworzyć ręcznie:
+
+```bash
+ddev magento queue:consumers:start ergonode.media.gallery --max-messages=1
+```
+
+Testy i dokładny kontrakt ponownego użycia opisano w
+[dokumencie mediów](docs/ergonode-media-single-instance.md).
+
+```bash
+ddev mutagen sync
+ddev exec vendor/bin/phpunit --no-configuration --bootstrap tests/bootstrap-unit.php \
+  --do-not-cache-result packages/ergonode/module-media/Test/Unit \
+  packages/ergonode/module-product-media/Test/Unit \
+  packages/ergonode/module-product-media-consumer/Test/Unit \
+  packages/ergonode/module-media-admin-ui/Test/Unit \
+  packages/ergonode/module-product-attribute/Test/Unit/Model/Mapping/MediaCapabilityTest.php
+ddev exec node --test packages/ergonode/module-media-admin-ui/Test/Js/system-config.test.cjs
+ddev exec --raw -- php tests/media-import-smoke.php
+```
+
+Smoke test wymaga pustej kolejki pracy mediów i ukończonego skanu w trybie
+`shared`. Korzysta z lokalnego serwera zdjęć bez kluczy API, tworzy produkty
+wewnątrz transakcji, wycofuje ich dane i usuwa własny katalog plików testowych.
 
 ## Codzienna praca
 

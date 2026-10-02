@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ergonode_media_asset" resource="default" engine="innodb" comment="Ergonode Media Asset">
+        <column xsi:type="bigint" name="asset_id" unsigned="true" nullable="false" identity="true" comment="Asset ID"/>
+        <column xsi:type="varbinary" name="source_path_hash" nullable="false" length="32" comment="Path Hash"/>
+        <column xsi:type="text" name="source_path" nullable="false" comment="Source Path"/>
+        <column xsi:type="text" name="download_url" nullable="true" comment="Download URL"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="128" default="" comment="Name"/>
+        <column xsi:type="varchar" name="extension" nullable="false" length="16" default="bin" comment="Extension"/>
+        <column xsi:type="varchar" name="mime_type" nullable="false" length="128" default="application/octet-stream" comment="MIME"/>
+        <column xsi:type="bigint" name="size" unsigned="true" nullable="false" default="0" comment="Size"/>
+        <column xsi:type="varbinary" name="content_hash" nullable="true" length="32" comment="Content Hash"/>
+        <column xsi:type="varchar" name="cache_path" nullable="true" length="255" comment="Cache Path"/>
+        <column xsi:type="int" name="revision" unsigned="true" nullable="false" default="0" comment="Revision"/>
+        <column xsi:type="text" name="last_cursor" nullable="true" comment="Cursor"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16" default="pending" comment="Status"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="asset_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="ERGONODE_MEDIA_ASSET_SOURCE_PATH_HASH">
+            <column name="source_path_hash"/>
+        </constraint>
+        <index referenceId="ERGONODE_MEDIA_ASSET_CONTENT_HASH" indexType="btree">
+            <column name="content_hash"/>
+        </index>
+    </table>
+    <table name="ergonode_media_materialization" resource="default" engine="innodb" comment="Ergonode Media Materialization">
+        <column xsi:type="bigint" name="materialization_id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="bigint" name="asset_id" unsigned="true" nullable="false" comment="Asset ID"/>
+        <column xsi:type="varchar" name="scope_key" nullable="false" length="80" comment="Scope"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="true" comment="Product ID"/>
+        <column xsi:type="varbinary" name="local_path_hash" nullable="false" length="32" comment="Path Hash"/>
+        <column xsi:type="varchar" name="local_path" nullable="false" length="255" comment="Local Path"/>
+        <column xsi:type="varbinary" name="content_hash" nullable="false" length="32" comment="Content Hash"/>
+        <column xsi:type="int" name="revision" unsigned="true" nullable="false" comment="Revision"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="materialization_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_MEDIA_MATERIALIZATION_ASSET"
+            table="ergonode_media_materialization"
+            column="asset_id"
+            referenceTable="ergonode_media_asset"
+            referenceColumn="asset_id"
+            onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique" referenceId="ERGONODE_MEDIA_MATERIALIZATION_SCOPE">
+            <column name="asset_id"/>
+            <column name="scope_key"/>
+        </constraint>
+        <index referenceId="ERGONODE_MEDIA_MATERIALIZATION_LOCAL_PATH" indexType="btree">
+            <column name="local_path_hash"/>
+        </index>
+    </table>
+    <table name="ergonode_media_product_usage" resource="default" engine="innodb" comment="Ergonode Gallery Usage">
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="bigint" name="asset_id" unsigned="true" nullable="false" comment="Asset ID"/>
+        <column xsi:type="smallint" name="position" unsigned="true" nullable="false" default="0" comment="Position"/>
+        <column xsi:type="boolean" name="desired" nullable="false" default="1" comment="Desired"/>
+        <column xsi:type="varchar" name="attached_path" nullable="true" length="255" comment="Attached Path"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="product_id"/>
+            <column name="asset_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_MEDIA_PRODUCT_USAGE_ASSET"
+            table="ergonode_media_product_usage"
+            column="asset_id"
+            referenceTable="ergonode_media_asset"
+            referenceColumn="asset_id"
+            onDelete="CASCADE"
+        />
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_MEDIA_PRODUCT_USAGE_PRODUCT"
+            table="ergonode_media_product_usage"
+            column="product_id"
+            referenceTable="catalog_product_entity"
+            referenceColumn="entity_id"
+            onDelete="CASCADE"
+        />
+        <index referenceId="ERGONODE_MEDIA_PRODUCT_USAGE_ASSET_DESIRED" indexType="btree">
+            <column name="asset_id"/>
+            <column name="desired"/>
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="ergonode_media_product_work" resource="default" engine="innodb" comment="Ergonode Media Work">
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16" default="pending" comment="Status"/>
+        <column xsi:type="smallint" name="attempt_count" unsigned="true" nullable="false" default="0" comment="Attempts"/>
+        <column xsi:type="timestamp" name="available_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Available"/>
+        <column xsi:type="varbinary" name="lease_token" nullable="true" length="16" comment="Lease Token"/>
+        <column xsi:type="timestamp" name="lease_expires_at" nullable="true" on_update="false" comment="Lease Expiry"/>
+        <column xsi:type="text" name="last_error" nullable="true" comment="Error"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Created"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="product_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_MEDIA_PRODUCT_WORK_PRODUCT"
+            table="ergonode_media_product_work"
+            column="product_id"
+            referenceTable="catalog_product_entity"
+            referenceColumn="entity_id"
+            onDelete="CASCADE"
+        />
+        <index referenceId="ERGONODE_MEDIA_PRODUCT_WORK_CLAIM" indexType="btree">
+            <column name="status"/>
+            <column name="available_at"/>
+            <column name="lease_expires_at"/>
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="ergonode_media_file_usage" resource="default" engine="innodb" comment="Ergonode File Usage">
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="varchar" name="attribute_code" nullable="false" length="255" comment="Attribute Code"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+        <column xsi:type="varbinary" name="source_path_hash" nullable="false" length="32" comment="Source Hash"/>
+        <column xsi:type="text" name="source_path" nullable="false" comment="Source Path"/>
+        <column xsi:type="varchar" name="attached_path" nullable="true" length="255" comment="Attached Path"/>
+        <column xsi:type="boolean" name="desired" nullable="false" default="1" comment="Desired"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="product_id"/>
+            <column name="attribute_code"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint
+            xsi:type="foreign"
+            referenceId="ERGONODE_MEDIA_FILE_USAGE_PRODUCT"
+            table="ergonode_media_file_usage"
+            column="product_id"
+            referenceTable="catalog_product_entity"
+            referenceColumn="entity_id"
+            onDelete="CASCADE"
+        />
+        <index referenceId="ERGONODE_MEDIA_FILE_USAGE_SOURCE" indexType="btree">
+            <column name="source_path_hash"/>
+            <column name="desired"/>
+            <column name="product_id"/>
+        </index>
+    </table>
+    <table name="ergonode_media_state" resource="default" engine="innodb" comment="Ergonode Media State">
+        <column xsi:type="smallint" name="state_id" unsigned="true" nullable="false" comment="State ID"/>
+        <column xsi:type="varchar" name="gallery_mode" nullable="false" length="16" comment="Gallery Mode"/>
+        <column xsi:type="timestamp" name="locked_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Locked"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="state_id"/>
+        </constraint>
+    </table>
+    <table name="ergonode_media_local_file" resource="default" engine="innodb" comment="Ergonode Local Product Media Index">
+        <column xsi:type="varbinary" name="path_hash" nullable="false" length="32" comment="Path Hash"/>
+        <column xsi:type="varchar" name="path" nullable="false" length="1024" comment="Media Relative Path"/>
+        <column xsi:type="varbinary" name="content_hash" nullable="false" length="32" comment="Content SHA256"/>
+        <column xsi:type="bigint" name="size" nullable="false" unsigned="true" comment="Bytes"/>
+        <column xsi:type="bigint" name="modified_at" nullable="false" unsigned="true" comment="Modification Timestamp"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="path_hash"/>
+        </constraint>
+        <index referenceId="ERGONODE_MEDIA_LOCAL_FILE_CONTENT_HASH" indexType="btree">
+            <column name="content_hash"/>
+        </index>
+    </table>
+    <table name="ergonode_media_scan" resource="default" engine="innodb" comment="Ergonode Local Media Scan Progress">
+        <column xsi:type="smallint" name="state_id" unsigned="true" nullable="false" comment="Singleton ID"/>
+        <column xsi:type="varchar" name="status" length="16" nullable="false" default="required" comment="Scan Status"/>
+        <column xsi:type="bigint" name="estimated_total" unsigned="true" nullable="false" default="0" comment="Estimated Unique Paths"/>
+        <column xsi:type="bigint" name="indexed" unsigned="true" nullable="false" default="0" comment="Hashed Files"/>
+        <column xsi:type="bigint" name="reused" unsigned="true" nullable="false" default="0" comment="Unchanged Files"/>
+        <column xsi:type="bigint" name="removed" unsigned="true" nullable="false" default="0" comment="Removed Index Entries"/>
+        <column xsi:type="bigint" name="bytes" unsigned="true" nullable="false" default="0" comment="Checked Bytes"/>
+        <column xsi:type="bigint" name="started_at" unsigned="true" nullable="true" comment="Start UTC Timestamp"/>
+        <column xsi:type="bigint" name="updated_at" unsigned="true" nullable="true" comment="Progress UTC Timestamp"/>
+        <column xsi:type="bigint" name="last_completed_at" unsigned="true" nullable="true" comment="Last Full Scan UTC Timestamp"/>
+        <column xsi:type="text" name="error" nullable="true" comment="Last Scan Error"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="state_id"/>
+        </constraint>
+    </table>
+</schema>

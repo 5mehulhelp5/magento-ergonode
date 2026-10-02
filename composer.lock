@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "570329f9870f4db9479650389681f966",
+    "content-hash": "99b3361b2619b16515b7933af1e900a9",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -2996,6 +2996,90 @@
             }
         },
         {
+            "name": "ergonode/module-media",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-media",
+                "reference": "772f971a18e5cc6ae64df2f1f3b49125eba18a2e"
+            },
+            "require": {
+                "ergonode/module-product-media": "dev-main@dev",
+                "magento/module-message-queue": "*",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\Media\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Asynchronous Ergonode binary transfer, usage queue, SHA-256 index and local scan readiness; delegates native product galleries to ProductMedia.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-media-admin-ui",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-media-admin-ui",
+                "reference": "71eab9e8205ba8f14a4c3778342cfd2c59041761"
+            },
+            "require": {
+                "ergonode/module-core-admin-ui": "dev-main@dev",
+                "ergonode/module-media": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\MediaAdminUi\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Magento Admin gallery rules, image role configuration and local media scan controls for Ergonode.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "ergonode/module-product",
             "version": "dev-main",
             "dist": {
@@ -3835,6 +3919,89 @@
                 }
             ],
             "description": "Magento Admin action and request handling for importing product data from Ergonode.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-media",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-media",
+                "reference": "46ab279b5b9c5535faa6ff81a9b95e5a81812eb9"
+            },
+            "require": {
+                "ergonode/module-product-attribute": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductMedia\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Direction-neutral product gallery layout, image roles, media configuration and Image mapping capability.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "ergonode/module-product-media-consumer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/ergonode/module-product-media-consumer",
+                "reference": "4ff92d7edf18fc123ca4d26bee1579769438e717"
+            },
+            "require": {
+                "ergonode/module-media": "dev-main@dev",
+                "ergonode/module-product-consumer": "dev-main@dev",
+                "php": "~8.3.0||~8.4.0||~8.5.0"
+            },
+            "type": "magento2-module",
+            "extra": {
+                "ergonode": {
+                    "lifecycle": "development"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Ergonode\\ProductMediaConsumer\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Pack Hauer",
+                    "email": "packhauer@gmail.com"
+                }
+            ],
+            "description": "Product import bridge for selected Gallery and positioned Image sources, asynchronous file usages and mapped image roles.",
             "transport-options": {
                 "symlink": true,
                 "relative": true
@@ -32693,6 +32860,8 @@
         "ergonode/module-core-admin-ui": 20,
         "ergonode/module-language": 20,
         "ergonode/module-language-admin-ui": 20,
+        "ergonode/module-media": 20,
+        "ergonode/module-media-admin-ui": 20,
         "ergonode/module-product": 20,
         "ergonode/module-product-admin-ui": 20,
         "ergonode/module-product-attribute": 20,
@@ -32713,6 +32882,8 @@
         "ergonode/module-product-category-publisher-admin-ui": 20,
         "ergonode/module-product-consumer": 20,
         "ergonode/module-product-consumer-admin-ui": 20,
+        "ergonode/module-product-media": 20,
+        "ergonode/module-product-media-consumer": 20,
         "ergonode/module-product-publisher": 20,
         "ergonode/module-product-publisher-admin-ui": 20,
         "ergonode/module-product-template-publisher": 20,
