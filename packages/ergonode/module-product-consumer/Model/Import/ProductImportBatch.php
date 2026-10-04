@@ -19,7 +19,8 @@ class ProductImportBatch implements ProductImportBatchInterface
         private readonly ProductImportReadinessInterface $readiness,
         private readonly ProductIdentityServiceInterface $identities,
         private readonly SelectedProductImporter $importer,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly ?\Ergonode\ProductConsumer\Model\Pipeline\ProductBatchPipeline $pipeline = null
     ) {
     }
 
@@ -42,6 +43,23 @@ class ProductImportBatch implements ProductImportBatchInterface
             throw new LocalizedException(__($status['message']));
         }
         $identities = $this->identities->getIdentitiesByProductIds($productIds);
+        if ($this->pipeline !== null) {
+            $entries = [];
+            foreach ($productIds as $id) {
+                $entries[] = new \Ergonode\ProductConsumer\Model\Pipeline\BatchEntry($identities[$id] ?? null, $id);
+            }
+            $context = $this->pipeline->run($entries);
+            return array_map(static function ($entry): array {
+                $error = $entry->error;
+                $reason = $error instanceof LocalizedException ? $error->getMessage()
+                    : (string)__('Unexpected error while importing the product.');
+                return ['product_id' => $entry->productId, 'code' => $entry->request?->getMagentoSku() ?? (string)$entry->productId,
+                    'status' => $error === null ? 'success' : 'failed',
+                    'message' => $error === null ? (string)__('Product synchronization completed in Magento.')
+                        : (string)__('Product ID: %1. Ergonode SKU: %2. %3 Earlier writes may have completed. Log reference: %4.',
+                            $entry->productId, $entry->sku(), $reason, $entry->logReference)];
+            }, $context->entries);
+        }
         $results = [];
         foreach ($productIds as $id) {
             $identity = $identities[$id] ?? null;

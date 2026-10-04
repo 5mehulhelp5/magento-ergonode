@@ -27,7 +27,8 @@ class WorkProcessor
     public function process(WorkItem $work): void
     {
         $galleryEnabled = $this->galleryConfiguration->isSynchronizationEnabled();
-        $writeGallery = $galleryEnabled ? $this->gallery->prepare($work->productId) : null;
+        $updateGallery = $galleryEnabled && $work->synchronizeGallery;
+        $writeGallery = $updateGallery ? $this->gallery->prepare($work->productId) : null;
         $writes = [];
         $roles = $this->imageRoles->getOptions();
         foreach ($this->repository->fileUsages($work->productId) as $usage) {
@@ -43,7 +44,7 @@ class WorkProcessor
                 $writes[] = ['usage' => $usage, 'path' => $path];
             }
         }
-        $write = function () use ($work, $writes, $writeGallery, $galleryEnabled): void {
+        $write = function () use ($work, $writes, $writeGallery, $updateGallery, $roles): void {
             if ($writeGallery !== null) {
                 $writeGallery();
             }
@@ -55,9 +56,7 @@ class WorkProcessor
                     $this->repository->saveFilePath($work->productId, $usage['attribute_code'], $usage['store_id'], $path);
                 }
             }
-            if ($galleryEnabled) {
-                $this->repository->purgeObsoleteFileUsages($work->productId);
-            }
+            $this->repository->purgeObsoleteFileUsages($work->productId, $updateGallery ? [] : array_keys($roles));
         };
         $this->galleryLocks->run(fn(): bool => $this->repository->applyWork($work, $write));
     }

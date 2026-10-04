@@ -10,6 +10,7 @@ use Ergonode\MediaAdminUi\Controller\Adminhtml\Scan\Start;
 use Ergonode\MediaAdminUi\Controller\Adminhtml\Scan\Status;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\Result\Json;
@@ -54,11 +55,23 @@ class ScanActionsTest extends TestCase
         self::assertSame($result, $controller->execute());
     }
 
-    private function context(Json $result): Context
+    public function testVerificationButtonOnlyRequestsVerificationWithoutExecutingItInTheRequest(): void
+    {
+        $scanner = $this->createMock(ScanRequesterInterface::class);
+        $scanner->expects(self::once())->method('request')->with(true);
+        $result = $this->createMock(Json::class);
+        $result->expects(self::once())->method('setData')->with(['success' => true])->willReturnSelf();
+        self::assertSame($result, (new Start($this->context($result, true), $scanner))->execute());
+    }
+
+    private function context(Json $result, bool $verify = false): Context
     {
         $factory = $this->createStub(ResultFactory::class);
         $factory->method('create')->willReturn($result);
+        $request = $this->createStub(RequestInterface::class);
+        $request->method('getParam')->willReturn($verify ? '1' : '0');
         $context = $this->createStub(Context::class);
+        $context->method('getRequest')->willReturn($request);
         $context->method('getResultFactory')->willReturn($factory);
         return $context;
     }

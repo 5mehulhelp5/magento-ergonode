@@ -19,7 +19,12 @@ class FileUsageRecorder implements FileUsageRecorderInterface
 
     public function synchronize(int $productId, FileUsageSet $references): void
     {
-        $this->repository->replaceFileUsages($productId, $references->toRows());
+        $this->repository->replaceFileUsages(
+            $productId,
+            $references->toRows(),
+            $references->attributeCodes(),
+            $references->preservedAttributeCodes()
+        );
         $this->publisher->dispatch();
     }
 }

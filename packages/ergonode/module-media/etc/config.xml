@@ -6,7 +6,6 @@
                 <gallery_mode>shared</gallery_mode>
                 <stream_page_size>50</stream_page_size>
                 <consumer_batch_size>10</consumer_batch_size>
-                <maximum_attempts>8</maximum_attempts>
                 <lease_seconds>900</lease_seconds>
             </media>
         </ergonode_products>

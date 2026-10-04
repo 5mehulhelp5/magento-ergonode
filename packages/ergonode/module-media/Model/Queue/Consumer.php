@@ -23,7 +23,8 @@ class Consumer
         private readonly ConfigProvider $connection,
         private readonly LoggerInterface $logger,
         private readonly ScanReadiness $scanReadiness,
-        private readonly MaterializationCache $cache
+        private readonly MaterializationCache $cache,
+        private readonly ?\Ergonode\Product\Model\Cache\ProductCacheFinalizer $productCache = null
     ) {
     }
 
@@ -36,26 +37,63 @@ class Consumer
             $this->config->getConsumerBatchSize(),
             $this->config->getLeaseSeconds()
         );
-        $this->cache->run(function () use ($items): void {
+        try {
+            $before = $this->productCache?->begin(array_map(static fn($item): int => $item->productId, $items)) ?? [];
+        } catch (Throwable $error) {
+            $this->logger->error('Unable to prepare product cache state before Ergonode media synchronization.', [
+                'product_ids' => array_map(static fn($item): int => $item->productId, $items),
+                'stage' => 'preprocess:cache', 'exception' => $error,
+            ]);
+            foreach ($items as $item) {
+                try {
+                    $this->repository->fail($item, $error->getMessage());
+                } catch (Throwable $storageError) {
+                    $this->logger->error('Unable to record failed Ergonode media work.', [
+                        'product_id' => $item->productId, 'exception' => $storageError,
+                    ]);
+                }
+            }
+            if ($this->repository->hasWork()) {
+                $this->publisher->dispatch();
+            }
+            return;
+        }
+        $completed = [];
+        $this->cache->run(function () use ($items, &$completed): void {
             foreach ($items as $item) {
                 try {
                     $this->processor->process($item);
-                    $this->repository->complete($item);
+                    $completedWork = $this->repository->complete($item);
+                    if (!$completedWork && $this->productCache !== null) {
+                        throw new \Magento\Framework\Exception\LocalizedException(__(
+                            'Media work for product %1 changed before completion.', $item->productId
+                        ));
+                    }
+                    if ($completedWork) { $completed[] = $item->productId; }
                 } catch (Throwable $e) {
-                    $retryDelay = min(900, 5 * (2 ** min(8, $item->attemptCount - 1)));
-                    $this->repository->release(
-                        $item,
-                        $e->getMessage(),
-                        $this->config->getMaximumAttempts(),
-                        $retryDelay
-                    );
                     $this->logger->error(
                         'Unable to synchronize Ergonode media.',
                         ['product_id' => $item->productId, 'exception' => $e]
                     );
+                    try {
+                        $this->repository->fail($item, $e->getMessage());
+                    } catch (Throwable $storageError) {
+                        $this->logger->error('Unable to record failed Ergonode media work.', [
+                            'product_id' => $item->productId, 'exception' => $storageError,
+                        ]);
+                    }
                 }
             }
         });
+        if ($this->productCache !== null) {
+            try {
+                $this->productCache->complete($this->productCache->changes($completed, $before));
+            } catch (Throwable $error) {
+                $this->logger->error('Unable to refresh product cache after Ergonode media synchronization.', [
+                    'product_ids' => $completed, 'stage' => 'postprocess:cache', 'exception' => $error,
+                ]);
+            }
+        }
         if ($this->repository->hasWork()) {
             $this->publisher->dispatch();
         }

@@ -9,6 +9,8 @@ use Ergonode\ProductMedia\Api\GalleryConfigurationInterface;
 use Ergonode\ProductMedia\Api\GalleryRulesInterface;
 use Ergonode\ProductMediaConsumer\Model\Media\MediaImportHashProvider;
 use PHPUnit\Framework\TestCase;
+use Ergonode\ProductMedia\Exception\InvalidMediaConfigurationException;
+use Ergonode\ProductConsumer\Exception\NonRetryableImportException;
 
 class MediaImportHashProviderTest extends TestCase
 {
@@ -27,6 +29,7 @@ class MediaImportHashProviderTest extends TestCase
     public function testEquivalentRuleOrderDoesNotInvalidateImport(): void
     {
         $configuration = $this->createStub(GalleryConfigurationInterface::class);
+        $configuration->method('isSynchronizationEnabled')->willReturn(true);
         $rules = $this->createStub(GalleryRulesInterface::class);
         $rules->method('getAdditionalImages')->willReturnOnConsecutiveCalls(
             ['back' => 2, 'front' => 3], ['front' => 3, 'back' => 2]
@@ -35,4 +38,26 @@ class MediaImportHashProviderTest extends TestCase
         $source = new RemoteProduct('sku', 'simple', 'template', false, [], []);
         self::assertSame($provider->getHash($source), $provider->getHash($source));
     }
+    public function testInvalidMediaConfigurationCannotRequestProductImportRetries(): void
+    {
+        $configuration = $this->createStub(GalleryConfigurationInterface::class);
+        $configuration->method('isSynchronizationEnabled')->willReturn(true);
+        $rules = $this->createStub(GalleryRulesInterface::class);
+        $rules->method('getAdditionalImages')->willThrowException(new InvalidMediaConfigurationException(__('Invalid image rules.')));
+        $this->expectException(NonRetryableImportException::class);
+        $this->expectExceptionMessage('Invalid image rules.');
+        (new MediaImportHashProvider($configuration, $rules))->getHash(new RemoteProduct('sku', 'simple', 'template', false, [], []));
+    }
+
+    public function testDisabledGalleryDoesNotValidateUnusedImageSettings(): void
+    {
+        $configuration = $this->createStub(GalleryConfigurationInterface::class);
+        $configuration->method('isSynchronizationEnabled')->willReturn(false);
+        $rules = $this->createMock(GalleryRulesInterface::class);
+        $rules->expects(self::never())->method('getAdditionalImages');
+        $rules->expects(self::never())->method('getAdditionalRole');
+        self::assertNotEmpty((new MediaImportHashProvider($configuration, $rules))
+            ->getHash(new RemoteProduct('sku', 'simple', 'template', false, [], [])));
+    }
+
 }

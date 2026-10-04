@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ergonode\ProductConsumer\Model\Magento;
 
 use Ergonode\ProductConsumer\Api\ProductStateSynchronizerInterface;
+use Ergonode\ProductConsumer\Api\UnchangedProductStateSynchronizerInterface;
 use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProduct;
 
 class ProductStateSynchronizerPool
@@ -18,6 +19,15 @@ class ProductStateSynchronizerPool
     {
         foreach ($this->synchronizers as $synchronizer) {
             $synchronizer->synchronize($productId, $magentoSku, $source);
+        }
+    }
+
+    public function synchronizeUnchanged(int $productId, string $magentoSku, RemoteProduct $source): void
+    {
+        foreach ($this->synchronizers as $synchronizer) {
+            if ($synchronizer instanceof UnchangedProductStateSynchronizerInterface) {
+                $synchronizer->synchronizeUnchanged($productId, $magentoSku, $source);
+            }
         }
     }
 }

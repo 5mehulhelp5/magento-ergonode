@@ -94,6 +94,7 @@
     </table>
     <table name="ergonode_media_product_work" resource="default" engine="innodb" comment="Ergonode Media Work">
         <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="boolean" name="synchronize_gallery" nullable="true" comment="Gallery and Image Roles Requested; Null for Legacy Work"/>
         <column xsi:type="varchar" name="status" nullable="false" length="16" default="pending" comment="Status"/>
         <column xsi:type="smallint" name="attempt_count" unsigned="true" nullable="false" default="0" comment="Attempts"/>
         <column xsi:type="timestamp" name="available_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Available"/>
@@ -182,6 +183,7 @@
         <column xsi:type="bigint" name="started_at" unsigned="true" nullable="true" comment="Start UTC Timestamp"/>
         <column xsi:type="bigint" name="updated_at" unsigned="true" nullable="true" comment="Progress UTC Timestamp"/>
         <column xsi:type="bigint" name="last_completed_at" unsigned="true" nullable="true" comment="Last Full Scan UTC Timestamp"/>
+        <column xsi:type="bigint" name="verification_completed_at" unsigned="true" nullable="true" comment="Last Integrity Verification UTC Timestamp"/>
         <column xsi:type="text" name="error" nullable="true" comment="Last Scan Error"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="state_id"/>

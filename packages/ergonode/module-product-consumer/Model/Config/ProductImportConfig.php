@@ -36,7 +36,7 @@ class ProductImportConfig
 
     public function getMaximumAttempts(): int
     {
-        return $this->boundedInt('maximum_attempts', 8, 1, 100);
+        return 1;
     }
 
     public function getLeaseSeconds(): int

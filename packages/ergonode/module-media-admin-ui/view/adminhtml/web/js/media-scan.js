@@ -14,7 +14,10 @@ define([
             pending: $t('Waiting for the background worker'),
             running: $t('Scanning local media'),
             complete: $t('Scan completed'),
-            failed: $t('Scan failed')
+            failed: $t('Scan failed'),
+            audit_pending: $t('Waiting for file verification'),
+            auditing: $t('Verifying file integrity'),
+            audited: $t('File verification completed')
         };
         let timer;
         let busy = false;
@@ -25,7 +28,10 @@ define([
             'The scan runs in the background. You can leave this page.':
                 $t('The scan runs in the background. You can leave this page.'),
             'Refresh status': $t('Refresh status'),
-            'Error details': $t('Error details')
+            'Error details': $t('Error details'),
+            'Verify file integrity': $t('Verify file integrity'),
+            'Verification runs only on request, in the background. You can leave this page. It reads all original product media and reports mapping mismatches without downloading or repairing files.':
+                $t('Verification runs only on request, in the background. You can leave this page. It reads all original product media and reports mapping mismatches without downloading or repairing files.')
         };
         element.querySelectorAll('[data-label]').forEach(node => {
             node.textContent = staticLabels[node.dataset.label];
@@ -41,19 +47,19 @@ define([
         }
 
         function render(scan) {
-            active = ['pending', 'running'].includes(scan.status);
+            active = ['pending', 'running', 'audit_pending', 'auditing'].includes(scan.status);
             text('status', labels[scan.status] || scan.status);
             text('blocking', scan.blocked
                 ? $t('Shared media synchronization is waiting for the first successful full scan.')
                 : $t('The scan requirement does not block media synchronization.'));
             text('counts', $t('Checked: %1 files. Estimated scope from the database: about %2 paths.')
                 .replace('%1', scan.processed).replace('%2', scan.estimated_total));
-            if (scan.status === 'complete') {
+            if (['complete', 'audited'].includes(scan.status)) {
                 text('counts', $t('Checked: %1 files. Missing index entries removed: %2.')
                     .replace('%1', scan.processed).replace('%2', scan.removed));
             }
             const progress = find('progress');
-            progress.hidden = !active && scan.status !== 'complete';
+            progress.hidden = !active && !['complete', 'audited'].includes(scan.status);
             if (scan.percent === null) {
                 progress.removeAttribute('value');
             } else {
@@ -68,8 +74,13 @@ define([
                 ? $t('No successful full scan yet.')
                 : $t('Last successful full scan: %1')
                     .replace('%1', new Date(scan.last_completed_at * 1000).toLocaleString()));
+            text('verification-time', scan.verification_completed_at
+                ? $t('File verification completed at: %1')
+                    .replace('%1', new Date(scan.verification_completed_at * 1000).toLocaleString())
+                : '');
             text('start', scan.last_completed_at === null ? $t('Scan media') : $t('Refresh index'));
             find('start').disabled = active;
+            find('verify').disabled = active;
             find('errors').hidden = !scan.error && !actionError;
             text('error', actionError || scan.error || '');
         }
@@ -104,17 +115,18 @@ define([
         }
 
         find('refresh').addEventListener('click', poll);
-        find('start').addEventListener('click', () => {
+        function requestScan(verify) {
             if (busy || active) {
                 return;
             }
             clearTimeout(timer);
             busy = true;
             find('start').disabled = true;
+            find('verify').disabled = true;
             actionError = '';
             $.ajax({
                 url: config.startUrl, type: 'POST', dataType: 'json',
-                data: {form_key: window.FORM_KEY}
+                data: {form_key: window.FORM_KEY, verify: verify ? '1' : '0'}
             }).done(response => {
                 if (!response || response.success !== true) {
                     actionError = response && response.message ? response.message : $t('Unable to request a scan.');
@@ -127,9 +139,12 @@ define([
                 .always(() => {
                     busy = false;
                     find('start').disabled = active;
+                    find('verify').disabled = active;
                     poll();
                 });
-        });
+        }
+        find('start').addEventListener('click', () => requestScan(false));
+        find('verify').addEventListener('click', () => requestScan(true));
         poll();
     };
 });

@@ -22,17 +22,8 @@ class RecoverProductImports
     ) {
     }
 
+    /** Legacy scheduled rows may still call this handler; never revive failed or interrupted work. */
     public function execute(): void
     {
-        if (!$this->config->isEnabled() || !$this->automation->isAllowed()) {
-            return;
-        }
-        try {
-            $this->recoveryDispatcher->dispatch();
-        } catch (ConnectionConfigurationException) {
-            return;
-        } catch (Throwable $exception) {
-            $this->logger->error('Unable to recover Ergonode product imports.', ['exception' => $exception]);
-        }
     }
 }

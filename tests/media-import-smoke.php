@@ -163,9 +163,10 @@ try {
         $languages, $om->get(\Ergonode\Media\Api\FileUsageRecorderInterface::class),
         $om->get(\Magento\Eav\Model\Config::class),
         new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(),
-        $om->get(\Magento\Store\Model\StoreManagerInterface::class));
+        $om->get(\Magento\Store\Model\StoreManagerInterface::class),
+        $om->get(\Ergonode\ProductMedia\Api\ImageRolesInterface::class));
     $bridge = new ProductMediaSynchronizer($fileUsages, $selection,
-        new GalleryScheduler($galleryConfig, $repository, $publisher));
+        new GalleryScheduler($galleryConfig, $repository, $publisher), $repository);
     $productResource = $om->get(ProductResource::class);
     $ids = [];
     foreach ([1, 2, 3] as $number) {

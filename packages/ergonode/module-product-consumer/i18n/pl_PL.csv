@@ -13,3 +13,5 @@
 "Attribute ""%1"" does not belong to the product attribute set.","Atrybut „%1” nie należy do zestawu atrybutów produktu."
 "Required attribute ""%1"" has no default value in Ergonode.","Wymagany atrybut „%1” nie ma wartości w domyślnym języku Ergonode."
 "Attribute ""%1"" has conflicting values in stores of website %2. Magento uses website scope.","Atrybut „%1” ma sprzeczne wartości w sklepach witryny %2. Magento przechowuje jedną wartość dla całej witryny."
+"Product synchronization completed in Magento.","Synchronizacja produktu w Magento została zakończona."
+"Product ID: %1. Ergonode SKU: %2. %3 Earlier writes may have completed. Log reference: %4.","ID produktu: %1. SKU Ergonode: %2. %3 Wcześniejsze zmiany mogły zostać zapisane. Identyfikator błędu w logach: %4."

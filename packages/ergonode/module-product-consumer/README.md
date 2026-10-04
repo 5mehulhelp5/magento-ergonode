@@ -5,7 +5,7 @@
 ## Responsibility boundary
 
 Durable Ergonode product import: changed/deleted stream scheduling, queue coalescing,
-Magento product writes, retries, deferred dependencies and deletion-as-disable.
+Magento product writes, terminal failure reporting and deletion-as-disable.
 
 Product owns identity records and SKU mode. This consumer writes mapped product values;
 ProductAttributeConsumer owns attribute/option definitions and inbound mapping
@@ -61,9 +61,11 @@ import never changes an existing Magento product type implicitly.
 
 Each SKU has at most one pending row. A newer event replaces its payload and
 event token, preventing an older worker from acknowledging newer data. Workers
-claim bounded batches with expiring leases, use exponential retry for failures,
-and defer missing variants, children, mappings or templates without exhausting
-the normal retry budget. The scheduler stops reading streams at the configured
+claim bounded batches with expiring leases. A failed or interrupted attempt is terminal:
+it is logged and is never automatically re-executed. Missing dependencies also fail
+that item; other products continue. A new full import or cursor replay including the
+product schedules a fresh attempt. The old recovery cron is disabled, and the CLI
+has no retry-failed operation. The scheduler stops reading streams at the configured
 backlog threshold.
 
 Remote deletion disables only a product already owned by the immutable
@@ -128,7 +130,8 @@ default language mapping and configured attribute mappings.
 The selected importer reuses remote loading, language/option value mapping and SKU
 identity synchronization. It restricts values to mapped attributes in the target set.
 It preserves product type, attribute set and structural relationships. It does not create
-remote-only products or import category relations, media-gallery structures or tier prices.
+remote-only products or import category relations or tier prices. Configured gallery
+and image roles execute synchronously in the shared batch pipeline.
 Assigned SKU uses the configured identity mapping; historical shared bindings use
 their persisted native Ergonode SKU.
 
@@ -186,7 +189,7 @@ are retained; manual import policies and settings remain visible.
 
 ## Unavailable connection in scheduled work
 
-Automatic synchronization and recovery use Core's fresh connection probe before
+Automatic synchronization uses Core's fresh connection probe before
 starting domain work. Missing or invalid configuration and unsuccessful probes
 skip the run without changing cursors, enqueueing work or logging connection
 errors. A rejected connection discovered during execution is also skipped;

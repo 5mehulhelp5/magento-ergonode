@@ -34,4 +34,22 @@
             <argument name="importEnabled" xsi:type="boolean">true</argument>
         </arguments>
     </type>
+    <type name="Ergonode\ProductConsumer\Model\Magento\SelectedProductStateSynchronizerPool">
+        <arguments>
+            <argument name="synchronizers" xsi:type="array">
+                <item name="media" xsi:type="object">Ergonode\ProductMediaConsumer\Model\Media\ProductMediaSynchronizer</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Pipeline\ProductBatchPipeline">
+        <arguments><argument name="processors" xsi:type="array">
+            <item name="200_media" xsi:type="object">Ergonode\ProductMediaConsumer\Model\Pipeline\WriteProductMedia</item>
+        </argument></arguments>
+    </type>
+    <type name="Ergonode\ProductMediaConsumer\Model\Media\ProductMediaSynchronizer">
+        <arguments><argument name="batchScope" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\BatchScope</argument></arguments>
+    </type>
+    <type name="Ergonode\Media\Model\Queue\QueuePublisher">
+        <plugin name="ergonode_product_inline_media" type="Ergonode\ProductMediaConsumer\Plugin\InlineMediaDispatch"/>
+    </type>
 </config>

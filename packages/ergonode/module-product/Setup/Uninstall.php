@@ -32,6 +32,10 @@ class Uninstall implements UninstallInterface
                     ['path = ?' => MagentoIdentityAttribute::XML_PATH_ATTRIBUTE]
                 );
             }
+            $cacheTable = $setup->getTable('ergonode_product_cache_state');
+            if ($connection->isTableExists($cacheTable)) {
+                $connection->dropTable($cacheTable);
+            }
             $mappingTable = $setup->getTable(self::MAPPING_TABLE);
             if ($connection->isTableExists($mappingTable)) {
                 $connection->dropTable($mappingTable);

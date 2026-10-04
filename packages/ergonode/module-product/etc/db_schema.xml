@@ -27,4 +27,11 @@
             <column name="import_hash"/>
         </index>
     </table>
+    <table name="ergonode_product_cache_state" resource="default" engine="innodb" comment="Last Product Cache State">
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="varchar" name="state_hash" length="64" nullable="false" comment="Last Invalidated State Hash"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="product_id"/></constraint>
+        <constraint xsi:type="foreign" referenceId="ERGONODE_PRODUCT_CACHE_STATE_PRODUCT" table="ergonode_product_cache_state"
+            column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
 </schema>

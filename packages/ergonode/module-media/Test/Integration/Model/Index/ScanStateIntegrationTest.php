@@ -26,7 +26,7 @@ class ScanStateIntegrationTest extends TestCase
         foreach (['estimated_total', 'indexed', 'reused', 'removed', 'bytes'] as $name) {
             $definition->addColumn($name, Table::TYPE_BIGINT, null, ['nullable' => false, 'default' => 0]);
         }
-        foreach (['started_at', 'updated_at', 'last_completed_at'] as $name) {
+        foreach (['started_at', 'updated_at', 'last_completed_at', 'verification_completed_at'] as $name) {
             $definition->addColumn($name, Table::TYPE_BIGINT);
         }
         $definition->addColumn('error', Table::TYPE_TEXT, '64k');

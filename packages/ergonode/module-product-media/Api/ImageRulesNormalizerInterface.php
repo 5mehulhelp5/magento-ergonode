@@ -10,4 +10,5 @@ interface ImageRulesNormalizerInterface
      * @return list<array{attribute:string,position:int}>
      */
     public function normalize(array $rows): array;
+    public function normalizePosition(mixed $position): int;
 }

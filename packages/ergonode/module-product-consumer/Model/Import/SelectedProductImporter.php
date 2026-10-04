@@ -10,6 +10,7 @@ use Ergonode\ProductConsumer\Model\GraphQl\RemoteProductLoader;
 use Ergonode\ProductConsumer\Model\Magento\ProductAttributeValueMapper;
 use Ergonode\ProductConsumer\Model\Magento\MappedMagentoSkuResolver;
 use Ergonode\ProductConsumer\Model\Magento\MagentoSkuSynchronizer;
+use Ergonode\ProductConsumer\Model\Magento\SelectedProductStateSynchronizerPool;
 use Ergonode\ProductConsumer\Model\Port\SelectedProductWriterInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
@@ -31,15 +32,21 @@ class SelectedProductImporter
         private readonly AttributeManagementInterface $attributes,
         private readonly MappedMagentoSkuResolver $skuResolver,
         private readonly MagentoSkuSynchronizer $skuSynchronizer,
-        private readonly ProductIdentityServiceInterface $identities
+        private readonly ProductIdentityServiceInterface $identities,
+        private readonly SelectedProductStateSynchronizerPool $stateSynchronizers,
+        private readonly ?\Ergonode\ProductConsumer\Model\Pipeline\BatchScope $batchScope = null
     ) {
     }
 
     public function import(ProductIdentityInterface $identity): void
     {
+        $this->importSource($identity, $this->loader->load($identity->getErgonodeSku()));
+    }
+
+    public function importSource(ProductIdentityInterface $identity, ?\Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProduct $source): void
+    {
         $productId = $identity->getProductId();
         $product = $this->products->getById($productId, true, 0, true);
-        $source = $this->loader->load($identity->getErgonodeSku());
         if ($source === null) {
             throw new LocalizedException(__('The mapped product does not exist in Ergonode.'));
         }
@@ -57,10 +64,12 @@ class SelectedProductImporter
         $this->skuSynchronizer->assertIdentityAttributeNotMapped($mapped, $identity->getIdentityMode());
         $this->writer->write($productId, $mapped['values'], $mapped['clear']);
         $this->skuSynchronizer->synchronize($productId, $magentoSku, $source->sku);
-        $this->identities->recordImported(
+        $this->stateSynchronizers->synchronize($productId, $magentoSku, $source, $codes);
+        $record = fn() => $this->identities->recordImported(
             $productId,
             $source->sku,
             hash('sha256', 'selected-attributes-v1:' . $source->contentHash())
         );
+        if (!($this->batchScope?->afterSuccess($record) ?? false)) { $record(); }
     }
 }

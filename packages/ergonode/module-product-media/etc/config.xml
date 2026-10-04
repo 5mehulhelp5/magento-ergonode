@@ -5,6 +5,7 @@
             <media>
                 <synchronization_enabled>1</synchronization_enabled>
                 <role_position>2</role_position>
+                <unmanaged_images>keep</unmanaged_images>
             </media>
         </ergonode_products>
     </default>

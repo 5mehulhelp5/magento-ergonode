@@ -12,6 +12,13 @@ use Magento\Framework\Exception\LocalizedException;
 
 class ProductTargetResolver
 {
+    private ?array $batchTargets = null;
+
+    public function setBatchTargets(?array $targets): void
+    {
+        $this->batchTargets = $targets;
+    }
+
     public function __construct(
         private readonly ResourceConnection $resourceConnection,
         private readonly ProductIdentityServiceInterface $identityService,
@@ -26,6 +33,17 @@ class ProductTargetResolver
         string $identityMode = ProductIdentityInterface::MODE_SHARED
     ): ?array {
         $ergonodeSku = trim($ergonodeSku);
+        if ($this->batchTargets !== null && array_key_exists($ergonodeSku, $this->batchTargets)) {
+            $target = $this->batchTargets[$ergonodeSku];
+            if ($target !== null) {
+                if (!$target['bound']) {
+                    $this->identityService->bind($target['product_id'], $ergonodeSku, $identityMode);
+                    $this->batchTargets[$ergonodeSku]['bound'] = true;
+                }
+                unset($target['bound']);
+            }
+            return $target;
+        }
         $mapped = $this->identityService->getIdentitiesByErgonodeSkus([$ergonodeSku]);
         $identity = $mapped[0] ?? null;
         $mappedId = $identity?->getProductId();

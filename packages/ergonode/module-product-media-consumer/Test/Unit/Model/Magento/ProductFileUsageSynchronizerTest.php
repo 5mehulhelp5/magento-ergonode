@@ -18,6 +18,42 @@ use PHPUnit\Framework\TestCase;
 
 class ProductFileUsageSynchronizerTest extends TestCase
 {
+    public function testMissingGalleryPreservesImageUsagesAndSelectedImportTouchesOnlyAllowedAttributes(): void
+    {
+        $mappings = $this->createStub(ProductAttributeMappingProviderInterface::class);
+        $mappings->method('getMappings')->willReturn([
+            ['ergonode_attribute_code' => 'manual', 'magento_attribute_code' => 'manual_url',
+                'ergonode_type' => 'file', 'magento_type' => 'text'],
+            ['ergonode_attribute_code' => 'image', 'magento_attribute_code' => 'hover_image',
+                'ergonode_type' => 'image', 'magento_type' => 'image'],
+            ['ergonode_attribute_code' => 'other', 'magento_attribute_code' => 'other_file',
+                'ergonode_type' => 'file', 'magento_type' => 'file'],
+        ]);
+        $languages = $this->createStub(LanguageStoreMappingProviderInterface::class);
+        $languages->method('getLanguageStoreMap')->willReturn([0 => 'pl_PL']);
+        $attribute = $this->createStub(Attribute::class);
+        $attribute->method('getIsGlobal')->willReturn(1);
+        $eav = $this->createMock(Config::class);
+        $eav->expects(self::once())->method('getAttribute')->with('catalog_product', 'manual_url')->willReturn($attribute);
+        $roles = $this->createStub(\Ergonode\ProductMedia\Api\ImageRolesInterface::class);
+        $roles->method('getOptions')->willReturn(['image' => 'Image', 'hover_image' => 'Hover']);
+        $recorder = $this->createMock(FileUsageRecorderInterface::class);
+        $recorder->expects(self::once())->method('synchronize')->with(23, self::callback(
+            static fn(FileUsageSet $set): bool => $set->toRows() === [
+                ['source_path' => 'manual.pdf', 'attribute_code' => 'manual_url', 'store_id' => 0],
+            ] && $set->attributeCodes() === ['manual_url', 'hover_image']
+                && $set->preservedAttributeCodes() === ['image', 'hover_image']
+        ));
+        $attributes = array_map(static fn(string $code): RemoteProductAttribute => new RemoteProductAttribute(
+            $code, new RemoteProductAttributeType($code === 'image' ? 'image' : 'file'),
+            new LocalizedStringValues(['pl_PL' => $code . ($code === 'image' ? '.jpg' : '.pdf')])
+        ), ['manual', 'image', 'other']);
+        (new ProductFileUsageSynchronizer($mappings, $languages, $recorder, $eav,
+            new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(),
+            $this->createStub(\Magento\Store\Model\StoreManagerInterface::class), $roles))
+            ->synchronize(23, $attributes, false, ['manual_url', 'hover_image']);
+    }
+
     public function testTranslatesProductConsumerFileValueToMediaOwnedReferences(): void
     {
         $mappings = $this->createStub(ProductAttributeMappingProviderInterface::class);
@@ -52,7 +88,8 @@ class ProductFileUsageSynchronizerTest extends TestCase
 
         (new ProductFileUsageSynchronizer($mappings, $languages, $recorder, $eav,
             new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(),
-            $this->createStub(\Magento\Store\Model\StoreManagerInterface::class)))->synchronize(23, [
+            $this->createStub(\Magento\Store\Model\StoreManagerInterface::class),
+            $this->createStub(\Ergonode\ProductMedia\Api\ImageRolesInterface::class)))->synchronize(23, [
             new RemoteProductAttribute(
                 'manual',
                 new RemoteProductAttributeType('file'),
@@ -101,7 +138,8 @@ class ProductFileUsageSynchronizerTest extends TestCase
             ]
         ));
         (new ProductFileUsageSynchronizer($mappings, $languages, $recorder, $eav,
-            new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(), $stores))
+            new \Ergonode\ProductMediaConsumer\Model\Magento\AsynchronousFileAttributeMapping(), $stores,
+            $this->createStub(\Ergonode\ProductMedia\Api\ImageRolesInterface::class)))
             ->synchronize(23, [new RemoteProductAttribute('manual', new RemoteProductAttributeType('file'),
                 new LocalizedStringValues(['pl_PL' => 'pl.pdf', 'en_GB' => 'en.pdf', 'de_DE' => 'de.pdf', 'fr_FR' => 'fr.pdf']))]);
     }

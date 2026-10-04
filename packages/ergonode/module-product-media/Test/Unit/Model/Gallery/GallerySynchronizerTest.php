@@ -6,6 +6,8 @@ namespace Ergonode\ProductMedia\Test\Unit\Model\Gallery;
 
 use Ergonode\ProductMedia\Api\GalleryRulesInterface;
 use Ergonode\ProductMedia\Api\ImageRolesInterface;
+use Ergonode\ProductMedia\Api\OrphanImageCleanerInterface;
+use Ergonode\ProductMedia\Model\Gallery\ObsoleteImageRoles;
 use Ergonode\ProductMedia\Model\Gallery\GallerySynchronizer;
 use Ergonode\ProductMedia\Model\Port\GalleryWriterInterface;
 use Ergonode\ProductMedia\Model\Port\RoleWriterInterface;
@@ -25,8 +27,9 @@ class GallerySynchronizerTest extends TestCase
         $gallery->expects(self::once())->method('synchronize')->with(8, [
             ['path' => 'catalog/product/a.jpg', 'position' => 1],
             ['path' => 'catalog/product/b.jpg', 'position' => 2],
-        ], [])->willReturnCallback(static function () use (&$done): void {
+        ], [])->willReturnCallback(static function () use (&$done): array {
             $done = true;
+            return [];
         });
         $roles = $this->createMock(RoleWriterInterface::class);
         $roles->expects(self::once())->method('write')->with(8, 0, [
@@ -68,4 +71,51 @@ class GallerySynchronizerTest extends TestCase
             $this->createStub(ImageRolesInterface::class)
         ))->synchronize(8, [], []);
     }
+
+    public function testRemovedMappingUsesTheCurrentPositionalRoleInsteadOfBlockingTheGallery(): void
+    {
+        $rules = $this->createStub(GalleryRulesInterface::class);
+        $rules->method('getAdditionalRole')->willReturn(['attribute' => 'hover_image', 'position' => 2]);
+        $available = $this->createStub(ImageRolesInterface::class);
+        $available->method('getOptions')->willReturn(['hover_image' => 'Hover']);
+        $roles = $this->createMock(RoleWriterInterface::class);
+        $written = [];
+        $roles->expects(self::exactly(2))->method('write')->willReturnCallback(
+            static function (int $id, int $store, array $values) use (&$written): void { $written[$store] = $values; }
+        );
+        (new GallerySynchronizer($this->createStub(GalleryWriterInterface::class), $rules, $roles, $available))
+            ->synchronize(23, [
+                ['path' => 'catalog/product/a.jpg', 'position' => 1],
+                ['path' => 'catalog/product/c.jpg', 'position' => 2],
+            ], ['catalog/product/b.jpg'], [
+                ['attribute' => 'hover_image', 'store_id' => 0, 'path' => null],
+                ['attribute' => 'hover_image', 'store_id' => 2, 'path' => null],
+            ]);
+        self::assertSame('catalog/product/c.jpg', $written[0]['hover_image']);
+        self::assertSame('catalog/product/c.jpg', $written[2]['hover_image']);
+    }
+
+    public function testNextPassReconcilesRolesEvenWithoutNewlyRemovedGalleryPaths(): void
+    {
+        $order = [];
+        $gallery = $this->createMock(GalleryWriterInterface::class);
+        $gallery->expects(self::once())->method('synchronize')->with(23, [], [])
+            ->willReturnCallback(static function () use (&$order): array { $order[] = 'gallery'; return []; });
+        $roles = $this->createMock(RoleWriterInterface::class);
+        $roles->expects(self::once())->method('write')->willReturnCallback(
+            static function () use (&$order): void { $order[] = 'roles'; }
+        );
+        $obsolete = $this->createMock(ObsoleteImageRoles::class);
+        $obsolete->expects(self::once())->method('clearMissing')->with(23)
+            ->willReturnCallback(static function () use (&$order): array {
+                $order[] = 'reconcile'; return ['catalog/product/b.jpg'];
+            });
+        $cleaner = $this->createMock(OrphanImageCleanerInterface::class);
+        $cleaner->expects(self::once())->method('schedule')->with(23, ['catalog/product/b.jpg'])
+            ->willReturnCallback(static function () use (&$order): void { $order[] = 'cleanup'; });
+        (new GallerySynchronizer($gallery, $this->createStub(GalleryRulesInterface::class), $roles,
+            $this->createStub(ImageRolesInterface::class), $obsolete, $cleaner))->synchronize(23, [], []);
+        self::assertSame(['gallery', 'roles', 'reconcile', 'cleanup'], $order);
+    }
+
 }

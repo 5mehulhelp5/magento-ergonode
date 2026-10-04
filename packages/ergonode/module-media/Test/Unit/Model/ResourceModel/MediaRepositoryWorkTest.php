@@ -14,6 +14,7 @@ use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class MediaRepositoryWorkTest extends TestCase
@@ -44,7 +45,7 @@ class MediaRepositoryWorkTest extends TestCase
         ];
     }
 
-    public function testExpiredLeaseThrowsSoConsumerRetriesInsteadOfDeletingWork(): void
+    public function testExpiredLeaseRejectsWritesWithoutRetry(): void
     {
         $events = [];
         [$repository, $connection] = $this->repository([
@@ -91,6 +92,6 @@ class MediaRepositoryWorkTest extends TestCase
         $resource->method('getTableName')->willReturnArgument(0);
         $clock = $this->createStub(DateTime::class);
         $clock->method('gmtDate')->willReturn('2026-10-02 12:00:00');
-        return [new MediaRepository($resource, $clock, $this->createStub(File::class)), $connection];
+        return [new MediaRepository($resource, $clock, $this->createStub(File::class), $this->createStub(LoggerInterface::class)), $connection];
     }
 }

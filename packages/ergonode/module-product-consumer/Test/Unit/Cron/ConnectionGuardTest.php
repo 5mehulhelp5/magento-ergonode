@@ -50,36 +50,15 @@ class ConnectionGuardTest extends ConnectionTestCase
         (new ScheduleProductImports($policy, $process, $logger, $config))->execute();
     }
 
-    #[DataProvider('unavailableConnections')]
-    public function testRecoverProductImportsSkipsRepeatedUnavailableConnections(string $scenario): void
+    public function testLegacyRecoveryNeverDispatchesEvenWhenConnectionIsAvailable(): void
     {
-        $policy = $this->unavailableAutomation($scenario);
-        $logger = $this->silentLogger();
+        $policy = $this->createMock(AutomaticSynchronizationInterface::class);
+        $policy->expects(self::never())->method('isAllowed');
         $process = $this->createMock(ProductImportRecoveryDispatcher::class);
         $process->expects(self::never())->method('dispatch');
         $config = $this->createStub(ProductImportConfig::class);
         $config->method('isEnabled')->willReturn(true);
-        $cron = new RecoverProductImports($policy, $process, $logger, $config);
-        $cron->execute();
-        $cron->execute();
-    }
-
-    public function testRecoverProductImportsSkipsCredentialsRejectedAfterTheProbe(): void
-    {
-        $policy = $this->createStub(AutomaticSynchronizationInterface::class);
-        $policy->method('isAllowed')->willReturn(true);
-        $logger = $this->silentLogger();
-        $process = $this->createMock(ProductImportRecoveryDispatcher::class);
-        $process->expects(self::once())->method('dispatch')->willThrowException(
-            new ConnectionConfigurationException(
-                'Key revoked',
-                ConnectionConfigurationException::FAILURE_AUTHORIZATION,
-                401
-            )
-        );
-        $config = $this->createStub(ProductImportConfig::class);
-        $config->method('isEnabled')->willReturn(true);
-        (new RecoverProductImports($policy, $process, $logger, $config))->execute();
+        (new RecoverProductImports($policy, $process, $this->silentLogger(), $config))->execute();
     }
 
     public function testScheduleProductImportsResumesAfterConnectionRecovery(): void
@@ -112,34 +91,6 @@ class ConnectionGuardTest extends ConnectionTestCase
         (new ScheduleProductImports($policy, $process, $logger, $config))->execute();
     }
 
-    public function testRecoverProductImportsResumesAfterConnectionRecovery(): void
-    {
-        $policy = $this->createMock(AutomaticSynchronizationInterface::class);
-        $policy->expects(self::exactly(2))->method('isAllowed')->willReturnOnConsecutiveCalls(false, true);
-        $logger = $this->silentLogger();
-        $process = $this->createMock(ProductImportRecoveryDispatcher::class);
-        $process->expects(self::once())->method('dispatch');
-        $config = $this->createStub(ProductImportConfig::class);
-        $config->method('isEnabled')->willReturn(true);
-        $cron = new RecoverProductImports($policy, $process, $logger, $config);
-        $cron->execute();
-        $cron->execute();
-    }
-
-    public function testRecoverProductImportsStillReportsUnexpectedProcessFailures(): void
-    {
-        $policy = $this->createStub(AutomaticSynchronizationInterface::class);
-        $policy->method('isAllowed')->willReturn(true);
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects(self::once())->method('error');
-        $logger->expects(self::never())->method('info');
-        $process = $this->createMock(ProductImportRecoveryDispatcher::class);
-        $process->expects(self::once())->method('dispatch')
-            ->willThrowException(new RuntimeException('Database failed'));
-        $config = $this->createStub(ProductImportConfig::class);
-        $config->method('isEnabled')->willReturn(true);
-        (new RecoverProductImports($policy, $process, $logger, $config))->execute();
-    }
 
     public function testScheduleProductImportsDoesNotProbeWhenProductImportIsDisabled(): void
     {

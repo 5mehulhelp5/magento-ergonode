@@ -7,7 +7,6 @@
                 <stream_page_size>25</stream_page_size>
                 <consumer_batch_size>25</consumer_batch_size>
                 <maximum_pending_items>10000</maximum_pending_items>
-                <maximum_attempts>8</maximum_attempts>
                 <lease_seconds>900</lease_seconds>
                 <type_attribute_code>magento_product_type</type_attribute_code>
                 <active_status_code>active</active_status_code>

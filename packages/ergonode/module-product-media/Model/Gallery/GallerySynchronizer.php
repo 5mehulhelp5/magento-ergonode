@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ergonode\ProductMedia\Model\Gallery;
 
 use Ergonode\ProductMedia\Api\GalleryRulesInterface;
+use Ergonode\ProductMedia\Api\OrphanImageCleanerInterface;
 use Ergonode\ProductMedia\Api\GallerySynchronizerInterface;
 use Ergonode\ProductMedia\Api\ImageRolesInterface;
 use Ergonode\ProductMedia\Model\Port\RoleWriterInterface;
@@ -17,7 +18,9 @@ class GallerySynchronizer implements GallerySynchronizerInterface
         private readonly GalleryWriterInterface $gallery,
         private readonly GalleryRulesInterface $rules,
         private readonly RoleWriterInterface $roles,
-        private readonly ImageRolesInterface $imageRoles
+        private readonly ImageRolesInterface $imageRoles,
+        private readonly ?ObsoleteImageRoles $obsoleteRoles = null,
+        private readonly ?OrphanImageCleanerInterface $orphanCleaner = null
     ) {
     }
     public function synchronize(int $productId, array $desired, array $managed, array $mappedRoles = []): void
@@ -45,6 +48,11 @@ class GallerySynchronizer implements GallerySynchronizerInterface
                 continue;
             }
             if (array_key_exists($role['attribute'], $roles[0])) {
+                if ($role['path'] === null) {
+                    // A removed attribute mapping must not override its current positional role.
+                    $roles[$role['store_id']][$role['attribute']] = $roles[0][$role['attribute']];
+                    continue;
+                }
                 throw new LocalizedException(__('An image role cannot use both a position and an attribute mapping.'));
             }
             if ($role['path'] !== null && !in_array($role['path'], $paths, true)) {
@@ -52,9 +60,11 @@ class GallerySynchronizer implements GallerySynchronizerInterface
             }
             $roles[$role['store_id']][$role['attribute']] = $role['path'];
         }
-        $this->gallery->synchronize($productId, $desired, $managed);
+        $retired = $this->gallery->synchronize($productId, $desired, $managed);
         foreach ($roles as $store => $values) {
             $this->roles->write($productId, $store, $values);
         }
+        $retired = array_values(array_unique([...$retired, ...($this->obsoleteRoles?->clearMissing($productId) ?? [])]));
+        $this->orphanCleaner?->schedule($productId, $retired);
     }
 }

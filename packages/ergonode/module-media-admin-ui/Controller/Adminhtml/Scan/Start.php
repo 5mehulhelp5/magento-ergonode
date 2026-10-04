@@ -24,7 +24,7 @@ class Start extends Action implements HttpPostActionInterface
     {
         $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         try {
-            $this->scanner->request();
+            $this->scanner->request((string)$this->getRequest()->getParam('verify', '0') === '1');
             return $result->setData(['success' => true]);
         } catch (LocalizedException $exception) {
             return $result->setHttpResponseCode(400)->setData([

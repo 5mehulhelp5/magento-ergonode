@@ -28,7 +28,7 @@ class GalleryRolesIntegrationTest extends TestCase
         $resource = $om->get(ResourceConnection::class);
         $connection = $resource->getConnection();
         $products = $om->get(ProductResource::class);
-        $writer = new NativeGalleryWriter($resource, $om->get(Config::class), $om->get(GalleryWriteLocks::class));
+        $writer = new NativeGalleryWriter($resource, $om->get(Config::class), $om->get(GalleryWriteLocks::class), $om->get(\Ergonode\ProductMedia\Api\GalleryConfigurationInterface::class));
         $roles = new RoleWriter($products, $om->get(Action::class));
         $sync = new GallerySynchronizer(
             $writer,

@@ -9,7 +9,10 @@ local index and future optional federation boundary are recorded in
 `Ergonode_Media` keeps source identity (`Multimedia.path`) separate from the
 Magento file materialization. The optional `Ergonode_ProductMediaConsumer`
 bridge persists desired gallery and file-attribute references during product
-imports; downloads run on `ergonode.media.gallery`.
+imports. Product imports execute downloads, gallery writes and image roles inline
+in the common product batch pipeline. Independent multimedia-stream updates retain
+`ergonode.media.gallery`; both workers share the same product synchronization lock
+and selective cache finalizer.
 Media gallery synchronization can be disabled independently from mapped file
 attributes with `ergonode_products/media/synchronization_enabled`. When
 disabled, product imports do not request the configured Ergonode Gallery
@@ -36,8 +39,28 @@ metadata and activation use the expected local revision to reject stale download
 Workers prepare files before starting the product-write transaction. The transaction
 locks the work row and verifies its current lease token and expiry before updating
 gallery, roles, file attributes and attachment records. A rescheduled worker cannot
-write; an expired lease is retried. Gallery path locks remain held until commit or
+write; an expired lease prevents the write and is not retried. Gallery path locks remain held until commit or
 rollback so simultaneous products reuse the same native gallery entry.
+
+Each queued product records whether a gallery update was requested. File-only work
+does not rewrite the gallery or native Image roles. An explicit empty gallery still
+clears the managed gallery and its roles; a missing gallery attribute leaves them
+untouched. Gallery writes complete before Image roles are written. File-only
+scheduling preserves an already pending gallery request.
+Multimedia changes request gallery processing only for products with desired
+gallery usages; other registered file usages remain file-only work.
+
+The multimedia scheduler holds one Magento lock across cursor reads and page
+processing. Each page and its cursor checkpoint commit in the same database
+transaction. Concurrent CLI/cron runs skip while that lock is held; failed pages
+roll back and release the lock.
+
+After deploying this change, stop media consumers and run `bin/magento setup:upgrade`
+before resuming them. This adds nullable `synchronize_gallery` to the work table.
+Legacy queued work infers gallery intent from existing managed gallery usages;
+new work always stores its intent explicitly. A legacy empty-gallery request with
+no usage history cannot be distinguished from file-only work and must be requeued
+by importing the product again.
 
 An active asset with a matching stored content hash and revision reuses its
 existing target file before source preparation. Removing the temporary source
@@ -123,7 +146,7 @@ withheld during warm-up and when the database estimate has been exceeded.
 
 Before the first complete scan, the product media consumer does not claim work
 in **shared** mode. Desired usages still accumulate during product imports;
-waiting does not consume retry attempts. Recovery dispatches them after a full
+waiting does not start an attempt. The normal scanner dispatches this fresh waiting work after a full
 successful scan. The synchronization switch retains the administrator's setting.
 SEO mode is not gated by this prerequisite. A later scan or failed refresh
 preserves the previous completion marker and does not re-block synchronization.
@@ -179,3 +202,100 @@ unexpected failures remain visible. Existing work is retained for the next run.
 The local media scan and history retention remain independent of this policy.
 Unit tests cover repeated rejection and recovery; the project integration cron
 contract exercises Magento scheduling with existing work and stored checkpoints.
+
+## Manual integrity verification
+
+Admin's **Verify file integrity** requests a background scan. The existing scan
+worker executes that explicit request; it never creates a recurring verification.
+The panel shows waiting/running/completed status, progress, a concise findings
+summary and the persisted time of the last completed verification. This date
+survives subsequent index refreshes and requests. Deployment requires Magento's
+standard declarative schema upgrade for `verification_completed_at`.
+
+CLI users can explicitly run `ergonode:media:scan --verify-content`. This reads
+all original files under `catalog/product` (excluding generated cache, temporary
+and archive directories), recomputes their hashes regardless of size/mtime, and
+refreshes the index of actual files. Published materialization paths are checked
+against their existing expected hashes. Files without a known mapping are
+indexed but cannot be certified against expected source contents. This verifies
+byte integrity, not image decoding or the correctness of the original source.
+
+Missing, unreadable and mismatched files are reported with paths and source/asset
+context in logs, with duplicate findings for the same path/expected hash collapsed.
+An individual unreadable file does not stop the remaining checks. A fatal traversal
+or database failure ends the request and is logged. An interrupted verification
+is reported as failed by the worker; a new scan requires another explicit request.
+Verification never downloads
+or repairs a file, changes expected hashes, edits galleries/roles, dispatches
+media work, or sets the first-full-scan readiness marker. Normal synchronization
+and the existing fast index scan do not gain content verification.
+
+## Gallery replacement and retained image roles
+
+The current gallery selection is authoritative for managed photos and image
+roles. If a previously recorded Image usage points to a source absent from the
+new gallery, gallery processing clears that role instead of rejecting the product.
+This also applies to references retained outside a selected import's attribute
+scope. The obsolete reference is removed by product, role, store and source hash
+only after gallery and role writes succeed, inside the existing guarded product
+transaction. Current positional roles take precedence over a removed mapping.
+
+An explicit empty gallery clears its old roles and references; missing gallery
+data does not request a replacement. Download, gallery or role-write failures
+leave cleanup unperformed. Ordinary file attributes keep their existing scope
+and processing. The ProductMedia setting for additional Magento images defaults to
+preserving unmanaged images, with optional per-product hiding or one-to-one unlinking.
+The next explicit pass covering a product also clears native image roles pointing
+outside its completed visible gallery, including a previous partial state.
+
+Native unlinking preserves other product links and removes an unused gallery row
+on the last association. Physical deletion runs after commit under the path lock,
+only when no gallery link, native image attribute or desired integration usage
+still references the file. It also removes obsolete materialization/index entries;
+the prepared source cache remains available. Rollback preserves physical files.
+Cleanup errors are logged once with product, path, stage and exception. No repair
+queue or automatic resubmission is added; failed physical cleanup requires manual
+investigation using its log entry.
+
+
+## Failed media and a new import pass
+
+A product media failure is logged with its product ID and exception and leaves a
+terminal `failed` work record with the error. The consumer continues with the other
+products in the batch. There is no delay, maximum-attempts setting or recovery cron.
+Only fresh `pending` work with zero previous attempts can be claimed or dispatched.
+The retained attempt counter is diagnostic, not a retry policy.
+
+When another consumer invocation or new scheduling encounters an expired processing
+lease or a legacy delayed retry, it marks that record failed and logs its reason;
+it never executes that old attempt. Previously scheduled recovery cron rows are
+compatible no-ops. A stopped process cannot log its interruption at that instant;
+the next invocation/scheduling detects the expired lease. No periodic repair job
+is added.
+
+A new product import or a replay after an operator resets the appropriate product
+cursor can schedule current media data again. If the ordinary product payload hash
+is unchanged, the media bridge checks the existing work record. Failed/interrupted
+media are synchronized through the normal gallery/file scheduling services using
+the source read in this new pass; successfully completed media remain skipped.
+Ordinary product attributes and other state synchronizers are not rewritten by this
+hook. A newer cursor that does not include the product cannot repair its previous
+failure. Resetting only the multimedia cursor is not equivalent to replaying all
+product gallery selections.
+
+This policy applies to the media consumer. Retry policies of ordinary product,
+category or other import consumers are outside this change. Content corruption is
+also separate: manual integrity verification remains reporting-only and preserves
+expected hashes. Replaying an import does not guarantee detection/repair of an
+existing corrupted mapped file; replace that file manually before replaying.
+
+
+## Retired ordinary file attributes
+
+After an obsolete ordinary file attribute is successfully cleared, its undesired
+usage row is purged inside the guarded product-write transaction. This also runs
+when gallery synchronization is disabled. Image-role usage rows are preserved
+whenever this work does not update the gallery. A failed clear does not purge the
+reference. Once the obsolete ordinary-file reference is gone, a later unrelated
+media pass cannot clear a new manual value using that old reference. This cleanup
+adds no download, physical file deletion or retry process.

@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": "~8.3.0||~8.4.0||~8.5.0",
-        "ergonode/module-product-attribute": "dev-main@dev"
+        "ergonode/module-product-attribute": "dev-main@dev",
+        "ergonode/module-product": "*"
     },
     "autoload": {
         "files": [

@@ -22,7 +22,8 @@ class ProductImportWorkRepository implements ProductImportWorkRepositoryInterfac
     public function __construct(
         private readonly ResourceConnection $resourceConnection,
         private readonly Json $json,
-        private readonly DateTime $dateTime
+        private readonly DateTime $dateTime,
+        private readonly ?\Psr\Log\LoggerInterface $logger = null
     ) {
     }
 
@@ -58,15 +59,13 @@ class ProductImportWorkRepository implements ProductImportWorkRepositoryInterfac
         $leaseToken = random_bytes(16);
         $connection->beginTransaction();
         try {
+            $this->expireInterruptedWork();
             $pending = $connection->quoteInto('status = ?', 'pending')
                 . ' AND ' . $connection->quoteInto('available_at <= ?', $now);
-            $expired = $connection->quoteInto('status = ?', 'processing')
-                . ' AND lease_expires_at IS NOT NULL AND '
-                . $connection->quoteInto('lease_expires_at <= ?', $now);
             $rows = $connection->fetchAll(
                 $connection->select()
                     ->from($this->table())
-                    ->where('((' . $pending . ') OR (' . $expired . '))')
+                    ->where('(' . $pending . ') AND attempt_count = 0')
                     ->order('item_id ASC')
                     ->limit($limit)
                     ->forUpdate(true)
@@ -120,10 +119,10 @@ class ProductImportWorkRepository implements ProductImportWorkRepositoryInterfac
         int $delaySeconds,
         bool $dependencyWait = false
     ): void {
-        $failed = !$dependencyWait && $item->attemptCount >= max(1, $maximumAttempts);
+        $failed = true;
         $this->connection()->update($this->table(), [
             'status' => $failed ? 'failed' : 'pending',
-            'available_at' => $this->dateTime->gmtDate(null, time() + max(1, $delaySeconds)),
+            'available_at' => $this->now(),
             'lease_token' => null,
             'lease_expires_at' => null,
             'last_error' => mb_substr(trim($message), 0, 65535),
@@ -141,31 +140,46 @@ class ProductImportWorkRepository implements ProductImportWorkRepositoryInterfac
         $now = $this->now();
         $pending = $connection->quoteInto('status = ?', 'pending')
             . ' AND ' . $connection->quoteInto('available_at <= ?', $now);
-        $expired = $connection->quoteInto('status = ?', 'processing')
-            . ' AND lease_expires_at IS NOT NULL AND '
-            . $connection->quoteInto('lease_expires_at <= ?', $now);
 
         return (bool)$connection->fetchOne(
             $connection->select()
                 ->from($this->table(), [new Expression('1')])
-                ->where('((' . $pending . ') OR (' . $expired . '))')
+                ->where('(' . $pending . ') AND attempt_count = 0')
                 ->limit(1)
         );
     }
 
-    public function retryFailed(): int
+    private function expireInterruptedWork(?array $skus = null): void
     {
-        return $this->connection()->update($this->table(), [
-            'status' => 'pending',
-            'attempt_count' => 0,
-            'available_at' => $this->now(),
-            'last_error' => null,
-        ], ['status = ?' => 'failed']);
+        $db = $this->connection();
+        $condition = "(status = 'processing' AND lease_expires_at IS NOT NULL AND "
+            . $db->quoteInto('lease_expires_at <= ?', $this->now()) . ") OR (status = 'pending' AND attempt_count > 0)";
+        $select = $db->select()->from($this->table(), ['item_id', 'ergonode_sku', 'event_token'])->where($condition);
+        if ($skus !== null) { $select->where('ergonode_sku IN (?)', $skus); }
+        $rows = $db->fetchAll($select->forUpdate(true));
+        foreach ($rows as $row) {
+            $message = 'Product import was interrupted. Start a new import including this product.';
+            $affected = $db->update($this->table(), ['status' => 'failed', 'lease_token' => null,
+                'lease_expires_at' => null, 'last_error' => $message], [
+                    'item_id = ?' => $row['item_id'], 'event_token = ?' => $row['event_token'], 0 => $condition,
+                ]);
+            if ($affected > 0) {
+                $this->logger?->error($message, ['ergonode_sku' => $row['ergonode_sku'], 'item_id' => (int)$row['item_id']]);
+            }
+        }
     }
 
     /** @param array<int, array{sku: string, payload: array<string, mixed>|null}> $items */
     private function schedule(array $items, string $operation): int
     {
+        if ($items === []) { return 0; }
+        $skus = array_map(static fn(array $item): string => trim((string)($item['sku'] ?? '')), $items);
+        foreach ($skus as $sku) {
+            if ($sku === '' || strlen($sku) > 64) {
+                throw new LocalizedException(__('Ergonode product stream returned an invalid SKU.'));
+            }
+        }
+        $this->expireInterruptedWork(array_values(array_unique($skus)));
         $scheduled = 0;
         $now = $this->now();
         foreach ($items as $item) {

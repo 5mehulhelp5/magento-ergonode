@@ -11,5 +11,5 @@ interface ScanRequesterInterface
      *
      * @return void
      */
-    public function request(): void;
+    public function request(bool $verifyContent = false): void;
 }

@@ -7,8 +7,5 @@
         <job name="ergonode_multimedia_stream_schedule" instance="Ergonode\Media\Cron\ScheduleStream" method="execute">
             <schedule>* * * * *</schedule>
         </job>
-        <job name="ergonode_media_recovery" instance="Ergonode\Media\Cron\RecoverWork" method="execute">
-            <schedule>* * * * *</schedule>
-        </job>
     </group>
 </config>

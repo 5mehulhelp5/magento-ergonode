@@ -14,6 +14,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\HTTP\Client\CurlFactory;
 use Magento\Framework\Lock\LockManagerInterface;
+use Throwable;
 
 class SourcePreparer
 {
@@ -56,8 +57,7 @@ class SourcePreparer
                 . '-' . substr(bin2hex($hash), 0, 16) . '.' . $asset->extension;
             $absolute = $this->varPath($cache);
             if (!$this->file->fileExists($absolute)) {
-                $this->file->checkAndCreateFolder($this->file->dirname($absolute));
-                $this->file->write($absolute, $body);
+                $this->writeCache($asset, $absolute, $body);
             }
             $this->repository->activate($asset->id, $hash, $cache, strlen($body), $asset->revision);
             $prepared = $this->repository->getAsset($asset->id);
@@ -67,6 +67,47 @@ class SourcePreparer
             return $prepared;
         } finally {
             $this->locks->unlock($lock);
+        }
+    }
+
+    private function writeCache(Asset $asset, string $absolute, string $body): void
+    {
+        $directory = $this->file->dirname($absolute);
+        $temporary = $directory . '/.ergonode-source-' . bin2hex(random_bytes(8)) . '.tmp';
+        $stage = 'create cache directory';
+        try {
+            $this->file->checkAndCreateFolder($directory);
+            $stage = 'write temporary file';
+            $written = $this->file->write($temporary, $body);
+            if ($written !== strlen($body)) {
+                throw new LocalizedException(__(
+                    'Expected %1 bytes, wrote %2.',
+                    strlen($body),
+                    $written === false ? 'none' : (string)$written
+                ));
+            }
+            $stage = 'publish source cache';
+            if (!$this->file->mv($temporary, $absolute)) {
+                throw new LocalizedException(__('Unable to move the temporary file into the source cache.'));
+            }
+        } catch (Throwable $exception) {
+            $cleanupError = '';
+            try {
+                if ($this->file->fileExists($temporary) && !$this->file->rm($temporary)) {
+                    $cleanupError = (string)__('Unable to remove temporary source file "%1".', $temporary);
+                }
+            } catch (Throwable $cleanupException) {
+                $cleanupError = (string)__('Temporary source cleanup failed: %1', $cleanupException->getMessage());
+            }
+            throw new LocalizedException(__(
+                'Unable to store Ergonode media "%1" (asset %2, revision %3) at stage "%4": %5 %6',
+                $asset->sourcePath,
+                $asset->id,
+                $asset->revision,
+                $stage,
+                $exception->getMessage(),
+                $cleanupError
+            ), $exception);
         }
     }
 

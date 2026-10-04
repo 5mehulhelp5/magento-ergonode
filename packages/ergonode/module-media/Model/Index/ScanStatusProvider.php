@@ -20,7 +20,7 @@ class ScanStatusProvider implements ScanStatusProviderInterface
             $row['estimated_total'] = $this->state->estimate();
         }
         $processed = $row['indexed'] + $row['reused'];
-        $running = $row['status'] === 'running';
+        $running = in_array($row['status'], ['running', 'auditing'], true);
         $end = $running ? time() : ($row['updated_at'] ?? 0);
         $elapsed = $row['started_at'] === null ? 0 : max(0, $end - $row['started_at']);
         $remaining = $running && $elapsed >= 5 && $processed >= 10 && $row['estimated_total'] > $processed
@@ -31,8 +31,9 @@ class ScanStatusProvider implements ScanStatusProviderInterface
             'processed' => $processed,
             'elapsed_seconds' => $elapsed,
             'estimated_remaining_seconds' => $remaining,
-            'percent' => $row['status'] === 'complete' ? 100 : $percent,
+            'percent' => in_array($row['status'], ['complete', 'audited'], true) ? 100 : $percent,
             'blocked' => $this->readiness->isBlocked(),
+            'verification_completed_at' => $row['verification_completed_at'] ?? null,
         ];
     }
 }

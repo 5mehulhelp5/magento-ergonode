@@ -8,6 +8,7 @@ interface GalleryWriterInterface
 {
     /** @param list<array{path:string,position:int}> $desired
      * @param list<string> $managed
+     * @return list<string> Paths removed or hidden for this product; roles referencing them must be cleared.
      */
-    public function synchronize(int $productId, array $desired, array $managed): void;
+    public function synchronize(int $productId, array $desired, array $managed): array;
 }

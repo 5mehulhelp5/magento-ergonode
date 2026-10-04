@@ -12,4 +12,9 @@
         <plugin name="ergonode_product_identity_extension_attribute" type="Ergonode\Product\Plugin\ProductRepositoryIdentityPlugin"/>
     </type>
     <preference for="Ergonode\Product\Api\ProductCatalogInterface" type="Ergonode\Product\Model\ResourceModel\ProductCatalog"/>
+    <type name="Ergonode\Product\Model\Cache\ProductStateSnapshots">
+        <arguments><argument name="providers" xsi:type="array">
+            <item name="attributes" xsi:type="object">Ergonode\Product\Model\ResourceModel\ProductStateSnapshot</item>
+        </argument></arguments>
+    </type>
 </config>

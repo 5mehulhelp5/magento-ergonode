@@ -4,8 +4,5 @@
         <job name="ergonode_product_import_schedule" instance="Ergonode\ProductConsumer\Cron\ScheduleProductImports" method="execute">
             <schedule>* * * * *</schedule>
         </job>
-        <job name="ergonode_product_import_recovery" instance="Ergonode\ProductConsumer\Cron\RecoverProductImports" method="execute">
-            <schedule>* * * * *</schedule>
-        </job>
     </group>
 </config>

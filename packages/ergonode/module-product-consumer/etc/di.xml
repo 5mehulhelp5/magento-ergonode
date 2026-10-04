@@ -40,4 +40,41 @@
             </argument>
         </arguments>
     </type>
+    <type name="Ergonode\ProductConsumer\Model\Pipeline\ProductBatchPipeline">
+        <arguments>
+            <argument name="lock" xsi:type="object">Ergonode\Product\Model\Synchronization\ProductSynchronizationLock</argument>
+            <argument name="preprocessors" xsi:type="array">
+                <item name="010_source" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\LoadSources</item>
+                <item name="020_targets" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\PrepareTargets</item>
+            </argument>
+            <argument name="processors" xsi:type="array">
+                <item name="100_attributes" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\WriteProductData</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Queue\ProductImportProcessor">
+        <arguments><argument name="batchScope" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\BatchScope</argument></arguments>
+    </type>
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="ergonode_batch_defer_product_cache" type="Ergonode\ProductConsumer\Plugin\DeferProductCache"/>
+    </type>
+    <type name="Magento\Framework\Event\Manager">
+        <plugin name="ergonode_batch_defer_cache_event" type="Ergonode\ProductConsumer\Plugin\DeferProductCache"/>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Queue\ProductImportConsumer">
+        <arguments>
+            <argument name="pipeline" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\ProductBatchPipeline</argument>
+        </arguments>
+        <plugin name="ergonode_serialize_product_worker" type="Ergonode\Product\Plugin\SerializeProductWorkers"/>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Import\ProductImportBatch">
+        <arguments><argument name="pipeline" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\ProductBatchPipeline</argument></arguments>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\ResourceModel\ProductImportWorkRepository">
+        <arguments><argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument></arguments>
+    </type>
+    <type name="Ergonode\ProductConsumer\Model\Import\SelectedProductImporter">
+        <arguments><argument name="batchScope" xsi:type="object">Ergonode\ProductConsumer\Model\Pipeline\BatchScope</argument></arguments>
+    </type>
+
 </config>

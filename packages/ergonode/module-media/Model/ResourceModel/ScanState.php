@@ -31,6 +31,7 @@ class ScanState implements ScanStateInterface
             'started_at' => isset($row['started_at']) ? (int)$row['started_at'] : null,
             'updated_at' => isset($row['updated_at']) ? (int)$row['updated_at'] : null,
             'last_completed_at' => isset($row['last_completed_at']) ? (int)$row['last_completed_at'] : null,
+            'verification_completed_at' => isset($row['verification_completed_at']) ? (int)$row['verification_completed_at'] : null,
             'error' => $row['error'] ?? null,
         ];
     }
@@ -44,19 +45,19 @@ class ScanState implements ScanStateInterface
         )->where('media_type = ?', 'image'));
     }
 
-    public function request(int $estimate): void
+    public function request(int $estimate, bool $verifyContent = false): void
     {
         $this->write([
-            'status' => 'pending', 'estimated_total' => $estimate,
+            'status' => $verifyContent ? 'audit_pending' : 'pending', 'estimated_total' => $estimate,
             'indexed' => 0, 'reused' => 0, 'removed' => 0, 'bytes' => 0,
             'started_at' => null, 'error' => null,
         ]);
     }
 
-    public function begin(int $estimate): void
+    public function begin(int $estimate, bool $verifyContent = false): void
     {
         $this->write([
-            'status' => 'running', 'estimated_total' => $estimate,
+            'status' => $verifyContent ? 'auditing' : 'running', 'estimated_total' => $estimate,
             'indexed' => 0, 'reused' => 0, 'removed' => 0, 'bytes' => 0,
             'started_at' => time(), 'error' => null,
         ]);
@@ -67,8 +68,13 @@ class ScanState implements ScanStateInterface
         $this->write($counts + ['bytes' => $bytes]);
     }
 
-    public function complete(): void
+    public function complete(bool $verifyContent = false, ?string $report = null): void
     {
+        if ($verifyContent) {
+            // An audit reports findings but does not change import readiness or expected asset hashes.
+            $this->write(['status' => 'audited', 'verification_completed_at' => time(), 'error' => $report]);
+            return;
+        }
         $this->write(['status' => 'complete', 'last_completed_at' => time(), 'error' => null]);
     }
 

@@ -31,5 +31,4 @@ interface ProductImportWorkRepositoryInterface
 
     public function hasClaimableWork(): bool;
 
-    public function retryFailed(): int;
 }

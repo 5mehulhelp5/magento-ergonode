@@ -10,8 +10,16 @@ Those remain in Media. There are no new tables and no existing-data migration.
 
 `ergonode_products/media/gallery_attribute` and `synchronization_enabled` retain
 their existing paths. New settings are `additional_images` (JSON rules),
-`additional_role` and `role_position` (default 2). All settings are global.
-MediaAdminUi owns their form and remote-source validation. The selected Gallery
+`additional_role`, `role_position` (default 2) and `unmanaged_images` (default `keep`). All settings are global.
+MediaAdminUi owns their form and remote-source validation. Admin saving and runtime
+configuration both use ImageRulesNormalizer for additional-image rows and image
+positions. Duplicate attributes/positions, fractions, invalid shapes and positions
+outside 2..65535 are rejected instead of silently cast or overwritten. Whitespace
+in attribute codes and integer digit strings are normalized identically. Malformed
+stored JSON reports the setting path and cause. The bridge classifies these media
+configuration errors as terminal in the product import queue, logs them and continues
+with other products; correction and a new import are required. Disabled gallery
+synchronization does not validate unused image rules in the product import hash. The selected Gallery
 is the base order. Additional Image paths are inserted at unique positions >= 2;
 an already present source is moved, not copied. The first Gallery source remains
 first. A position beyond the current size appends the image. Other sources retain
@@ -32,8 +40,28 @@ All desired binaries must be prepared before native gallery writes. Roles are
 written after the gallery succeeds. Removing the first source assigns the next
 image to the primary roles; an empty completed gallery writes no_selection.
 Role writes compare effective stored values and skip unchanged attributes.
-Manual overrides of configured roles are replaced; other roles are left alone.
-Existing unmanaged gallery associations are preserved by the native writer.
+Manual overrides of configured roles are replaced. After the gallery and configured
+roles are written, other native image roles are checked against the visible native
+gallery in each store. A role pointing outside that gallery is cleared. This also
+handles a previous partial state on the next explicit pass covering that product;
+there is no separate repair job or automatic resubmission.
+
+The global `unmanaged_images` setting controls images added outside the integration:
+- `keep` (default): preserve their gallery associations and valid roles;
+- `hide`: mark absent images disabled for this product in all existing store overrides;
+- `remove`: unlink absent images from this product for one-to-one synchronization.
+
+Previously managed images absent from the imported gallery continue to be unlinked
+in every mode. Videos are unaffected. Returning source images are made visible
+again. Configuration changes take effect when that product's gallery is synchronized.
+Shared images keep other products' associations, metadata and roles.
+
+On the last association, the unused native gallery record is removed. Media checks
+remaining native gallery links, image attributes and desired integration usages
+before deleting the physical product image after the product transaction commits.
+Rollback preserves the file. Hidden images remain linked and retain their files.
+Physical cleanup failures are logged with product, path, stage and exception;
+this change adds no automatic retry. The source cache is preserved.
 
 ## Contracts and lifecycle
 

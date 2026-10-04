@@ -31,6 +31,13 @@
                     <backend_model>Ergonode\MediaAdminUi\Model\Config\Backend\GalleryMode</backend_model>
                 </field>
 
+                <field id="unmanaged_images" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Additional Magento images</label>
+                    <comment>Default: keep images added outside the integration. Hide marks them disabled for this product; one-to-one synchronization unlinks them when absent from Ergonode. Shared files and other products are preserved. Files with no remaining use are deleted after the product save. Previously managed images still follow the imported gallery. Changes apply on the next gallery synchronization.</comment>
+                    <source_model>Ergonode\MediaAdminUi\Model\Config\Source\UnmanagedImages</source_model>
+                    <backend_model>Ergonode\MediaAdminUi\Model\Config\Backend\UnmanagedImages</backend_model>
+                </field>
+
                 <field id="role_position" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Additional role position</label>
                     <comment>Position in the completed Magento gallery, after inserting additional Image attributes. Default: 2.</comment>

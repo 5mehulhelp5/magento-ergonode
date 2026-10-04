@@ -27,10 +27,14 @@ class UninstallTest extends TestCase
                 $deleted[] = $where['path = ?'];
                 return 1;
             });
-        $connection->expects(self::once())->method('dropTable')->with('prefix_ergonode_product_mapping');
+        $dropped = [];
+        $connection->expects(self::exactly(2))->method('dropTable')->willReturnCallback(
+            static function (string $table) use (&$dropped): void { $dropped[] = $table; }
+        );
         $connection->expects(self::once())->method('endSetup');
 
         (new Uninstall())->uninstall($setup, $this->createStub(ModuleContextInterface::class));
+        self::assertSame(['prefix_ergonode_product_cache_state', 'prefix_ergonode_product_mapping'], $dropped);
         self::assertSame([
             'ergonode_products/identity/sku_mode',
             'ergonode_products/identity/magento_attribute',

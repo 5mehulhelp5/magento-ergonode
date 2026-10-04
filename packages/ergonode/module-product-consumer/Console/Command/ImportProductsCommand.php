@@ -26,19 +26,11 @@ class ImportProductsCommand extends Command
     {
         $this->setName('ergonode:products:import')
             ->setDescription('Schedule changed and deleted Ergonode products for durable Magento import.')
-            ->addOption('max-pages', null, InputOption::VALUE_REQUIRED, 'Maximum pages per stream.', '100')
-            ->addOption('retry-failed', null, InputOption::VALUE_NONE, 'Return failed items to the queue.');
+            ->addOption('max-pages', null, InputOption::VALUE_REQUIRED, 'Maximum pages per stream.', '100');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ((bool)$input->getOption('retry-failed')) {
-            $retried = $this->workRepository->retryFailed();
-            if ($retried > 0) {
-                $this->queuePublisher->dispatch();
-            }
-            $output->writeln(sprintf('Retried failed products: %d', $retried));
-        }
         $summary = $this->scheduler->schedule(max(1, (int)$input->getOption('max-pages')));
         $output->writeln(sprintf(
             'Pages: %d; changed: %d; deleted: %d; throttled: %s',

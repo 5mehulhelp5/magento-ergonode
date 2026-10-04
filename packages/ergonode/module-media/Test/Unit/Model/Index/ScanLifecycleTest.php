@@ -160,4 +160,31 @@ class ScanLifecycleTest extends TestCase
         $publisher->expects(self::once())->method('dispatch');
         (new LocalFileScanner($publisher, $files, $index, $this->locks(), $state))->scan(true);
     }
+
+    public function testManualVerificationRequestIsStoredAsItsOwnMode(): void
+    {
+        $state = $this->createMock(ScanStateInterface::class);
+        $state->method('read')->willReturn(['status' => 'complete']);
+        $state->method('estimate')->willReturn(25);
+        $state->expects(self::once())->method('request')->with(25, true);
+        (new ScanRequest($state, $this->locks()))->request(true);
+    }
+
+    public function testDuplicateVerificationDoesNotResetThePendingRequest(): void
+    {
+        $state = $this->createMock(ScanStateInterface::class);
+        $state->method('read')->willReturn(['status' => 'audit_pending']);
+        $state->expects(self::never())->method('request');
+        (new ScanRequest($state, $this->locks()))->request(true);
+    }
+
+    public function testPendingVerificationCannotBeOverwrittenByAnIndexRequest(): void
+    {
+        $state = $this->createMock(ScanStateInterface::class);
+        $state->method('read')->willReturn(['status' => 'audit_pending']);
+        $state->expects(self::never())->method('request');
+        $this->expectException(LocalizedException::class);
+        (new ScanRequest($state, $this->locks()))->request();
+    }
+
 }

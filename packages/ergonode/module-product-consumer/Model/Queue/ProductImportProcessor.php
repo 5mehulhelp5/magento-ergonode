@@ -25,26 +25,21 @@ class ProductImportProcessor
         private readonly ProductIdentityServiceInterface $identityService,
         private readonly ProductAttributeValueMapper $attributeValueMapper,
         private readonly MagentoSkuSynchronizer $magentoSkuSynchronizer,
-        private readonly ProductImportHashProviderPool $hashProviders
+        private readonly ProductImportHashProviderPool $hashProviders,
+        private readonly ?\Ergonode\ProductConsumer\Model\Pipeline\BatchScope $batchScope = null
     ) {
     }
 
     public function process(ProductImportWorkItem $item): bool
     {
-        if ($item->operation === ProductImportWorkItem::OPERATION_DELETE) {
-            $current = $this->remoteProductLoader->loadCurrent($item->sku);
-            if ($current === null) {
-                return $this->deletionPolicy->deactivate($item->sku);
-            }
+        $source = $this->remoteProductLoader->loadCurrent($item->sku,
+            $item->operation === ProductImportWorkItem::OPERATION_DELETE ? null : $item->payload);
+        return $this->processSource($item, $source);
+    }
 
-            return $this->synchronize($current);
-        }
-        $source = $this->remoteProductLoader->loadCurrent($item->sku, $item->payload);
-        if ($source === null) {
-            return $this->deletionPolicy->deactivate($item->sku);
-        }
-
-        return $this->synchronize($source);
+    public function processSource(ProductImportWorkItem $item, ?RemoteProduct $source): bool
+    {
+        return $source === null ? $this->deletionPolicy->deactivate($item->sku) : $this->synchronize($source);
     }
 
     private function synchronize(RemoteProduct $source): bool
@@ -52,6 +47,7 @@ class ProductImportProcessor
         $specialAttributes = $this->attributeValueMapper->mapSpecial($source->attributes);
         $prepared = $this->targetPreparer->prepare($source, $specialAttributes['values']);
         $productId = $prepared->productId;
+        $this->batchScope?->recordProduct($productId);
         $this->magentoSkuSynchronizer->synchronizeIdentityAttribute(
             $productId,
             $source->sku,
@@ -65,6 +61,7 @@ class ProductImportProcessor
             . ':' . json_encode($this->hashProviders->getHashes($source), JSON_THROW_ON_ERROR)
         );
         if ($this->identityService->getImportHash($productId) === $hash) {
+            $this->stateWriter->synchronizeUnchanged($productId, $prepared->magentoSku, $source);
             if ($prepared->currentMagentoSku !== $prepared->magentoSku) {
                 $this->magentoSkuSynchronizer->synchronize($productId, $prepared->magentoSku, $source->sku);
 
@@ -82,7 +79,8 @@ class ProductImportProcessor
             $prepared->identityMode
         );
         $this->magentoSkuSynchronizer->synchronize($productId, $prepared->magentoSku, $source->sku);
-        $this->identityService->recordImported($productId, $source->sku, $hash);
+        $record = fn() => $this->identityService->recordImported($productId, $source->sku, $hash);
+        if (!($this->batchScope?->afterSuccess($record) ?? false)) { $record(); }
 
         return true;
     }

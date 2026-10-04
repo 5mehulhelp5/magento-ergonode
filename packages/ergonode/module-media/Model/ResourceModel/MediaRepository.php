@@ -13,6 +13,7 @@ use Magento\Framework\DB\Sql\Expression;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class MediaRepository implements MediaRepositoryInterface
@@ -26,7 +27,8 @@ class MediaRepository implements MediaRepositoryInterface
     public function __construct(
         private readonly ResourceConnection $resource,
         private readonly DateTime $dateTime,
-        private readonly File $file
+        private readonly File $file,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -71,6 +73,7 @@ class MediaRepository implements MediaRepositoryInterface
     public function recordStream(array $items): array
     {
         $products = [];
+        $galleryProducts = [];
         $connection = $this->connection();
         $connection->beginTransaction();
         try {
@@ -99,6 +102,7 @@ class MediaRepository implements MediaRepositoryInterface
                     ['product_id']
                 )->where('asset_id = ?', $asset->id)->where('desired = ?', 1)) as $id) {
                     $products[(int)$id] = (int)$id;
+                    $galleryProducts[(int)$id] = (int)$id;
                 }
                 foreach ($connection->fetchCol($connection->select()->from(
                     $this->table(self::FILE),
@@ -109,7 +113,8 @@ class MediaRepository implements MediaRepositoryInterface
                     $products[(int)$id] = (int)$id;
                 }
             }
-            $this->scheduleProducts(array_values($products));
+            $this->scheduleProducts(array_values($galleryProducts), true);
+            $this->scheduleProducts(array_values(array_diff($products, $galleryProducts)));
             $connection->commit();
         } catch (Throwable $exception) {
             $connection->rollBack();
@@ -157,7 +162,7 @@ class MediaRepository implements MediaRepositoryInterface
                     'position' => $position++, 'desired' => 1,
                 ]], ['position', 'desired']);
             }
-            $this->scheduleProducts([$productId]);
+            $this->scheduleProducts([$productId], true);
             $connection->commit();
         } catch (Throwable $exception) {
             $connection->rollBack();
@@ -166,12 +171,25 @@ class MediaRepository implements MediaRepositoryInterface
     }
 
     /** @param list<array{source_path: string,attribute_code: string,store_id: int}> $references */
-    public function replaceFileUsages(int $productId, array $references): void
+    public function replaceFileUsages(
+        int $productId,
+        array $references,
+        ?array $attributeCodes = null,
+        array $preservedAttributeCodes = []
+    ): void
     {
         $connection = $this->connection();
         $connection->beginTransaction();
         try {
-            $connection->update($this->table(self::FILE), ['desired' => 0], ['product_id = ?' => $productId]);
+            $where = ['product_id = ?' => $productId];
+            if ($attributeCodes !== null) {
+                // An empty scope deliberately updates no attributes.
+                $where['attribute_code IN (?)'] = $attributeCodes === [] ? [''] : $attributeCodes;
+            }
+            if ($preservedAttributeCodes !== []) {
+                $where['attribute_code NOT IN (?)'] = $preservedAttributeCodes;
+            }
+            $connection->update($this->table(self::FILE), ['desired' => 0], $where);
             foreach ($references as $reference) {
                 $path = $this->sourcePath($reference['source_path']);
                 $connection->insertOnDuplicate($this->table(self::FILE), [[
@@ -233,14 +251,27 @@ class MediaRepository implements MediaRepositoryInterface
         ]);
     }
 
+    public function removeFileUsage(int $productId, string $code, int $storeId, string $sourcePath): void
+    {
+        $this->connection()->delete($this->table(self::FILE), [
+            'product_id = ?' => $productId, 'attribute_code = ?' => $code, 'store_id = ?' => $storeId,
+            // Do not delete a different source subsequently recorded for this role.
+            'source_path_hash = ?' => hash('sha256', $this->sourcePath($sourcePath), true),
+        ]);
+    }
+
     public function purgeObsoleteGalleryUsages(int $productId): void
     {
         $this->connection()->delete($this->table(self::GALLERY), ['product_id = ?' => $productId, 'desired = ?' => 0]);
     }
 
-    public function purgeObsoleteFileUsages(int $productId): void
+    public function purgeObsoleteFileUsages(int $productId, array $preservedAttributeCodes = []): void
     {
-        $this->connection()->delete($this->table(self::FILE), ['product_id = ?' => $productId, 'desired = ?' => 0]);
+        $where = ['product_id = ?' => $productId, 'desired = ?' => 0];
+        if ($preservedAttributeCodes !== []) {
+            $where['attribute_code NOT IN (?)'] = $preservedAttributeCodes;
+        }
+        $this->connection()->delete($this->table(self::FILE), $where);
     }
 
     /** @return array{path: string,content_hash: string,revision: int}|null */
@@ -264,38 +295,50 @@ class MediaRepository implements MediaRepositoryInterface
     }
 
     /** @param int[] $productIds */
-    public function scheduleProducts(array $productIds): void
+    public function scheduleProducts(array $productIds, bool $synchronizeGallery = false): void
     {
         $rows = [];
         foreach (array_unique(array_map('intval', $productIds)) as $id) {
             if ($id > 0) {
-                $rows[] = ['product_id' => $id, 'status' => 'pending', 'attempt_count' => 0,
+                $rows[] = ['product_id' => $id, 'synchronize_gallery' => (int)$synchronizeGallery,
+                    'status' => 'pending', 'attempt_count' => 0,
                     'available_at' => $this->now(), 'lease_token' => null, 'lease_expires_at' => null,
                     'last_error' => null];
             }
         }
         if ($rows !== []) {
-            $this->connection()->insertOnDuplicate($this->table(self::WORK), $rows, [
-                'status', 'attempt_count', 'available_at', 'lease_token', 'lease_expires_at', 'last_error',
-            ]);
+            $this->expireWork(array_column($rows, 'product_id'));
+            $columns = ['status', 'attempt_count', 'available_at', 'lease_token', 'lease_expires_at', 'last_error'];
+            // File-only work must not cancel a gallery update already waiting for this product.
+            if ($synchronizeGallery) {
+                $columns[] = 'synchronize_gallery';
+            }
+            $this->connection()->insertOnDuplicate($this->table(self::WORK), $rows, $columns);
         }
     }
 
     /** @return WorkItem[] */
     public function claim(int $limit, int $leaseSeconds): array
     {
+        return $this->claimMatching($limit, $leaseSeconds);
+    }
+
+    public function claimProduct(int $productId, int $leaseSeconds): ?WorkItem
+    {
+        return $this->claimMatching(1, $leaseSeconds, [$productId])[0] ?? null;
+    }
+
+    private function claimMatching(int $limit, int $leaseSeconds, ?array $productIds = null): array
+    {
         $connection = $this->connection();
         $token = random_bytes(16);
-        $now = $this->now();
         $connection->beginTransaction();
         try {
-            $claimable = '(' . $connection->quoteInto('status = ?', 'pending')
-                . ' AND ' . $connection->quoteInto('available_at <= ?', $now) . ') OR ('
-                . $connection->quoteInto('status = ?', 'processing')
-                . ' AND ' . $connection->quoteInto('lease_expires_at <= ?', $now) . ')';
-            $rows = $connection->fetchAll($connection->select()->from($this->table(self::WORK))
-                ->where($claimable)
-                ->order('product_id ASC')->limit(max(1, $limit))->forUpdate(true));
+            $this->expireWork($productIds);
+            $claimable = $this->pendingWorkCondition();
+            $select = $connection->select()->from($this->table(self::WORK))->where($claimable);
+            if ($productIds !== null) { $select->where('product_id IN (?)', $productIds); }
+            $rows = $connection->fetchAll($select->order('product_id ASC')->limit(max(1, $limit))->forUpdate(true));
             $ids = array_map(static fn (array $row): int => (int)$row['product_id'], $rows);
             if ($ids !== []) {
                 $connection->update($this->table(self::WORK), [
@@ -310,18 +353,22 @@ class MediaRepository implements MediaRepositoryInterface
             $connection->rollBack();
             throw $exception;
         }
-        return array_map(static fn (array $row): WorkItem => new WorkItem(
+        return array_map(fn (array $row): WorkItem => new WorkItem(
             (int)$row['product_id'],
             $token,
-            (int)$row['attempt_count'] + 1
+            (int)$row['attempt_count'] + 1,
+            isset($row['synchronize_gallery'])
+                ? (bool)$row['synchronize_gallery']
+                : (bool)$connection->fetchOne($connection->select()->from($this->table(self::GALLERY), ['product_id'])
+                    ->where('product_id = ?', (int)$row['product_id'])->limit(1))
         ), $rows);
     }
 
-    public function complete(WorkItem $item): void
+    public function complete(WorkItem $item): bool
     {
-        $this->connection()->delete($this->table(self::WORK), [
+        return $this->connection()->delete($this->table(self::WORK), [
             'product_id = ?' => $item->productId, 'lease_token = ?' => $item->leaseToken,
-        ]);
+        ]) === 1;
     }
 
     public function applyWork(WorkItem $item, callable $write): bool
@@ -340,7 +387,7 @@ class MediaRepository implements MediaRepositoryInterface
                 return false;
             }
             if ((string)$row['lease_expires_at'] <= $this->now()) {
-                // Throw so the consumer releases this unchanged token for retry instead of completing it.
+                // Expired work fails without writing product data or resubmitting the task.
                 throw new LocalizedException(__('Ergonode media work lease expired before the product write.'));
             }
             $write();
@@ -352,28 +399,71 @@ class MediaRepository implements MediaRepositoryInterface
         }
     }
 
-    public function release(WorkItem $item, string $error, int $maxAttempts, int $delay): void
+    public function fail(WorkItem $item, string $error): void
     {
         $this->connection()->update($this->table(self::WORK), [
-            'status' => $item->attemptCount >= $maxAttempts ? 'failed' : 'pending',
-            'available_at' => $this->dateTime->gmtDate(null, time() + max(1, $delay)),
-            'lease_token' => null, 'lease_expires_at' => null, 'last_error' => mb_substr($error, 0, 65535),
+            'status' => 'failed', 'lease_token' => null, 'lease_expires_at' => null,
+            'last_error' => mb_substr($error, 0, 65535),
         ], ['product_id = ?' => $item->productId, 'lease_token = ?' => $item->leaseToken]);
     }
 
     public function hasWork(): bool
     {
-        $now = $this->now();
+        return $this->connection()->fetchOne($this->connection()->select()->from(
+            $this->table(self::WORK), [new Expression('1')]
+        )->where($this->pendingWorkCondition())->limit(1)) !== false;
+    }
+
+    public function hasFailedWork(int $productId): bool
+    {
         $connection = $this->connection();
-        $claimable = '(' . $connection->quoteInto('status = ?', 'pending')
-            . ' AND ' . $connection->quoteInto('available_at <= ?', $now) . ') OR ('
-            . $connection->quoteInto('status = ?', 'processing')
-            . ' AND ' . $connection->quoteInto('lease_expires_at <= ?', $now) . ')';
-        return (bool)$this->connection()->fetchOne($this->connection()->select()->from(
-            $this->table(self::WORK),
-            [new Expression('1')]
-        )->where($claimable)
-            ->limit(1));
+        return $connection->fetchOne($connection->select()->from($this->table(self::WORK), ['product_id'])
+            ->where('product_id = ?', $productId)
+            ->where('(' . $connection->quoteInto('status = ?', 'failed') . ') OR ('
+                . $this->interruptedWorkCondition() . ')')->limit(1)) !== false;
+    }
+
+    private function pendingWorkCondition(): string
+    {
+        $connection = $this->connection();
+        return $connection->quoteInto('status = ?', 'pending') . ' AND attempt_count = 0 AND '
+            . $connection->quoteInto('available_at <= ?', $this->now());
+    }
+
+    private function interruptedWorkCondition(): string
+    {
+        $connection = $this->connection();
+        return '(' . $connection->quoteInto('status = ?', 'processing') . ' AND '
+            . $connection->quoteInto('lease_expires_at <= ?', $this->now()) . ') OR ('
+            . $connection->quoteInto('status = ?', 'pending') . ' AND attempt_count > 0)';
+    }
+
+    /** Retire interrupted/legacy retry work; a fresh import may then schedule current data. */
+    private function expireWork(?array $productIds = null): void
+    {
+        $connection = $this->connection();
+        $select = $connection->select()->from($this->table(self::WORK))->where($this->interruptedWorkCondition());
+        if ($productIds !== null) {
+            $select->where('product_id IN (?)', $productIds);
+        }
+        foreach ($connection->fetchAll($select) as $row) {
+            $where = ['product_id = ?' => (int)$row['product_id'], 'status = ?' => $row['status']];
+            if ($row['status'] === 'processing') {
+                $where['lease_token = ?'] = $row['lease_token'];
+                $where['lease_expires_at <= ?'] = $this->now();
+                $error = 'Media execution was interrupted or its lease expired. Start a new import to process this product.';
+            } else {
+                $where['attempt_count > ?'] = 0;
+                $error = (string)($row['last_error'] ?? 'Previous media attempt did not complete.');
+            }
+            if ($connection->update($this->table(self::WORK), [
+                'status' => 'failed', 'lease_token' => null, 'lease_expires_at' => null, 'last_error' => $error,
+            ], $where) > 0) {
+                $this->logger->error('Unfinished Ergonode media work requires a new import.', [
+                    'product_id' => (int)$row['product_id'], 'reason' => $error,
+                ]);
+            }
+        }
     }
 
     private function asset(array $row): Asset

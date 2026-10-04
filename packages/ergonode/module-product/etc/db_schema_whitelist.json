@@ -17,5 +17,15 @@
             "ERGONODE_PRD_MAPPING_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
             "ERGONODE_PRODUCT_MAPPING_ERGONODE_SKU": true
         }
+    },
+    "ergonode_product_cache_state": {
+        "column": {
+            "product_id": true,
+            "state_hash": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ERGONODE_PRODUCT_CACHE_STATE_PRODUCT": true
+        }
     }
 }

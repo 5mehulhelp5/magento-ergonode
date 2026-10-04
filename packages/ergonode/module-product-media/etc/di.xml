@@ -10,6 +10,11 @@
     <preference for="Ergonode\ProductMedia\Api\ImageRulesNormalizerInterface" type="Ergonode\ProductMedia\Model\Config\ImageRulesNormalizer"/>
     <preference for="Ergonode\ProductMedia\Model\Port\RoleWriterInterface" type="Ergonode\ProductMedia\Model\ResourceModel\RoleWriter"/>
     <preference for="Ergonode\ProductMedia\Model\Port\GalleryWriterInterface" type="Ergonode\ProductMedia\Model\ResourceModel\NativeGalleryWriter"/>
+    <type name="Ergonode\ProductMedia\Model\Gallery\GallerySynchronizer">
+        <arguments>
+            <argument name="obsoleteRoles" xsi:type="object">Ergonode\ProductMedia\Model\Gallery\ObsoleteImageRoles</argument>
+        </arguments>
+    </type>
     <type name="Ergonode\ProductAttribute\Model\Config\ProductAttributePolicy">
         <arguments>
             <argument name="mediaTypes" xsi:type="array">
@@ -30,5 +35,10 @@
                 <item name="ergonode_products/media/synchronization_enabled" xsi:type="string">1</item>
             </argument>
         </arguments>
+    </type>
+    <type name="Ergonode\Product\Model\Cache\ProductStateSnapshots">
+        <arguments><argument name="providers" xsi:type="array">
+            <item name="gallery" xsi:type="object">Ergonode\ProductMedia\Model\ResourceModel\GalleryStateSnapshot</item>
+        </argument></arguments>
     </type>
 </config>

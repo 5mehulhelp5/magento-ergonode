@@ -52,6 +52,7 @@ class ProductImportProcessorTest extends TestCase
         );
         $writer = $this->createMock(ProductStateWriter::class);
         $writer->expects(self::never())->method('write');
+        $writer->expects(self::once())->method('synchronizeUnchanged')->with(23, 'MAG-1', $source);
         $processor = new ProductImportProcessor(
             $loader,
             $this->createStub(ProductDeletionPolicy::class),

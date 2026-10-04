@@ -9,6 +9,7 @@ use Ergonode\Language\Api\LanguageStoreMappingProviderInterface;
 use Ergonode\Media\Api\FileUsageRecorderInterface;
 use Ergonode\Media\Model\ValueObject\File\FileUsageReference;
 use Ergonode\Media\Model\ValueObject\File\FileUsageSet;
+use Ergonode\ProductMedia\Api\ImageRolesInterface;
 use Ergonode\ProductConsumer\Model\ValueObject\Product\Attribute\LocalizedStringValues;
 use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProductAttribute;
 use LogicException;
@@ -24,12 +25,13 @@ class ProductFileUsageSynchronizer
         private readonly FileUsageRecorderInterface $recorder,
         private readonly Config $eav,
         private readonly AsynchronousFileAttributeMapping $deferredMappings,
-        private readonly StoreManagerInterface $storeManager
+        private readonly StoreManagerInterface $storeManager,
+        private readonly ImageRolesInterface $imageRoles
     ) {
     }
 
     /** @param RemoteProductAttribute[] $attributes */
-    public function synchronize(int $productId, array $attributes): void
+    public function synchronize(int $productId, array $attributes, bool $synchronizeImages = true, ?array $attributeCodes = null): void
     {
         $source = [];
         foreach ($attributes as $attribute) {
@@ -37,8 +39,15 @@ class ProductFileUsageSynchronizer
         }
         $storeLanguages = $this->languages->getLanguageStoreMap();
         $references = [];
+        $preserved = $synchronizeImages ? [] : array_keys($this->imageRoles->getOptions());
         foreach ($this->mappings->getMappings() as $mapping) {
             if (!$this->deferredMappings->supports($mapping)) {
+                continue;
+            }
+            $code = (string)$mapping['magento_attribute_code'];
+            if (($attributeCodes !== null && !in_array($code, $attributeCodes, true))
+                || in_array($code, $preserved, true)
+            ) {
                 continue;
             }
             $item = $source[(string)$mapping['ergonode_attribute_code']] ?? null;
@@ -62,7 +71,7 @@ class ProductFileUsageSynchronizer
                 }
             }
         }
-        $this->recorder->synchronize($productId, new FileUsageSet($references));
+        $this->recorder->synchronize($productId, new FileUsageSet($references, $attributeCodes, $preserved));
     }
 
     /** @param array<int, string|null> $languages @return array<int, string|null> */

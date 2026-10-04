@@ -12,6 +12,18 @@
     <preference for="Ergonode\Media\Api\SharedPathStrategyInterface" type="Ergonode\Media\Model\Materialization\DefaultSharedPathStrategy"/>
     <preference for="Ergonode\Media\Model\Port\MediaRepositoryInterface" type="Ergonode\Media\Model\ResourceModel\MediaRepository"/>
     <preference for="Ergonode\Media\Model\Port\FileAttributeWriterInterface" type="Ergonode\Media\Model\ResourceModel\FileAttributeWriter"/>
+    <preference for="Ergonode\ProductMedia\Api\OrphanImageCleanerInterface" type="Ergonode\Media\Model\Materialization\OrphanImageCleaner"/>
+    <type name="Ergonode\ProductMedia\Model\Gallery\GallerySynchronizer">
+        <arguments>
+            <argument name="orphanCleaner" xsi:type="object">Ergonode\Media\Model\Materialization\OrphanImageCleaner</argument>
+        </arguments>
+    </type>
+    <type name="Ergonode\Media\Model\Index\LocalFileScanner">
+        <arguments>
+            <argument name="verifier" xsi:type="object">Ergonode\Media\Model\Index\MaterializationIntegrityVerifier</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+        </arguments>
+    </type>
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -33,4 +45,11 @@
         </arguments>
     </virtualType>
     <preference for="Ergonode\Media\Api\ImageAttributeOptionsInterface" type="Ergonode\Media\Model\GraphQl\ImageAttributeOptions"/>
+    <type name="Ergonode\Media\Model\Queue\Consumer">
+        <arguments>
+            <argument name="productCache" xsi:type="object">Ergonode\Product\Model\Cache\ProductCacheFinalizer</argument>
+        </arguments>
+        <plugin name="ergonode_serialize_media_worker" type="Ergonode\Product\Plugin\SerializeProductWorkers"/>
+    </type>
+
 </config>

@@ -11,7 +11,6 @@ use Ergonode\Media\Model\Materialization\AssetMaterializer;
 use Ergonode\Media\Model\Port\MediaRepositoryInterface;
 use Ergonode\ProductMedia\Api\GallerySynchronizerInterface;
 use Ergonode\ProductMedia\Api\ImageRolesInterface;
-use Magento\Framework\Exception\LocalizedException;
 
 class GalleryWorkProcessor
 {
@@ -53,6 +52,7 @@ class GalleryWorkProcessor
             $attachments[$asset->id] = $path;
         }
         $mappedRoles = [];
+        $removedRoles = [];
         $roles = $this->imageRoles->getOptions();
         foreach ($this->repository->fileUsages($productId) as $usage) {
             if (!isset($roles[$usage['attribute_code']])) {
@@ -60,7 +60,8 @@ class GalleryWorkProcessor
             }
             $path = $usage['desired'] ? ($resolved[$usage['source_path']] ?? null) : null;
             if ($usage['desired'] && $path === null) {
-                throw new LocalizedException(__('Configure a gallery position for every mapped Image attribute.'));
+                // The current gallery is authoritative, including roles retained outside an import scope.
+                $removedRoles[] = $usage;
             }
             $mappedRoles[] = [
                 'attribute' => $usage['attribute_code'],
@@ -68,8 +69,13 @@ class GalleryWorkProcessor
                 'path' => $path,
             ];
         }
-        return function () use ($productId, $desired, $managed, $mappedRoles, $attachments, $mode): void {
+        return function () use ($productId, $desired, $managed, $mappedRoles, $removedRoles, $attachments, $mode): void {
             $this->gallery->synchronize($productId, $desired, array_values(array_unique($managed)), $mappedRoles);
+            foreach ($removedRoles as $usage) {
+                $this->repository->removeFileUsage(
+                    $productId, $usage['attribute_code'], (int)$usage['store_id'], $usage['source_path']
+                );
+            }
             foreach ($attachments as $assetId => $path) {
                 $this->repository->saveGalleryPath($productId, $assetId, $path);
             }

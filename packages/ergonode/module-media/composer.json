@@ -12,7 +12,8 @@
     "require": {
         "php": "~8.3.0||~8.4.0||~8.5.0",
         "magento/module-message-queue": "*",
-        "ergonode/module-product-media": "dev-main@dev"
+        "ergonode/module-product-media": "dev-main@dev",
+        "ergonode/module-product": "*"
     },
     "autoload": {
         "files": [

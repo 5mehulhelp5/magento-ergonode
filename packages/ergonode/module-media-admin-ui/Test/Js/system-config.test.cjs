@@ -31,3 +31,15 @@ test('gallery selection is required and global alongside the synchronization swi
     assert.doesNotMatch(galleryConfiguration, /ERGONODE_ATTRIBUTE_CODE/);
     assert.doesNotMatch(defaultConfigXml, /<gallery_attribute>/);
 });
+
+
+test('additional Magento image policy is global, validated and defaults to keeping images', () => {
+    const field = systemXml.match(/<field id="unmanaged_images"[\s\S]*?<\/field>/)[0];
+    assert.match(field, /type="select"/);
+    assert.match(field, /showInDefault="1" showInWebsite="0" showInStore="0"/);
+    assert.match(field, /<source_model>Ergonode\\MediaAdminUi\\Model\\Config\\Source\\UnmanagedImages/);
+    assert.match(field, /<backend_model>Ergonode\\MediaAdminUi\\Model\\Config\\Backend\\UnmanagedImages/);
+    assert.match(defaultConfigXml, /<unmanaged_images>keep<\/unmanaged_images>/);
+    assert.match(field, /next gallery synchronization/);
+    assert.match(field, /Files with no remaining use/);
+});

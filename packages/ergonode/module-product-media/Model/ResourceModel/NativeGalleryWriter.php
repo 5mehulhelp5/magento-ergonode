@@ -6,6 +6,8 @@ namespace Ergonode\ProductMedia\Model\ResourceModel;
 
 use Ergonode\ProductMedia\Model\Port\GalleryWriterInterface;
 use Ergonode\ProductMedia\Model\Gallery\GalleryWriteLocks;
+use Ergonode\ProductMedia\Api\GalleryConfigurationInterface;
+use Ergonode\ProductMedia\Api\UnmanagedImagesMode;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
@@ -18,7 +20,8 @@ class NativeGalleryWriter implements GalleryWriterInterface
     public function __construct(
         private readonly ResourceConnection $resource,
         private readonly Config $eav,
-        private readonly GalleryWriteLocks $locks
+        private readonly GalleryWriteLocks $locks,
+        private readonly GalleryConfigurationInterface $configuration
     ) {
     }
 
@@ -27,10 +30,13 @@ class NativeGalleryWriter implements GalleryWriterInterface
      *
      * @param list<array{path:string,position:int}> $desired
      * @param string[] $managed
+     * @return list<string> Removed or hidden paths.
      */
-    public function synchronize(int $productId, array $desired, array $managed): void
+    public function synchronize(int $productId, array $desired, array $managed): array
     {
         $connection = $this->resource->getConnection();
+        $mode = $this->configuration->getUnmanagedImagesMode();
+        $retired = [];
         // Acquire retained path locks in a stable order across products.
         usort($desired, fn(array $a, array $b): int => $this->path($a['path']) <=> $this->path($b['path']));
         $wanted = [];
@@ -43,6 +49,10 @@ class NativeGalleryWriter implements GalleryWriterInterface
                 [['value_id' => $valueId, 'entity_id' => $productId]],
                 []
             );
+            // An image returning to the source gallery is visible in every existing store override.
+            $connection->update($this->table('catalog_product_entity_media_gallery_value'), ['disabled' => 0], [
+                'value_id = ?' => $valueId, 'entity_id = ?' => $productId,
+            ]);
             $connection->insertOnDuplicate(
                 $this->table('catalog_product_entity_media_gallery_value'),
                 [[
@@ -61,6 +71,7 @@ class NativeGalleryWriter implements GalleryWriterInterface
             if (isset($wanted[$path])) {
                 continue;
             }
+            $retired[$path] = $path;
             foreach ($this->valueIds($path) as $id) {
                 $condition = ['value_id = ?' => $id, 'entity_id = ?' => $productId];
                 $connection->delete(
@@ -71,9 +82,60 @@ class NativeGalleryWriter implements GalleryWriterInterface
                     $this->table('catalog_product_entity_media_gallery_value'),
                     $condition
                 );
+                $this->deleteUnusedValue($id);
             }
         }
+        if ($mode !== UnmanagedImagesMode::Keep) {
+            foreach ($this->linkedImages($productId) as $row) {
+                $path = $this->path('catalog/product/' . ltrim((string)$row['value'], '/'));
+                if (isset($wanted[$path])) {
+                    continue;
+                }
+                $id = (int)$row['value_id'];
+                $condition = ['value_id = ?' => $id, 'entity_id = ?' => $productId];
+                $retired[$path] = $path;
+                if ($mode === UnmanagedImagesMode::Remove) {
+                    $connection->delete($this->table('catalog_product_entity_media_gallery_value_to_entity'), $condition);
+                    $connection->delete($this->table('catalog_product_entity_media_gallery_value'), $condition);
+                    $this->deleteUnusedValue($id);
+                } else {
+                    $connection->update($this->table('catalog_product_entity_media_gallery_value'), ['disabled' => 1], $condition);
+                    // Some native associations have no default metadata row yet.
+                    $connection->insertOnDuplicate($this->table('catalog_product_entity_media_gallery_value'), [[
+                        'value_id' => $id, 'entity_id' => $productId, 'store_id' => 0,
+                        'label' => null, 'position' => 0, 'disabled' => 1,
+                    ]], ['disabled']);
+                }
+            }
+        }
+        return array_values($retired);
     }
+
+    /** The gallery row is locked by valueIds/linkedImages until the caller's transaction completes. */
+    private function deleteUnusedValue(int $valueId): void
+    {
+        $connection = $this->resource->getConnection();
+        $inUse = $connection->fetchOne($connection->select()->from(
+            $this->table('catalog_product_entity_media_gallery_value_to_entity'), ['entity_id']
+        )->where('value_id = ?', $valueId)->limit(1)->forUpdate(true));
+        if ($inUse === false) {
+            $connection->delete($this->table('catalog_product_entity_media_gallery'), ['value_id = ?' => $valueId]);
+        }
+    }
+
+    /** @return list<array{value_id:int|string,value:string}> */
+    private function linkedImages(int $productId): array
+    {
+        $select = $this->resource->getConnection()->select()->from(
+            ['g' => $this->table('catalog_product_entity_media_gallery')], ['value_id', 'value']
+        )->joinInner(
+            ['p' => $this->table('catalog_product_entity_media_gallery_value_to_entity')],
+            'p.value_id = g.value_id', []
+        )->where('p.entity_id = ?', $productId)->where('g.attribute_id = ?', $this->attributeId())
+            ->where('g.media_type = ?', 'image')->order('g.value_id ASC')->forUpdate(true);
+        return $this->resource->getConnection()->fetchAll($select);
+    }
+
     private function valueId(string $path): int
     {
         return $this->locks->forPath($path, function () use ($path): int {

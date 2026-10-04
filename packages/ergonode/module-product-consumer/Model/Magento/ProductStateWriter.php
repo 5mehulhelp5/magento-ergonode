@@ -44,4 +44,9 @@ class ProductStateWriter
         $this->urlKeyWriter->write($productId, $urlKeyValues, $urlKeyClear);
         $adapter->synchronizeRelations($productId, $magentoSku, $source);
     }
+
+    public function synchronizeUnchanged(int $productId, string $magentoSku, RemoteProduct $source): void
+    {
+        $this->stateSynchronizers->synchronizeUnchanged($productId, $magentoSku, $source);
+    }
 }

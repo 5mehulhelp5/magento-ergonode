@@ -9,7 +9,8 @@ class WorkItem
     public function __construct(
         public readonly int $productId,
         public readonly string $leaseToken,
-        public readonly int $attemptCount
+        public readonly int $attemptCount,
+        public readonly bool $synchronizeGallery = false
     ) {
     }
 }

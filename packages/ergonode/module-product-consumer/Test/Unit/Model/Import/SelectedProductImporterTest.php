@@ -56,11 +56,13 @@ class SelectedProductImporterTest extends TestCase
             $attributes,
             $resolver,
             $sku,
-            $this->createStub(ProductIdentityServiceInterface::class)
+            $this->createStub(ProductIdentityServiceInterface::class),
+            new \Ergonode\ProductConsumer\Model\Magento\SelectedProductStateSynchronizerPool()
         ))->import($identity);
     }
 
-    public function testMappedValuesAreLimitedToTargetSetAndIdentityIsValidatedBeforeWriting(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('optionalStateFailure')]
+    public function testMappedValuesAreLimitedToTargetSetAndIdentityIsValidatedBeforeWriting(bool $failMedia): void
     {
         $source = new RemoteProduct('ERGO-1', 'simple', 'foreign-template', false, [], []);
         $loader = $this->createStub(RemoteProductLoader::class);
@@ -93,11 +95,22 @@ class SelectedProductImporterTest extends TestCase
                 self::assertTrue($validated);
             });
         $identities = $this->createMock(ProductIdentityServiceInterface::class);
-        $identities->expects(self::once())->method('recordImported')->with(1, 'ERGO-1', self::isString());
+        $synchronized = false;
+        $optional = $this->createMock(\Ergonode\ProductConsumer\Api\SelectedProductStateSynchronizerInterface::class);
+        $optional->expects(self::once())->method('synchronizeSelected')->with(1, 'MAG-1', $source, ['name', 'price'])
+            ->willReturnCallback(static function () use (&$synchronized, $failMedia): void {
+                if ($failMedia) { throw new \RuntimeException('Media scheduling failed'); }
+                $synchronized = true;
+            });
+        $identities->expects($failMedia ? self::never() : self::once())->method('recordImported')->with(1, 'ERGO-1', self::isString())
+            ->willReturnCallback(static function () use (&$synchronized): void { self::assertTrue($synchronized); });
         $identity = $this->createStub(ProductIdentityInterface::class);
         $identity->method('getProductId')->willReturn(1);
         $identity->method('getErgonodeSku')->willReturn('ERGO-1');
         $identity->method('getIdentityMode')->willReturn('assigned');
+        if ($failMedia) {
+            $this->expectExceptionMessage('Media scheduling failed');
+        }
         (new SelectedProductImporter(
             $loader,
             $mapper,
@@ -106,8 +119,14 @@ class SelectedProductImporterTest extends TestCase
             $attributes,
             $resolver,
             $sku,
-            $identities
+            $identities,
+            new \Ergonode\ProductConsumer\Model\Magento\SelectedProductStateSynchronizerPool([$optional])
         ))
             ->import($identity);
+    }
+
+    public static function optionalStateFailure(): array
+    {
+        return ['media scheduled before success' => [false], 'media failure must not record success' => [true]];
     }
 }

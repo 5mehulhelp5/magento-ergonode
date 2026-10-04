@@ -68,6 +68,7 @@
     "ergonode_media_product_work": {
         "column": {
             "product_id": true,
+            "synchronize_gallery": true,
             "status": true,
             "attempt_count": true,
             "available_at": true,
@@ -141,6 +142,7 @@
             "started_at": true,
             "updated_at": true,
             "last_completed_at": true,
+            "verification_completed_at": true,
             "error": true
         },
         "constraint": {

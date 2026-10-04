@@ -8,6 +8,8 @@ use Ergonode\ProductConsumer\Api\ProductImportHashProviderInterface;
 use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProduct;
 use Ergonode\ProductMedia\Api\GalleryConfigurationInterface;
 use Ergonode\ProductMedia\Api\GalleryRulesInterface;
+use Ergonode\ProductMedia\Exception\InvalidMediaConfigurationException;
+use Ergonode\ProductConsumer\Exception\NonRetryableImportException;
 
 class MediaImportHashProvider implements ProductImportHashProviderInterface
 {
@@ -19,15 +21,25 @@ class MediaImportHashProvider implements ProductImportHashProviderInterface
 
     public function getHash(RemoteProduct $source): string
     {
+        try {
+            return $this->configurationHash();
+        } catch (InvalidMediaConfigurationException $exception) {
+            throw new NonRetryableImportException(__('%1', $exception->getMessage()), $exception);
+        }
+    }
+
+    private function configurationHash(): string
+    {
         // The version also schedules existing File -> text/textarea mappings for migration.
-        $images = $this->rules->getAdditionalImages();
+        $enabled = $this->configuration->isSynchronizationEnabled();
+        $images = $enabled ? $this->rules->getAdditionalImages() : [];
         ksort($images);
         return hash('sha256', json_encode([
             'version' => 1,
-            'enabled' => $this->configuration->isSynchronizationEnabled(),
+            'enabled' => $enabled,
             'gallery' => $this->configuration->getGalleryAttributeCode(),
             'images' => $images,
-            'role' => $this->rules->getAdditionalRole(),
+            'role' => $enabled ? $this->rules->getAdditionalRole() : null,
         ], JSON_THROW_ON_ERROR));
     }
 }
