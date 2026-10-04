@@ -6,6 +6,7 @@ namespace Ergonode\Product\Model\Cache;
 
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Event\ManagerInterface;
+use RuntimeException;
 
 class ProductCacheInvalidator
 {
@@ -21,7 +22,12 @@ class ProductCacheInvalidator
             return;
         }
         $identity = new ProductCacheIdentity($ids);
-        $this->cache->clean($identity->getIdentities());
+        if ($this->cache->clean($identity->getIdentities()) === false) {
+            throw new RuntimeException(sprintf(
+                'Product cache cleanup returned false for Magento product IDs: %s.',
+                implode(', ', $ids)
+            ));
+        }
         $this->events->dispatch('clean_cache_by_tags', ['object' => $identity]);
     }
 }

@@ -48,11 +48,20 @@ mogą pozostać zapisane; nie dokładamy transakcji obejmującej całą paczkę.
 importu zapisujemy dopiero po zakończeniu procesorów. Zmiany częściowo zatwierdzonych
 produktów mogą wymagać indeksowania nawet wtedy, gdy późniejszy etap zawiódł.
 
-`ergonode_product_cache_state` pamięta ostatni stan objęty poprawnym odświeżeniem
-cache. Dzięki temu następny ręczny przebieg może dokończyć odświeżenie po wcześniejszym
-błędzie, nawet gdy część wartości jest już taka sama. Ten zapis nie uruchamia pracy,
-nie ma własnego harmonogramu i nie stanowi mechanizmu ponowień. Hashów źródłowych
-plików nie zmieniamy; ręczna weryfikacja integralności nadal tylko raportuje problemy.
+Cache porównujemy wyłącznie na podstawie danych przed i po aktualizacji w bieżącym
+przebiegu. Podpisy tych danych pozostają w pamięci kontekstu paczki; nie zapisujemy
+osobnego stanu cache w bazie. Niepowodzenie czyszczenia (wynik `false` lub wyjątek)
+trafia do jednego logu z ID/SKU produktów, etapem i przyczyną. Nie oznacza nieudanego
+zapisu produktu i nie zleca pracy na kolejny import. Jeśli późniejszy przebieg nie
+zmieni danych, nie podejmie ponownie wcześniejszego czyszczenia; cache można wtedy
+wyczyścić ręcznie na podstawie logów. Hash zakończonego importu nadal służy do
+pomijania niezmienionych danych źródłowych. Hashów źródłowych plików nie zmieniamy;
+ręczna weryfikacja integralności nadal tylko raportuje problemy.
+
+Tabela `ergonode_product_cache_state` nie jest już deklarowana ani używana przez
+kod synchronizacji. Historyczny wpis w `db_schema_whitelist.json` pozostaje wyłącznie
+po to, aby Magento mogło usunąć tę tabelę podczas aktualizacji schematu, jeśli została
+utworzona przez wcześniejszą wersję. Uninstall również obsługuje sprzątanie starej tabeli.
 
 ## Jedno aktywne wykonanie
 
@@ -67,11 +76,12 @@ korzysta z tej samej blokady i wspólnego końcowego mechanizmu cache.
 
 Testy jednostkowe sprawdzają kolejność faz, kontekst, izolację błędów, brak zlecenia
 mediów do innego workera podczas przebiegu produktów, dokładne tagi produktów,
-przebieg bez zmian i odświeżenie po kolejnym ręcznym imporcie. Odczyt istnienia
+przebieg bez zmian, logowanie błędów cache i brak pamiętania ich na kolejny import. Odczyt istnienia
 produktów jest sprawdzany jako jedno zapytanie dla paczki.
 
 Przed uruchomieniem na rzeczywistych danych potrzebna jest standardowa aktualizacja
-schematu Magento dla nowej tabeli stanu cache i wcześniejszych zmian mediów, odświeżenie
+schematu Magento dla wcześniejszych zmian mediów i usunięcia dawnej tabeli stanu cache,
+jeśli istnieje, odświeżenie
 konfiguracji DI oraz restart workerów. W ramach implementacji nie uruchamiamy
 `setup:upgrade`, rzeczywistego importu, skanu ani czyszczenia cache sklepu. Testy
 jednostkowe i statyczna walidacja nie potwierdzają efektu na rozgrzanym FPC/Varnish;

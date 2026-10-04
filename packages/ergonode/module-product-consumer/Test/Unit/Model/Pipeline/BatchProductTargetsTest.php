@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ergonode\ProductConsumer\Test\Unit\Model\Pipeline;
 
 use Ergonode\Product\Api\{MagentoIdentityAttributeInterface, ProductIdentityServiceInterface};
+use Ergonode\Product\Model\Config\ProductIdentityModeProvider;
+use Ergonode\ProductAttributeConsumer\Api\SkuIdentityMappingResolverInterface;
 use Ergonode\ProductConsumer\Model\Data\ProductImportWorkItem;
 use Ergonode\ProductConsumer\Model\Magento\{MappedMagentoSkuResolver, ProductTargetResolver};
 use Ergonode\ProductConsumer\Model\Pipeline\{BatchContext, BatchEntry};
@@ -13,13 +15,132 @@ use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProduct;
 use Magento\Catalog\Model\ResourceModel\Product;
 use Magento\Eav\Model\Config;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
+use Magento\Framework\Exception\LocalizedException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 class BatchProductTargetsTest extends TestCase
 {
+    #[DataProvider('unavailableNewModes')]
+    public function testUnavailableNewModeDoesNotBlockPersistedIdentitiesInMixedBatch(string $mode): void
+    {
+        $entries = []; $rows = [];
+        foreach (['shared', 'assigned', 'mapped', 'new'] as $index => $historicalMode) {
+            $entry = new BatchEntry(new ProductImportWorkItem($index + 1, $historicalMode, 'sync', null, 'e', 'l', 1));
+            $entry->source = new RemoteProduct($historicalMode, 'simple', 'template', false, [], []);
+            $entries[] = $entry;
+            if ($historicalMode !== 'new') {
+                $rows[] = ['entity_id' => (string)($index + 40), 'sku' => 'magento-' . $historicalMode,
+                    'type_id' => 'simple', 'attribute_set_id' => '4',
+                    'ergonode_sku' => $historicalMode, 'identity_mode' => $historicalMode];
+            }
+        }
+        // Selected imports already carry a Magento product ID.
+        $entries[2]->productId = 42;
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('error')->with(self::anything(), self::callback(
+            static fn(array $data): bool => $data['ergonode_sku'] === 'new'
+                && $data['stage'] === 'preprocess:identity'
+                && $data['exception'] instanceof LocalizedException
+        ));
+        $context = new BatchContext($entries, $logger);
+        $resource = $this->resourceWithRows($rows);
+        $config = $this->createStub(ScopeConfigInterface::class);
+        $config->method('getValue')->willReturn($mode);
+        $attribute = $this->createStub(MagentoIdentityAttributeInterface::class);
+        $attribute->method('validate')->willThrowException(new LocalizedException(__('Identity attribute is unavailable.')));
+        $skus = new MappedMagentoSkuResolver(
+            new ProductIdentityModeProvider($config, [], $attribute),
+            $this->createStub(SkuIdentityMappingResolverInterface::class)
+        );
+        $eav = $this->createMock(Config::class);
+        $eav->expects(self::never())->method('getAttribute');
+
+        $targets = (new BatchProductTargets($resource, $skus, $attribute, $eav,
+            $this->createStub(Product::class)))->get($context);
+
+        foreach (['shared', 'assigned', 'mapped'] as $index => $historicalMode) {
+            self::assertNull($entries[$index]->error);
+            self::assertSame($index + 40, $targets[$historicalMode]['product_id']);
+            self::assertSame($historicalMode, $targets[$historicalMode]['identity_mode']);
+            self::assertTrue($targets[$historicalMode]['bound']);
+        }
+        self::assertArrayNotHasKey('new', $targets);
+        self::assertSame('preprocess:identity', $entries[3]->failedStage);
+        self::assertInstanceOf(LocalizedException::class, $entries[3]->error);
+        $processed = [];
+        foreach ($entries as $entry) {
+            $context->run($entry, 'process:attributes', function () use (&$processed, $entry): void {
+                $processed[] = $entry->sku();
+            });
+        }
+        self::assertSame(['shared', 'assigned', 'mapped'], $processed);
+    }
+
+    public static function unavailableNewModes(): array
+    {
+        return [
+            'unset' => [''],
+            'legacy shared' => ['shared'],
+            'assigned support absent' => ['assigned'],
+            'mapped attribute unavailable' => ['mapped'],
+        ];
+    }
+
+    public function testDeletionBatchDoesNotRequireNewIdentityConfiguration(): void
+    {
+        $entry = new BatchEntry(new ProductImportWorkItem(1, 'deleted', 'delete', null, 'e', 'l', 1));
+        $skus = $this->createMock(MappedMagentoSkuResolver::class);
+        $skus->expects(self::never())->method('getConfiguredMode');
+        $skus->expects(self::never())->method('resolve');
+        $context = new BatchContext([$entry], new NullLogger());
+        $resource = $this->resourceWithRows([
+            ['entity_id' => '42', 'sku' => 'magento-deleted', 'type_id' => 'simple', 'attribute_set_id' => '4',
+                'ergonode_sku' => 'deleted', 'identity_mode' => 'shared'],
+        ]);
+
+        $targets = (new BatchProductTargets($resource, $skus,
+            $this->createStub(MagentoIdentityAttributeInterface::class),
+            $this->createStub(Config::class), $this->createStub(Product::class)))->get($context);
+
+        self::assertNull($entry->error);
+        self::assertSame(42, $targets['deleted']['product_id']);
+        self::assertSame('shared', $targets['deleted']['identity_mode']);
+    }
+
+    public function testEmptyBatchDoesNotReadConfigurationOrProducts(): void
+    {
+        $skus = $this->createMock(MappedMagentoSkuResolver::class);
+        $skus->expects(self::never())->method('getConfiguredMode');
+        $resource = $this->createMock(ResourceConnection::class);
+        $resource->expects(self::never())->method('getConnection');
+
+        self::assertSame([], (new BatchProductTargets($resource, $skus,
+            $this->createStub(MagentoIdentityAttributeInterface::class),
+            $this->createStub(Config::class), $this->createStub(Product::class)))
+            ->get(new BatchContext([], new NullLogger())));
+    }
+
+    private function resourceWithRows(array $rows): ResourceConnection
+    {
+        $db = $this->createMock(AdapterInterface::class);
+        $query = $this->createStub(Select::class);
+        foreach (['from', 'joinLeft', 'where'] as $method) { $query->method($method)->willReturnSelf(); }
+        $db->method('select')->willReturn($query);
+        $db->method('quoteInto')->willReturnArgument(0);
+        $db->expects(self::once())->method('fetchAll')->with($query)->willReturn($rows);
+        $db->expects(self::never())->method('fetchRow');
+        $resource = $this->createStub(ResourceConnection::class);
+        $resource->method('getConnection')->willReturn($db);
+        $resource->method('getTableName')->willReturnArgument(0);
+        return $resource;
+    }
+
     public function testOneExistenceQueryPreparesExistingAndMissingProductsAndResolverDoesNotRepeatIt(): void
     {
         $entries = [];

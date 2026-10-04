@@ -40,6 +40,7 @@ class MediaImportHashProvider implements ProductImportHashProviderInterface
             'gallery' => $this->configuration->getGalleryAttributeCode(),
             'images' => $images,
             'role' => $enabled ? $this->rules->getAdditionalRole() : null,
+            'unmanaged_images' => $enabled ? $this->configuration->getUnmanagedImagesMode()->value : null,
         ], JSON_THROW_ON_ERROR));
     }
 }

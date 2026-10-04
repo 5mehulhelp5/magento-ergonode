@@ -23,6 +23,7 @@ use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProduct;
 use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProductAttribute;
 use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProductAttributeType;
 use Ergonode\ProductMedia\Api\GalleryConfigurationInterface;
+use Ergonode\ProductMedia\Api\UnmanagedImagesMode;
 use Ergonode\ProductMediaConsumer\Model\Media\ProductGallerySelectionProvider;
 use Ergonode\ProductMediaConsumer\Model\Media\ProductMediaSynchronizer;
 use Magento\Catalog\Model\Product;
@@ -127,6 +128,7 @@ try {
     $galleryConfig = new class implements GalleryConfigurationInterface {
         public function isSynchronizationEnabled(): bool { return true; }
         public function getGalleryAttributeCode(): string { return 'smoke_photos'; }
+        public function getUnmanagedImagesMode(): UnmanagedImagesMode { return UnmanagedImagesMode::Keep; }
     };
     $repository = $om->get(MediaRepository::class);
     $cache = new MaterializationCache();

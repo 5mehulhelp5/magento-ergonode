@@ -56,12 +56,7 @@ class BatchContext
     /** One shared infrastructure failure gets one diagnostic, with the affected batch listed. */
     public function failBatch(string $stage, Throwable $error): void
     {
-        $reference = bin2hex(random_bytes(6));
-        $this->logger->error('Unable to finish Ergonode product batch phase.', [
-            'product_ids' => $this->productIds(),
-            'ergonode_skus' => array_map(static fn(BatchEntry $entry): string => $entry->sku(), $this->entries),
-            'stage' => $stage, 'reference' => $reference, 'exception' => $error,
-        ]);
+        $reference = $this->reportBatchError($stage, $error);
         foreach ($this->entries as $entry) {
             if ($entry->error === null) {
                 $entry->error = $error;
@@ -69,6 +64,20 @@ class BatchContext
                 $entry->logReference = $reference;
             }
         }
+    }
+
+    /** Log a shared diagnostic without marking successfully written products as failed. */
+    public function reportBatchError(string $stage, Throwable $error, ?array $productIds = null): string
+    {
+        $entries = $productIds === null ? $this->entries : array_filter($this->entries,
+            static fn(BatchEntry $entry): bool => in_array($entry->productId, $productIds, true));
+        $reference = bin2hex(random_bytes(6));
+        $this->logger->error('Unable to finish Ergonode product batch phase.', [
+            'product_ids' => $productIds ?? $this->productIds(),
+            'ergonode_skus' => array_values(array_map(static fn(BatchEntry $entry): string => $entry->sku(), $entries)),
+            'stage' => $stage, 'reference' => $reference, 'exception' => $error,
+        ]);
+        return $reference;
     }
 
     /** @return list<int> */

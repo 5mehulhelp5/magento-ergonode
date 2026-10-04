@@ -27,9 +27,14 @@ class FinishBatch
                     $completed[$entry->productId] = $changed[$entry->productId];
                 }
             }
-            $this->cache->complete($completed);
         } catch (Throwable $error) {
             $context->failBatch('postprocess:cache', $error);
+            return;
+        }
+        try {
+            $this->cache->complete($completed);
+        } catch (Throwable $error) {
+            $context->reportBatchError('postprocess:cache', $error, array_keys($completed));
         }
     }
 }

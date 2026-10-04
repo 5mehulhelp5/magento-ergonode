@@ -29,21 +29,34 @@ class BatchProductTargets
     public function get(BatchContext $context): array
     {
         $sourceSkus = []; $lookupSkus = []; $ids = [];
-        $mode = $this->skus->getConfiguredMode();
+        $hasSources = false;
         foreach ($context->entries as $entry) {
             if ($entry->error !== null) { continue; }
             $sourceSkus[] = $entry->sku();
             if ($entry->productId !== null) { $ids[] = $entry->productId; }
+            $hasSources = $hasSources || $entry->source !== null;
+        }
+        if ($sourceSkus === []) { return []; }
+        $mode = null; $modeError = null;
+        if ($hasSources) {
+            try {
+                $mode = $this->skus->getConfiguredMode();
+            } catch (LocalizedException $error) {
+                // Defer new-identity configuration failures until existing ownership is known.
+                $modeError = $error;
+            }
+        }
+        foreach ($context->entries as $entry) {
+            if ($entry->error !== null) { continue; }
             try {
                 $lookupSkus[$entry->sku()] = $entry->source !== null
-                    ? $this->skus->resolve($entry->source, $mode) : $entry->sku();
+                    ? ($mode !== null ? $this->skus->resolve($entry->source, $mode) : '') : $entry->sku();
             } catch (LocalizedException) {
                 // An existing mapping may use a different identity mode. The regular resolver
                 // validates a missing assigned SKU later, if there is no such mapping.
                 $lookupSkus[$entry->sku()] = '';
             }
         }
-        if ($sourceSkus === []) { return []; }
         $db = $this->resource->getConnection();
         $select = $db->select()->from(['p' => $this->resource->getTableName('catalog_product_entity')],
             ['entity_id', 'sku', 'type_id', 'attribute_set_id'])
@@ -93,6 +106,10 @@ class BatchProductTargets
             $row = $entry->productId !== null ? ($byId[$entry->productId] ?? null)
                 : ($mapped[$entry->sku()] ?? ($mode === ProductIdentityInterface::MODE_MAPPED
                     ? ($native[$entry->sku()] ?? null) : ($bySku[$lookupSkus[$entry->sku()]] ?? null)));
+            if ($modeError !== null && $entry->source !== null && ($row === null || $row['ergonode_sku'] === null)) {
+                $context->fail($entry, 'preprocess:identity', $modeError);
+                continue;
+            }
             if ($row === null) { $targets[$entry->sku()] = null; continue; }
             $entry->productId = (int)$row['entity_id'];
             $targets[$entry->sku()] = ['product_id' => $entry->productId, 'sku' => (string)$row['sku'],

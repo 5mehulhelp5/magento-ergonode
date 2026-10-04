@@ -7,6 +7,7 @@ namespace Ergonode\ProductMediaConsumer\Test\Unit\Model\Media;
 use Ergonode\ProductConsumer\Model\ValueObject\Product\RemoteProduct;
 use Ergonode\ProductMedia\Api\GalleryConfigurationInterface;
 use Ergonode\ProductMedia\Api\GalleryRulesInterface;
+use Ergonode\ProductMedia\Api\UnmanagedImagesMode;
 use Ergonode\ProductMediaConsumer\Model\Media\MediaImportHashProvider;
 use PHPUnit\Framework\TestCase;
 use Ergonode\ProductMedia\Exception\InvalidMediaConfigurationException;
@@ -19,6 +20,7 @@ class MediaImportHashProviderTest extends TestCase
         $configuration = $this->createStub(GalleryConfigurationInterface::class);
         $configuration->method('isSynchronizationEnabled')->willReturn(true);
         $configuration->method('getGalleryAttributeCode')->willReturn('photos');
+        $configuration->method('getUnmanagedImagesMode')->willReturn(UnmanagedImagesMode::Keep);
         $rules = $this->createStub(GalleryRulesInterface::class);
         $rules->method('getAdditionalImages')->willReturnOnConsecutiveCalls(['back' => 2], ['back' => 3]);
         $provider = new MediaImportHashProvider($configuration, $rules);
@@ -30,6 +32,7 @@ class MediaImportHashProviderTest extends TestCase
     {
         $configuration = $this->createStub(GalleryConfigurationInterface::class);
         $configuration->method('isSynchronizationEnabled')->willReturn(true);
+        $configuration->method('getUnmanagedImagesMode')->willReturn(UnmanagedImagesMode::Keep);
         $rules = $this->createStub(GalleryRulesInterface::class);
         $rules->method('getAdditionalImages')->willReturnOnConsecutiveCalls(
             ['back' => 2, 'front' => 3], ['front' => 3, 'back' => 2]
@@ -51,8 +54,9 @@ class MediaImportHashProviderTest extends TestCase
 
     public function testDisabledGalleryDoesNotValidateUnusedImageSettings(): void
     {
-        $configuration = $this->createStub(GalleryConfigurationInterface::class);
+        $configuration = $this->createMock(GalleryConfigurationInterface::class);
         $configuration->method('isSynchronizationEnabled')->willReturn(false);
+        $configuration->expects(self::never())->method('getUnmanagedImagesMode');
         $rules = $this->createMock(GalleryRulesInterface::class);
         $rules->expects(self::never())->method('getAdditionalImages');
         $rules->expects(self::never())->method('getAdditionalRole');

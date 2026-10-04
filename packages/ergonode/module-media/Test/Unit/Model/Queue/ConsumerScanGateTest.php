@@ -91,7 +91,7 @@ class ConsumerScanGateTest extends TestCase
     public function testCachePreparationFailureIsLoggedAndEndsClaimedWorkWithoutWritingMedia(): void
     {
         $item = new WorkItem(41, 'lease', 1, true);
-        $error = new \RuntimeException('Cache state storage unavailable.');
+        $error = new \RuntimeException('Unable to read product data for cache comparison.');
         $repository = $this->createMock(MediaRepositoryInterface::class);
         $repository->method('claim')->willReturn([$item]);
         $repository->expects(self::once())->method('fail')->with($item, $error->getMessage());
@@ -115,6 +115,43 @@ class ConsumerScanGateTest extends TestCase
 
         (new Consumer($repository, $processor, $publisher, $this->createStub(MediaConfig::class),
             $connection, $logger, $readiness, new MaterializationCache(), $cache))->process('drain');
+    }
+
+    public function testStandaloneCacheFailureIsLoggedWithoutFailingCompletedMediaOrSchedulingWork(): void
+    {
+        $item = new WorkItem(41, 'lease', 1, true);
+        $repository = $this->createMock(MediaRepositoryInterface::class);
+        $repository->method('claim')->willReturn([$item]);
+        $repository->method('hasWork')->willReturn(false);
+        $repository->expects(self::once())->method('complete')->with($item)->willReturn(true);
+        $repository->expects(self::never())->method('fail');
+        $processor = $this->createMock(WorkProcessor::class);
+        $processor->expects(self::once())->method('process')->with($item);
+        $snapshots = $this->createStub(\Ergonode\Product\Model\Cache\ProductStateSnapshots::class);
+        $snapshots->method('hashes')->willReturnOnConsecutiveCalls([41 => 'old'], [41 => 'new']);
+        $cache = $this->createMock(\Magento\Framework\App\CacheInterface::class);
+        $cache->expects(self::once())->method('clean')->with(['cat_p_41'])->willReturn(false);
+        $events = $this->createMock(\Magento\Framework\Event\ManagerInterface::class);
+        $events->expects(self::never())->method('dispatch');
+        $finalizer = new \Ergonode\Product\Model\Cache\ProductCacheFinalizer($snapshots,
+            new \Ergonode\Product\Model\Cache\ProductCacheInvalidator($cache, $events));
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('error')->with(
+            'Unable to refresh product cache after Ergonode media synchronization.', self::callback(
+                static fn(array $data): bool => $data['product_ids'] === [41]
+                    && $data['stage'] === 'postprocess:cache'
+                    && str_contains($data['exception']->getMessage(), 'false')
+            )
+        );
+        $publisher = $this->createMock(QueuePublisher::class);
+        $publisher->expects(self::never())->method('dispatch');
+        $connection = $this->createStub(ConfigProvider::class);
+        $connection->method('isEnabled')->willReturn(true);
+        $readiness = $this->createStub(ScanReadiness::class);
+        $readiness->method('isBlocked')->willReturn(false);
+
+        (new Consumer($repository, $processor, $publisher, $this->createStub(MediaConfig::class),
+            $connection, $logger, $readiness, new MaterializationCache(), $finalizer))->process('drain');
     }
 
     public function testStandaloneMediaRefreshesOnlyCompletedProductsAfterTheirWrites(): void
